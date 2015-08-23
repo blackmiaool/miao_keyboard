@@ -15,7 +15,15 @@
 #include "tm_stm32f4_usb_hid_device.h"
 #include "tm_stm32f4_delay.h"
 #include "tm_stm32f4_disco.h"
-
+#include "keyboard.h"
+void delay_ms(u32 ms){
+	int i=0,j=0;
+	for(i=0;i<ms;i++){
+		for(j=0;j<56000;j++){
+			
+		}
+	}
+}
 int main(void) {
 	uint8_t already = 0;
 	
@@ -46,21 +54,19 @@ int main(void) {
 	/* Set default values for gamepad structs */
 	TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad1);
 	TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad2);
-
+	keyboard_init();
 	while (1) {		  
 		/* If we are connected and drivers are OK */
 		if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
-			/* Turn on green LED */
-//			TM_DISCO_LedOn(LED_GREEN);
-			
+			/* Turn on green LED */	
 /* Simple sketch start */	
 			
 			/* If you pressed button right now and was not already pressed */
-			if (TM_DISCO_ButtonPressed() && already == 0) { /* Button on press */
+			if ((TM_GPIO_GetInputPinValue(GPIOC, GPIO_PIN_1) != 0) && already == 0) { /* Button on press */
 				already = 1;
 				
 				/* Set pressed keys = WIN + R */
-				Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Pressed;	/* Win button */
+//				Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Pressed;	/* Win button */
 				Keyboard.Key1 = 0x15; 								/* R */
 				/* Result = "Run" command */
 				
@@ -77,12 +83,12 @@ int main(void) {
 				/* Send keyboard report */
 				TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
 			}
-			
+			delay_ms(25);
 /* Simple sketch end */
 			
 		} else {
 			/* Turn off green LED */
-//			TM_DISCO_LedOff(LED_GREEN);
+			TM_DISCO_LedOff(LED_GREEN);
 		}
 	}
 }
