@@ -62,7 +62,7 @@ int main(void) {
 /* Simple sketch start */	
 			
 			/* If you pressed button right now and was not already pressed */
-			if ((TM_GPIO_GetInputPinValue(GPIOC, GPIO_PIN_1) != 0) && already == 0) { /* Button on press */
+			if ((TM_GPIO_GetInputPinValue(GPIOC, GPIO_PIN_4) != 0) && already == 0) { /* Button on press */
 				already = 1;
 				
 				/* Set pressed keys = WIN + R */
