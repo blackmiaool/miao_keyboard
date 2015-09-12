@@ -89,7 +89,7 @@ void rt_usb_thread_entry(void* parameter){
                 /* Send keyboard report */
                 TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
             }
-            delay(25);
+            delay(250);
 /* Simple sketch end */
 
         } else {
