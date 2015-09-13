@@ -60,13 +60,16 @@ void rt_usb_thread_entry(void* parameter){
     /* Set default values for gamepad structs */
     TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad1);
     TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad2);
+
     keyboard_init();
+
     while (1) {
+
         /* If we are connected and drivers are OK */
         if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
             /* Turn on green LED */
 /* Simple sketch start */
-            rt_kprintf("sldkjfsldkfj");
+            rt_kprintf("sl");
             /* If you pressed button right now and was not already pressed */
             if ((TM_GPIO_GetInputPinValue(GPIOA, GPIO_PIN_0) != 0) && already == 0) { /* Button on press */
                 already = 1;
@@ -121,7 +124,7 @@ void rt_init_thread_entry(void* parameter)
         rt_kprintf("TCP/IP initialized!\n");
     }
 #endif
-rt_kprintf("initialized!\n");
+rt_kprintf("initialized!CORRECT");
 }
 
 int rt_application_init()

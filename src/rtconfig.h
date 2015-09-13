@@ -159,7 +159,8 @@
 #define CHECKSUM_GEN_TCP                0
 #define CHECKSUM_GEN_IP                 0
 #define CHECKSUM_GEN_UDP                0
-
+#define RT_USING_JS
+#define RT_USING_NEWLIB
 /* RT_GDB_STUB */
 //#define RT_USING_GDB
 
