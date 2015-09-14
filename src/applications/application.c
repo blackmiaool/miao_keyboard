@@ -104,6 +104,9 @@ void rt_usb_thread_entry(void* parameter){
 void rt_init_thread_entry(void* parameter)
 {
     /* GDB STUB */
+#ifdef  RT_USING_FINSH
+
+#endif
 #ifdef RT_USING_GDB
     gdb_set_device("uart6");
     gdb_start();
@@ -123,8 +126,10 @@ void rt_init_thread_entry(void* parameter)
         lwip_sys_init();
         rt_kprintf("TCP/IP initialized!\n");
     }
+
 #endif
-rt_kprintf("initialized!CORRECT");
+
+rt_kprintf("initialized!CORRECT1\r\n");
 }
 
 int rt_application_init()
@@ -140,8 +145,8 @@ int rt_application_init()
         4096, 15, 20);
     if (tid != RT_NULL)
         rt_thread_startup(tid);
-    if (tusb != RT_NULL)
-        rt_thread_startup(tusb);
+//    if (tusb != RT_NULL)
+//        rt_thread_startup(tusb);
 
     return 0;
 }

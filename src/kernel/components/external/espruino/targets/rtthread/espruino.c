@@ -3,8 +3,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <signal.h>
-#include <dirent.h> // for readdir
-
+//#include <dirent.h> // for readdir
+#include "../libc/newlib/sys/dirent.h"
 #include "jslex.h"
 #include "jsvar.h"
 #include "jsparse.h"

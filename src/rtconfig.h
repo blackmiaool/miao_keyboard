@@ -7,7 +7,8 @@
 
 /* RT_ALIGN_SIZE*/
 #define RT_ALIGN_SIZE	4
-
+#define RT_USING_ARM_LIBC
+#define RT_USING_LUA
 /* PRIORITY_MAX */
 #define RT_THREAD_PRIORITY_MAX	32
 
@@ -75,14 +76,14 @@
 #define RT_CONSOLEBUF_SIZE	128
 
 /* SECTION: finsh, a C-Express shell */
-//#define RT_USING_FINSH
+#define RT_USING_FINSH
 /* Using symbol table */
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 
 /* SECTION: device filesystem */
 /* Using Device file system */
-/* #define RT_USING_DFS */
+#define RT_USING_DFS
 /* the max number of mounted filesystem */
 #define DFS_FILESYSTEMS_MAX			2
 /* the max number of opened files 		*/
@@ -101,7 +102,7 @@
 #define RT_DFS_ELM_MAX_SECTOR_SIZE  512
 
 /* Using ROM file system */
-// #define RT_USING_DFS_ROMFS
+#define RT_USING_DFS_ROMFS
 
 /* SECTION: lwip, a lighwight TCP/IP protocol stack */
 /* #define RT_USING_LWIP */
@@ -159,7 +160,6 @@
 #define CHECKSUM_GEN_TCP                0
 #define CHECKSUM_GEN_IP                 0
 #define CHECKSUM_GEN_UDP                0
-#define RT_USING_JS
 #define RT_USING_NEWLIB
 /* RT_GDB_STUB */
 //#define RT_USING_GDB
