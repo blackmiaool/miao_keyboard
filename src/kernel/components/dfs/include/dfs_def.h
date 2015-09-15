@@ -73,7 +73,7 @@
 #if defined(RT_USING_NEWLIB) 
 #include <string.h>
 #include <sys/stat.h>            /* used for struct stat */
-#include <sys/statfs.h>          /* used for struct statfs */
+#include "sys/statfs.h"          /* used for struct statfs */
 #include <sys/errno.h>           /* used for error number */
 #include <sys/fcntl.h>           /* used for operation flags */
 #include <sys/unistd.h>          /* used for SEEK_SET/CUR/END */

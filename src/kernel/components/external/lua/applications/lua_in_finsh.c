@@ -45,7 +45,7 @@ void finsh_lua(void *parameter)
     rt_device_set_rx_indicate(dev4lua.device, rx_indicate);
 }
 
-static void lua(void)
+void lua(void)
 {
     rt_thread_t lua_thread;
     const char* device_name = finsh_get_device();

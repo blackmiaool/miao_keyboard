@@ -8,6 +8,7 @@
 /* RT_ALIGN_SIZE*/
 #define RT_ALIGN_SIZE	4
 #define RT_USING_ARM_LIBC
+#define RT_USING_LIBC
 #define RT_USING_LUA
 /* PRIORITY_MAX */
 #define RT_THREAD_PRIORITY_MAX	32
@@ -88,7 +89,7 @@
 #define DFS_FILESYSTEMS_MAX			2
 /* the max number of opened files 		*/
 #define DFS_FD_MAX					4
-
+#define RT_USING_DFS_DEVFS
 /* Using ELM FATFS */
 //#define RT_USING_DFS_ELMFAT
 #define RT_DFS_ELM_WORD_ACCESS
@@ -160,7 +161,8 @@
 #define CHECKSUM_GEN_TCP                0
 #define CHECKSUM_GEN_IP                 0
 #define CHECKSUM_GEN_UDP                0
-#define RT_USING_NEWLIB
+//#define RT_USING_NEWLIB
+#define RT_USING_LUA
 /* RT_GDB_STUB */
 //#define RT_USING_GDB
 

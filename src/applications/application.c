@@ -145,6 +145,7 @@ int rt_application_init()
         4096, 15, 20);
     if (tid != RT_NULL)
         rt_thread_startup(tid);
+
 //    if (tusb != RT_NULL)
 //        rt_thread_startup(tusb);
 
