@@ -31,6 +31,7 @@
 #include "tm_stm32f4_delay.h"
 #include "tm_stm32f4_disco.h"
 #include "keyboard.h"
+#include "application.h"
 void delay(u32 t){
     rt_thread_delay(t);
 }
@@ -131,10 +132,62 @@ void rt_init_thread_entry(void* parameter)
 
 rt_kprintf("initialized!CORRECT1\r\n");
 }
+int key_pos_init(lua_State *L)
+{
+    int n = lua_gettop(L);
+    int i;
+
+//    for (i=1; i<=n; i++)
+//    {
+//        if (i>1)
+//            rt_kprintf("\t");
+
+//        if (lua_isstring(L,i))
+//            rt_kprintf("%s",lua_tostring(L,i));
+//        else if (lua_isnumber(L, i))
+//            rt_kprintf("%d",lua_tointeger(L,i));
+//        else if (lua_isnil(L,i))
+//            rt_kprintf("%s","nil");
+//        else if (lua_isboolean(L,i))
+//            rt_kprintf("%s",lua_toboolean(L,i) ? "true" : "false");
+//        else
+//            rt_kprintf("%s:%p",luaL_typename(L,i),lua_topointer(L,i));
+//    }
+
+//    for (i=1; i<=n; i++){
+//        if (lua_isnumber(L, i))
+//             rt_kprintf("%d ",lua_tointeger(L,i));
+//    }
+    for (i=1; i<=n; i++){
+        if (!lua_istable(L, 1)) {
+            rt_kprintf("error! me is not a table");
+        }
+        //往栈里面压入一个key:name
+        lua_pushstring(L, "1");
+        //取得-2位置的table，然后把栈顶元素弹出，取出table[name]的值并压入栈
+        lua_gettable(L, 2);
+        //输出栈顶的name
+        rt_kprintf("1 = %s", lua_tostring(L, -1));
+        //把栈顶元素弹出去
+        lua_pop(L, 1);
+        //压入另一个key:age
+        lua_pushstring(L, "2");
+       //取出-2位置的table,把table[age]的值压入栈
+        lua_gettable(L, 2);
+
+        rt_kprintf("2 = %d", lua_tointeger(L, -1));
+    }
+
+    rt_kprintf("\n");
+
+    return 0;
+}
+
 
 int rt_application_init()
 {
     rt_thread_t tid;
+
 
     tid = rt_thread_create("init",
         rt_init_thread_entry, RT_NULL,
@@ -143,9 +196,17 @@ int rt_application_init()
     tusb = rt_thread_create("usb",
         rt_usb_thread_entry, RT_NULL,
         4096, 15, 20);
+
+
+    rt_thread_t tlua;
+    tlua = rt_thread_create("lua",
+        rt_lua_thread_entry, RT_NULL,
+        34096, 15, 20);
+
     if (tid != RT_NULL)
         rt_thread_startup(tid);
-
+    if (tlua != RT_NULL)
+        rt_thread_startup(tlua);
 //    if (tusb != RT_NULL)
 //        rt_thread_startup(tusb);
 
