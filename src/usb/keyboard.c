@@ -68,7 +68,7 @@ static int c_set_key_pos(lua_State *L){
 //TM_GPIO_Init(GPIOC, GPIO_PIN_5, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
 ////	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_1, TM_GPIO_PuPd_UP);
 //TM_GPIO_SetPinHigh(GPIOC,GPIO_PIN_5);
-static u8 key_index[5][16];
+static u8 key_index[5][14];
 static void scan(){
     u8 i=0,j=0;
     for(j=0;j<row_len;j++){
@@ -142,7 +142,6 @@ void rt_lua_thread_entry(void* parameter){
     lua_register(L, "c_set_key_pos", c_set_key_pos);
     lua_register(L, "c_set_key_index", c_set_key_index);
     //    luaL_dostring(L, "key_pos_init({{'A3'},{'A5'}});");
-    rt_kprintf("lua-script:%s\n",lua_string);
     u8 ret=luaL_dostring(L,lua_string);
     ret=ret;
     rt_kprintf("run lua result %s", lua_tostring(L, 1));
