@@ -1,7 +1,8 @@
 #include "keyboard.h"
 #include "stdlib.h"
 #include <rtthread.h>
-void put_num(d){
+#include "tm_stm32f4_usb_hid_device.h"
+void put_num(int d){
     rt_kprintf("%d \n",d);
 }
 struct GPIO_struct{
@@ -16,7 +17,7 @@ void keyboard_init(void){
     //	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_1, TM_GPIO_PuPd_UP);
     TM_GPIO_SetPinHigh(GPIOC,GPIO_PIN_5);
 }
-GPIO_TypeDef* char2port(ch){
+GPIO_TypeDef* char2port(char ch){
     switch(ch){
     case 'A':
         return (GPIO_TypeDef*)GPIOA;
@@ -42,7 +43,7 @@ GPIO_TypeDef* char2port(ch){
         break;
     }
 }
-u32 str2pin(str){
+u32 str2pin(char *str){
     return 1<<atoi(str);
 }
 u8 col_len=0;
@@ -59,7 +60,7 @@ static int c_set_key_pos(lua_State *L){
         row_len=lua_tointeger(L, 2);
     }
     arr[lua_tointeger(L, 2)-1].port=char2port(lua_tostring(L, 3)[0]);
-    arr[lua_tointeger(L, 2)-1].pin=str2pin(lua_tostring(L, 3)+1);
+    arr[lua_tointeger(L, 2)-1].pin=str2pin((char *)lua_tostring(L, 3)+1);
     return 0;
 
 }
@@ -67,6 +68,7 @@ static int c_set_key_pos(lua_State *L){
 //TM_GPIO_Init(GPIOC, GPIO_PIN_5, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
 ////	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_1, TM_GPIO_PuPd_UP);
 //TM_GPIO_SetPinHigh(GPIOC,GPIO_PIN_5);
+static u8 key_index[5][16];
 static void scan(){
     u8 i=0,j=0;
     for(j=0;j<row_len;j++){
@@ -89,6 +91,30 @@ static void scan(){
     for(j=0;j<row_len;j++){
         rt_kprintf("key value %d %d",j,key_val[j]);
     }
+
+
+
+
+    for(j=0;j<row_len;j++){
+        for(i=0;i<col_len;i++){
+            if(key_val[j]&(1<<i))
+            {
+                TM_USB_HIDDEVICE_Keyboard_t Keyboard;
+                TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
+                Keyboard.Key1 = key_index[j][i];
+                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+                rt_kprintf("key press %d  %d %d\n",j,i,Keyboard.Key1);
+                goto end;
+            }
+        }
+    }
+
+    TM_USB_HIDDEVICE_Keyboard_t Keyboard;
+    TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
+    Keyboard.Key1 = 0;
+    TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+end:
+
     rt_kprintf("\n");
 
 }
@@ -101,13 +127,24 @@ void keyboard_io_init(){
         TM_GPIO_Init(keyboard_gpio_rows[j].port, keyboard_gpio_rows[j].pin, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_High);
     }
 }
+
+static int c_set_key_index(lua_State *L){
+    u8 row=lua_tointeger(L, 1)-1,col=lua_tointeger(L, 2)-1,index=lua_tointeger(L, 3);
+    rt_kprintf("set key index row%d col%d index%d \n", row,col,index);
+    key_index[row][col]=index;
+    return 0;
+}
+
 void rt_lua_thread_entry(void* parameter){
 
     lua_State *L = luaL_newstate();
     //    lua_register(L, "key_pos_init", key_pos_init);
     lua_register(L, "c_set_key_pos", c_set_key_pos);
+    lua_register(L, "c_set_key_index", c_set_key_index);
     //    luaL_dostring(L, "key_pos_init({{'A3'},{'A5'}});");
-    luaL_dostring(L,lua_string);
+    rt_kprintf("lua-script:%s\n",lua_string);
+    u8 ret=luaL_dostring(L,lua_string);
+    ret=ret;
     rt_kprintf("run lua result %s", lua_tostring(L, 1));
     u8 j=0,i=0;
     for(j=0;j<row_len;j++){
@@ -117,9 +154,10 @@ void rt_lua_thread_entry(void* parameter){
         rt_kprintf("col=%2d,port=%d,pin=%d",i,keyboard_gpio_cols[i].port, keyboard_gpio_cols[i].pin);
     }
     keyboard_io_init();
+
     while(1){
         scan();
-        rt_thread_delay(1000);
+        rt_thread_delay(300);
     }
 
     lua_close(L);

@@ -62,9 +62,9 @@ void rt_usb_thread_entry(void* parameter){
     TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad1);
     TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad2);
 
-    keyboard_init();
-
-    while (1) {
+//    keyboard_init();
+    rt_kprintf("usb thread start\n");
+    while (0) {
 
         /* If we are connected and drivers are OK */
         if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
@@ -201,10 +201,12 @@ int rt_application_init()
     rt_thread_t tlua;
     tlua = rt_thread_create("lua",
         rt_lua_thread_entry, RT_NULL,
-        34096, 15, 20);
+        54096, 15, 20);
 
     if (tid != RT_NULL)
         rt_thread_startup(tid);
+    if (tusb != RT_NULL)
+        rt_thread_startup(tusb);
     if (tlua != RT_NULL)
         rt_thread_startup(tlua);
 //    if (tusb != RT_NULL)
