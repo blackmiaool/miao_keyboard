@@ -88,9 +88,9 @@ static void scan(){
         TM_GPIO_SetPinHigh(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].pin);
     }
 
-    for(j=0;j<row_len;j++){
-        rt_kprintf("key value %d %d",j,key_val[j]);
-    }
+//    for(j=0;j<row_len;j++){
+//        rt_kprintf("key value %d %d",j,key_val[j]);
+//    }
 
 
 
@@ -156,7 +156,7 @@ void rt_lua_thread_entry(void* parameter){
 
     while(1){
         scan();
-        rt_thread_delay(300);
+        rt_thread_delay(10);
     }
 
     lua_close(L);

@@ -2,10 +2,10 @@ local function set_pos()
     local key_pos_col={
         'A1',--ok
         'A8',--ok
-        'D0',--ok
+        'C8',--ok
         'C9',--ok
-        'B4',--ok
-        'E7',
+        'C6',--ok
+        'E7',--ok
         'B7',--ok
         'B11',--ok
         'B12',--ok
@@ -17,8 +17,8 @@ local function set_pos()
     local key_pos_row={
         'A0',--ok
         'B0',--ok
-        'E8',
-        'E9',
+        'E8',--ok
+        'E9',--ok
         'C5'} ;--ok
     local key_name={
         {'esc',     41,'1',     30, '2',    31,'3',32,'4',    33, '5',    34,'6', 35,'7',36,'8',37,'9',38,'0',39,'-',45,'=',46,'backspace',42},
