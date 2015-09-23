@@ -213,12 +213,11 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardStructInit(TM_USB_HIDDEVICE_K
 	Keyboard_Data->R_ALT = TM_USB_HIDDEVICE_Button_Released;
 	Keyboard_Data->R_SHIFT = TM_USB_HIDDEVICE_Button_Released;
 	Keyboard_Data->R_GUI = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->Key1 = 0;
-	Keyboard_Data->Key2 = 0;
-	Keyboard_Data->Key3 = 0;
-	Keyboard_Data->Key4 = 0;
-	Keyboard_Data->Key5 = 0;
-	Keyboard_Data->Key6 = 0;
+    u8 i=0;
+    for(i=0;i<6;i++){
+        Keyboard_Data->key[i]= 0;
+    }
+
 	
 	/* Return currect status */
 	return TM_USB_HIDDEVICE_INT_Status;
@@ -250,12 +249,16 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardSend(TM_USB_HIDDEVICE_Keyboar
 	buff[2] = 0x00;
 	
 	/* Keys */
-	buff[3] = Keyboard_Data->Key1;
-	buff[4] = Keyboard_Data->Key2;
-	buff[5] = Keyboard_Data->Key3;
-	buff[6] = Keyboard_Data->Key4;
-	buff[7] = Keyboard_Data->Key5;
-	buff[8] = Keyboard_Data->Key6;
+    u8 i=0;
+    for(i=0;i<6;i++){
+        buff[i+3]=Keyboard_Data->key[i];
+    }
+//	buff[3] = Keyboard_Data->Key1;
+//	buff[4] = Keyboard_Data->Key2;
+//	buff[5] = Keyboard_Data->Key3;
+//	buff[6] = Keyboard_Data->Key4;
+//	buff[7] = Keyboard_Data->Key5;
+//	buff[8] = Keyboard_Data->Key6;
 	
 	/* Send to USB */
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 9);

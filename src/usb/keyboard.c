@@ -68,6 +68,7 @@ static int c_set_key_pos(lua_State *L){
 //TM_GPIO_Init(GPIOC, GPIO_PIN_5, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
 ////	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_1, TM_GPIO_PuPd_UP);
 //TM_GPIO_SetPinHigh(GPIOC,GPIO_PIN_5);
+
 static u8 key_index[5][14];
 static void scan(){
     u8 i=0,j=0;
@@ -94,25 +95,59 @@ static void scan(){
 
 
 
-
+    u8 key_data_index=0;
+    static u8 pre_press=0;
+    static u8 key_press=0;
+    TM_USB_HIDDEVICE_Keyboard_t Keyboard;
+    TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
     for(j=0;j<row_len;j++){
         for(i=0;i<col_len;i++){
             if(key_val[j]&(1<<i))
             {
-                TM_USB_HIDDEVICE_Keyboard_t Keyboard;
-                TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
-                Keyboard.Key1 = key_index[j][i];
-                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
-                rt_kprintf("key press %d  %d %d\n",j,i,Keyboard.Key1);
-                goto end;
+                switch(key_index[j][i]){
+                case 225:
+                    Keyboard.L_SHIFT=1;
+                    break;
+                case 224:
+                    Keyboard.L_CTRL=1;
+                    break;
+                case 227:
+                    Keyboard.L_GUI=1;
+                    break;
+                case 226:
+                    Keyboard.L_ALT=1;
+                    break;
+                case 228:
+                    Keyboard.R_CTRL=1;
+                    break;
+                case 229:
+                    Keyboard.R_SHIFT=1;
+                    break;
+                case 230:
+                    Keyboard.R_ALT=1;
+                    break;
+                default:
+                    Keyboard.key[key_data_index++] = key_index[j][i];
+                }
+                rt_kprintf("key press %d  %d %d\n",j,i, key_index[j][i]);
+                pre_press=1;
+                key_press=1;
+                if(key_data_index==6){
+                   goto end;
+                }
             }
         }
     }
 
-    TM_USB_HIDDEVICE_Keyboard_t Keyboard;
-    TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
-    Keyboard.Key1 = 0;
-    TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+    if(key_press){
+        TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+//        rt_kprintf("key press %d  %d %d\n",j,i,Keyboard.key[0]);
+    }
+    else if(pre_press){
+        pre_press=0;
+        TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+    }
+
 end:
 
     rt_kprintf("\n");

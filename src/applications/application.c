@@ -66,40 +66,40 @@ void rt_usb_thread_entry(void* parameter){
     rt_kprintf("usb thread start\n");
     while (0) {
 
-        /* If we are connected and drivers are OK */
-        if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
-            /* Turn on green LED */
-/* Simple sketch start */
-            rt_kprintf("sl");
-            /* If you pressed button right now and was not already pressed */
-            if ((TM_GPIO_GetInputPinValue(GPIOA, GPIO_PIN_0) != 0) && already == 0) { /* Button on press */
-                already = 1;
-                rt_kprintf("111111");
-                /* Set pressed keys = WIN + R */
-//				Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Pressed;	/* Win button */
-                Keyboard.Key1 = 0x15; 								/* R */
-                /* Result = "Run" command */
+//        /* If we are connected and drivers are OK */
+//        if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
+//            /* Turn on green LED */
+///* Simple sketch start */
+//            rt_kprintf("sl");
+//            /* If you pressed button right now and was not already pressed */
+//            if ((TM_GPIO_GetInputPinValue(GPIOA, GPIO_PIN_0) != 0) && already == 0) { /* Button on press */
+//                already = 1;
+//                rt_kprintf("111111");
+//                /* Set pressed keys = WIN + R */
+////				Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Pressed;	/* Win button */
+//                Keyboard.Key1 = 0x15; 								/* R */
+//                /* Result = "Run" command */
 
-                /* Send keyboard report */
-                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
-            } else if (!TM_DISCO_ButtonPressed() && already == 1) { /* Button on release */
-                already = 0;
+//                /* Send keyboard report */
+//                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+//            } else if (!TM_DISCO_ButtonPressed() && already == 1) { /* Button on release */
+//                already = 0;
 
-                /* Release all buttons */
-                Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Released;	/* No button */
-                Keyboard.Key1 = 0x00; 								/* No key */
-                /* Result = Released everything */
+//                /* Release all buttons */
+//                Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Released;	/* No button */
+//                Keyboard.Key1 = 0x00; 								/* No key */
+//                /* Result = Released everything */
 
-                /* Send keyboard report */
-                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
-            }
-            delay(250);
-/* Simple sketch end */
+//                /* Send keyboard report */
+//                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
+//            }
+//            delay(250);
+///* Simple sketch end */
 
-        } else {
-            /* Turn off green LED */
-            TM_DISCO_LedOff(LED_GREEN);
-        }
+//        } else {
+//            /* Turn off green LED */
+//            TM_DISCO_LedOff(LED_GREEN);
+//        }
     }
 }
 void rt_init_thread_entry(void* parameter)
@@ -201,7 +201,7 @@ int rt_application_init()
     rt_thread_t tlua;
     tlua = rt_thread_create("lua",
         rt_lua_thread_entry, RT_NULL,
-        54096, 15, 20);
+        44096, 15, 20);
 
     if (tid != RT_NULL)
         rt_thread_startup(tid);
