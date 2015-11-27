@@ -1,0 +1,12 @@
+>^n::{down}
+>^p::{up}
+>^f::{right}
+>^b::{left}
+>^a::{home}
+>^e::{end}
+>^d::{delete}
+<+m::qk333student@sogou.com
+>^v::{pagedown}
+<!v::{pageup}
+
+;#:win !:alt ^:ctrl +:shift 
