@@ -51,71 +51,117 @@ extern int __bss_end;
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void assert_failed(u8* file, u32 line)
-{
-    rt_kprintf("\n\r Wrong parameter value detected on\r\n");
-    rt_kprintf("       file  %s\r\n", file);
-    rt_kprintf("       line  %d\r\n", line);
+//void assert_failed(u8* file, u32 line)
+//{
+//	rt_kprintf("\n\r Wrong parameter value detected on\r\n");
+//	rt_kprintf("       file  %s\r\n", file);
+//	rt_kprintf("       line  %d\r\n", line);
 
-    while (1) ;
-}
+//	while (1) ;
+//}
 
 /**
  * This function will startup RT-Thread RTOS.
  */
+ 
+ #include "usb_bsp.h"
+#include "usbh_core.h"
+#include "usbh_usr.h"
+#include "usbh_hid_core.h"
+#include "debug.h"
+//#include "usb_host.h"
+ 
+ 
+ 
+// #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+//#if defined ( __ICCARM__ ) /*!< IAR Compiler */
+//#pragma data_alignment=4
+//#endif
+//#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
+//__ALIGN_BEGIN USB_OTG_CORE_HANDLE           USB_OTG_Core_dev __ALIGN_END ;
+
+//#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+//#if defined ( __ICCARM__ ) /*!< IAR Compiler */
+//#pragma data_alignment=4
+//#endif
+//#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
+//__ALIGN_BEGIN USBH_HOST                     USB_Host __ALIGN_END ;
+
+
+ 
+ 
+ 
+ 
+ void delay_ms2(u32 ms);
+
 void rtthread_startup(void)
 {
-    /* init board */
-    rt_hw_board_init();
+    
+	/* init board */
+	rt_hw_board_init();
+	/* show version */
+	rt_show_version();
 
-    /* show version */
-    rt_show_version();
+	/* init tick */
+	rt_system_tick_init();
 
-    /* init tick */
-    rt_system_tick_init();
+	/* init kernel object */
+	rt_system_object_init();
 
-    /* init kernel object */
-    rt_system_object_init();
-
-    /* init timer system */
-    rt_system_timer_init();
+	/* init timer system */
+	rt_system_timer_init();
 
     rt_system_heap_init((void*)STM32_SRAM_BEGIN, (void*)STM32_SRAM_END);
 
-    /* init scheduler system */
-    rt_system_scheduler_init();
+	/* init scheduler system */
+	rt_system_scheduler_init();
 
-    /* init application */
-    rt_application_init();
+	/* init all device */
+	rt_device_init_all();
+
+	/* init application */
+	rt_application_init();
 
 #ifdef RT_USING_FINSH
-    /* init finsh */
-    finsh_system_init();
-    finsh_set_device( FINSH_DEVICE_NAME );
+	/* init finsh */
+	finsh_system_init();
+	finsh_set_device( FINSH_DEVICE_NAME );
 #endif
 
     /* init timer thread */
     rt_system_timer_thread_init();
 
-    /* init idle thread */
-    rt_thread_idle_init();
+	/* init idle thread */
+	rt_thread_idle_init();
 
-    /* start scheduler */
-    rt_system_scheduler_start();
+	/* start scheduler */
+	rt_system_scheduler_start();
 
-    /* never reach here */
-    return ;
+	/* never reach here */
+	return ;
 }
 
 int main(void)
 {
-    /* disable interrupt first */
-    rt_hw_interrupt_disable();
+	/* disable interrupt first */
+	rt_hw_interrupt_disable();
 
-    /* startup RT-Thread RTOS */
-    rtthread_startup();
+	/* startup RT-Thread RTOS */
 
-    return 0;
+	rtthread_startup();
+
+	return 0;
+}
+void delay_ms2(u32 ms)
+{
+	volatile u32 i=0;
+	volatile u32 j=0;
+	volatile u32 k=0;
+	for(i=0;i<ms;i++)
+	{
+		for(j=0;j<1000;j++)
+		for(k=0;k<72;k++);
+	}
 }
 
 /*@}*/

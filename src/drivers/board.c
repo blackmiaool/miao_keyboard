@@ -17,8 +17,10 @@
 
 #include "stm32f4xx.h"
 #include "board.h"
+#include "led.h"
+#include "oled.h"
 #include "usart.h"
-#include "gpio.h"
+
 
 /**
  * @addtogroup STM32
@@ -85,20 +87,30 @@ void SysTick_Handler(void)
 /**
  * This function will initial STM32 board.
  */
+void LD3320_GPIO_Cfg(void);
+void delay_ms2(u32 ms);
+void uart_debug_init(void);
+void SPI_Flash_Init(void);
 void rt_hw_board_init()
 {
-    /* NVIC Configuration */
     NVIC_Configuration();
-
-    /* Configure the SysTick */
     SysTick_Configuration();
-
-    stm32_hw_usart_init();
-    stm32_hw_pin_init();
-    
+    delay_ms2(2);
+    rt_hw_usart_init();
+    rt_kprintf("- RT -     Thread Operating System\n");
+//    
+//    
+//    rt_hw_LED_init();
+//    rt_hw_OLED_init();
+//    LD3320_GPIO_Cfg();
+	commu_Init();//SPI3
+    delay_ms2(2);
+//    SPI_Flash_Init();
+    delay_ms2(2);
 #ifdef RT_USING_CONSOLE
     rt_console_set_device(CONSOLE_DEVICE);
 #endif
+
 }
 
 /*@}*/

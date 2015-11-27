@@ -10,209 +10,475 @@
  * Change Logs:
  * Date           Author       Notes
  * 2009-01-05     Bernard      the first version
- * 2014-04-27     Bernard      make code cleanup. 
  */
+
+/**
+ * @addtogroup STM32
+ */
+/*@{*/
+
+#include <stdio.h>
+#include "app_interface.h"
+#include "stm32f4xx.h"
 
 #include <board.h>
 #include <rtthread.h>
-
-#ifdef RT_USING_LWIP
-#include <lwip/sys.h>
-#include <lwip/api.h>
-#include <netif/ethernetif.h>
-#include "stm32f4xx_eth.h"
-#endif
-
-#ifdef RT_USING_GDB
-#include <gdb_stub.h>
-#endif
-#include "defines.h"
-#include "tm_stm32f4_usb_hid_device.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_disco.h"
-#include "keyboard.h"
-#include "application.h"
-void delay(u32 t){
-    rt_thread_delay(t);
-}
-void rt_usb_thread_entry(void* parameter){
-//    SystemInit();
-    uint8_t already = 0;
-
-    TM_USB_HIDDEVICE_Keyboard_t Keyboard;
-    TM_USB_HIDDEVICE_Gamepad_t Gamepad1, Gamepad2;
-    TM_USB_HIDDEVICE_Mouse_t Mouse;
-    /* Initialize leds */
-    TM_DISCO_LedInit();
-
-    /* Initialize button */
-    TM_DISCO_ButtonInit();
-
-    /* Initialize delay */
-    TM_DELAY_Init();
-
-    /* Initialize USB HID Device */
-    TM_USB_HIDDEVICE_Init();
-
-    /* Set default values for mouse struct */
-    TM_USB_HIDDEVICE_MouseStructInit(&Mouse);
-    /* Set default values for keyboard struct */
-    TM_USB_HIDDEVICE_KeyboardStructInit(&Keyboard);
-    /* Set default values for gamepad structs */
-    TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad1);
-    TM_USB_HIDDEVICE_GamepadStructInit(&Gamepad2);
-
-//    keyboard_init();
-    rt_kprintf("usb thread start\n");
-    while (0) {
-
-//        /* If we are connected and drivers are OK */
-//        if (TM_USB_HIDDEVICE_GetStatus() == TM_USB_HIDDEVICE_Status_Connected) {
-//            /* Turn on green LED */
-///* Simple sketch start */
-//            rt_kprintf("sl");
-//            /* If you pressed button right now and was not already pressed */
-//            if ((TM_GPIO_GetInputPinValue(GPIOA, GPIO_PIN_0) != 0) && already == 0) { /* Button on press */
-//                already = 1;
-//                rt_kprintf("111111");
-//                /* Set pressed keys = WIN + R */
-////				Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Pressed;	/* Win button */
-//                Keyboard.Key1 = 0x15; 								/* R */
-//                /* Result = "Run" command */
-
-//                /* Send keyboard report */
-//                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
-//            } else if (!TM_DISCO_ButtonPressed() && already == 1) { /* Button on release */
-//                already = 0;
-
-//                /* Release all buttons */
-//                Keyboard.L_GUI = TM_USB_HIDDEVICE_Button_Released;	/* No button */
-//                Keyboard.Key1 = 0x00; 								/* No key */
-//                /* Result = Released everything */
-
-//                /* Send keyboard report */
-//                TM_USB_HIDDEVICE_KeyboardSend(&Keyboard);
-//            }
-//            delay(250);
-///* Simple sketch end */
-
-//        } else {
-//            /* Turn off green LED */
-//            TM_DISCO_LedOff(LED_GREEN);
-//        }
-    }
-}
-void rt_init_thread_entry(void* parameter)
+#include "debug.h"
+#include "usb_bsp.h"
+#include "usbh_core.h"
+#include "usbh_usr.h"
+#include "usbh_hid_core.h"
+#include "stm32f4lib.h"
+#include "commu.h"
+#include "w25q16.h"
+#include "mouse_gesture.h"
+#include "inifile.h"
+#include "key_remap.h"
+volatile u32 flash_addr;
+u8 flash_buf[512];
+void cmd(u8* content);
+void commu_blue_send(u8* buf,u32 lenth);
+void delay_ms2(u32 ms);
+extern rt_mq_t mq_commu;
+extern rt_mq_t mq_lua;
+//rt_mq_t mq_commu;
+extern rt_sem_t sem_commu;
+extern rt_sem_t sem_commu_self;
+extern rt_sem_t sem_app_init;
+rt_sem_t sem_ld3320;
+rt_sem_t sem_flash;
+//   rt_mailbox_t mb_commu;
+#define UART4_GPIO_TX		GPIO_Pin_0
+#define UART4_TX_PIN_SOURCE GPIO_PinSource0
+#define UART4_GPIO_RX		GPIO_Pin_1
+#define UART4_RX_PIN_SOURCE GPIO_PinSource1
+#define UART4_GPIO			GPIOA
+#define UART4_GPIO_RCC   	RCC_AHB1Periph_GPIOA
+#define RCC_APBPeriph_UART4	RCC_APB1Periph_UART4
+void blue_putchar(u8 ch)
 {
-    /* GDB STUB */
-#ifdef  RT_USING_FINSH
+    USART_SendData(UART4, (uint8_t) ch);
+    while (USART_GetFlagStatus(UART4, USART_FLAG_TC) == RESET){;}
+}
+void UART4_IRQHandler(void)//bluetooth
+{
+    static long lenth=0;
+    static u8 buf[9];
+    /* enter interrupt */
+    rt_interrupt_enter();
 
-#endif
-#ifdef RT_USING_GDB
-    gdb_set_device("uart6");
-    gdb_start();
-#endif
-
-    /* LwIP Initialization */
-#ifdef RT_USING_LWIP
+    //rt_hw_serial_isr(&uart3_device);
+    buf[lenth]=UART4->DR;
+    lenth++;
+    if(lenth==9)
     {
-        extern void lwip_sys_init(void);
-
-        /* register ethernetif device */
-        eth_system_device_init();
-
-        rt_hw_stm32_eth_init();
-
-        /* init lwip system */
-        lwip_sys_init();
-        rt_kprintf("TCP/IP initialized!\n");
+        lenth=0;
+        rt_mq_send (mq_commu, (void*)buf, 9);
     }
-
-#endif
-
-rt_kprintf("initialized!CORRECT1\r\n");
+    /* leave interrupt */
+    rt_interrupt_leave();
+    USART_ClearITPendingBit(UART4, USART_IT_RXNE);
 }
-int key_pos_init(lua_State *L)
+void blue_tooth_Init()
 {
-    int n = lua_gettop(L);
-    int i;
+    NVIC_InitTypeDef NVIC_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    SCPE(PERIOC);
+    SCPE(PERIOA);
+    IOConfig(IOCB,PIN13,tuiwanshuchu);
 
-//    for (i=1; i<=n; i++)
-//    {
-//        if (i>1)
-//            rt_kprintf("\t");
 
-//        if (lua_isstring(L,i))
-//            rt_kprintf("%s",lua_tostring(L,i));
-//        else if (lua_isnumber(L, i))
-//            rt_kprintf("%d",lua_tointeger(L,i));
-//        else if (lua_isnil(L,i))
-//            rt_kprintf("%s","nil");
-//        else if (lua_isboolean(L,i))
-//            rt_kprintf("%s",lua_toboolean(L,i) ? "true" : "false");
-//        else
-//            rt_kprintf("%s:%p",luaL_typename(L,i),lua_topointer(L,i));
-//    }
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
 
-//    for (i=1; i<=n; i++){
-//        if (lua_isnumber(L, i))
-//             rt_kprintf("%d ",lua_tointeger(L,i));
-//    }
-    for (i=1; i<=n; i++){
-        if (!lua_istable(L, 1)) {
-            rt_kprintf("error! me is not a table");
+	/* Enable USART3 clock */
+	RCC_APB1PeriphClockCmd(RCC_APBPeriph_UART4, ENABLE);
+
+
+	GPIO_InitStructure.GPIO_Pin =   UART4_GPIO_TX|UART4_GPIO_RX;
+	GPIO_Init(UART4_GPIO, &GPIO_InitStructure);
+  //  IOConfig(IOAB,PIN1,fukongshuru);
+
+    /* Connect alternate function */
+    GPIO_PinAFConfig(UART4_GPIO, UART4_TX_PIN_SOURCE, GPIO_AF_UART4);
+    GPIO_PinAFConfig(UART4_GPIO, UART4_RX_PIN_SOURCE, GPIO_AF_UART4);
+	/* DMA clock enable */
+
+    NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    USART_ITConfig(UART4, USART_IT_RXNE, ENABLE);
+	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+	USART_InitStructure.USART_Parity = USART_Parity_No;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	USART_Init(UART4, &USART_InitStructure);
+    
+    USART_Cmd(UART4, ENABLE);
+//        IO1(IOCB,PIN13);
+//    rt_thread_delay(1000);
+//    //IO(IOCB,PIN13);
+//    rt_thread_delay(1000);
+//    //blue_puts("at+uart=115200,0,0\r\n");//1st ADDR:14:1:61429
+//    rt_thread_delay(1000);
+//   // blue_puts("at+bind=14,1,61429\r\n");
+//    rt_thread_delay(1000);
+//  //  blue_puts("AT+ROLE=0\r\n");
+//    rt_thread_delay(1000);
+    IO0(IOCB,PIN13);
+
+}
+#include "usbh_hid_mouse.h"
+u8 blue_choose=0;
+
+
+void LD3320_main_Init(void);
+void ProcessInt0(void );
+void LD_loop(void);
+ALIGN(RT_ALIGN_SIZE)
+static char thread_ld3320_stack[3096];
+struct rt_thread thread_ld3320;
+static void rt_thread_entry_ld3320(void* parameter)
+{
+    if(!ini.Service.audio)
+        return ;
+	DBG("LD3320 Init_start\r\n");
+    LD3320_main_Init();
+	DBG("LD3320 Init_end\r\n");
+	LD_loop();
+    while(1)
+    {
+		
+        while(PCin(2)!=0)
+        {
+            rt_thread_delay(1); 
         }
-        //往栈里面压入一个key:name
-        lua_pushstring(L, "1");
-        //取得-2位置的table，然后把栈顶元素弹出，取出table[name]的值并压入栈
-        lua_gettable(L, 2);
-        //输出栈顶的name
-        rt_kprintf("1 = %s", lua_tostring(L, -1));
-        //把栈顶元素弹出去
-        lua_pop(L, 1);
-        //压入另一个key:age
-        lua_pushstring(L, "2");
-       //取出-2位置的table,把table[age]的值压入栈
-        lua_gettable(L, 2);
-
-        rt_kprintf("2 = %d", lua_tointeger(L, -1));
+        ProcessInt0();
+        LD_loop();
     }
-
-    rt_kprintf("\n");
-
-    return 0;
 }
 
 
+ALIGN(RT_ALIGN_SIZE)
+static char thread_Flash_Read_stack[1024];
+struct rt_thread thread_Flash_Read;
+static void rt_thread_entry_Flash_Read(void* parameter)
+{
+
+    u8 buf[15];
+    u8 i=0;
+    for(i=0;i<15;i++)
+        buf[i]=0;
+
+
+    SCPE(PERIOB);
+    IOConfig(IOBB,PIN6,xialashuru);
+   // rt_thread_delay(100);
+    //	DBG("--------------------SCAN_START\r\n");
+    rt_thread_delay(100);
+    while(1)
+    {
+        while(PBin(6)==0)
+        {
+            rt_thread_delay(1);
+        }
+        //DBG("----------FOUND\r\n");
+        buf[0]=3;//read!
+        rt_mq_send (mq_commu, (void*)buf, 9);//ask addr
+        rt_sem_take(sem_commu,RT_WAITING_FOREVER);//addr gotton
+        
+        if(flash_addr>=1000000)
+        {
+            buf[0]=5;
+            rt_mq_send (mq_commu, (void*)buf, 9);
+            rt_sem_take(sem_commu,RT_WAITING_FOREVER);
+            rt_sem_take(sem_flash,RT_WAITING_FOREVER);
+            SPI_Flash_Write(flash_buf, (flash_addr-1000000)<<9, 512);
+            rt_sem_release(sem_flash);
+        }
+        else
+        {
+          
+            SPI_Flash_Read(flash_buf, flash_addr<<9, 512);
+            buf[0]=4;
+            rt_mq_send (mq_commu, (void*)buf, 9);
+            rt_sem_take(sem_commu,RT_WAITING_FOREVER);
+        }
+    }
+    
+
+}
+void assert_failed(uint8_t* file, uint32_t line)
+{
+printf("Wrong parameters value: file %s on line %d\r\n",file, line);
+}
+
+
+__ALIGN_BEGIN USB_OTG_CORE_HANDLE           USB_OTG_Core_dev __ALIGN_END ;
+__ALIGN_BEGIN USBH_HOST                     USB_Host __ALIGN_END ;
+static char thread_usb_stack[1024];
+struct rt_thread thread_usb;
+extern uint8_t err_flag;
+extern char debug_en;
+static void rt_thread_entry_usb(void* parameter)
+{
+    #ifndef DEBUG
+    #define DEBUG
+    #endif
+    USBH_Init(&USB_OTG_Core_dev,//hardware reg&info
+              USB_OTG_FS_CORE_ID,		//use FS not HS(enum)
+              &USB_Host,//USB state
+              &HID_cb,//Class callback structure
+              &USR_Callbacks);//User callback structure
+	
+
+	while(1)
+	{
+		USBH_Process(&USB_OTG_Core_dev , &USB_Host);
+        rt_thread_delay(3);       
+	} 
+}
+extern  char thread_app_stack[10196];
+extern struct rt_thread thread_app;
+void rt_thread_entry_app(void* parameter);
+
+
+FATFS fs;
+ALIGN(RT_ALIGN_SIZE)
+char thread_init_stack[20024];
+struct rt_thread
+thread_init;
+extern bool system_init;
+void rt_thread_entry_init(void* parameter)
+{
+//    rt_device_t LED_dev;
+//    u8 led_value;
+//    u8 i;
+	u8 result=f_mount(&fs,"/",1);
+    if(result)
+    {
+        rt_kprintf("FS mount failed!!\r\n%d",result);
+		return;
+    }
+    
+    ini_init();
+    key_cap_Init();
+	system_init=true;
+	while(1)
+	{
+        rt_thread_delay(1000);       
+	}
+//    blue_tooth_Init();
+//    commu_Init();
+//    OLED_dev=rt_device_find("OLED");
+//    if(OLED_dev!=RT_NULL)
+//    {
+//        rt_kprintf("OLED dev found\n\r");
+//    }  
+//	rt_device_open(OLED_dev,RT_DEVICE_FLAG_ACTIVATED);
+//    
+//    
+//    LED_dev=rt_device_find("LED");
+//    rt_device_open(LED_dev,RT_DEVICE_FLAG_ACTIVATED);
+//    if(LED_dev!=RT_NULL)
+//    {
+//        rt_kprintf("LED dev found\n\r");
+//        rt_device_write(LED_dev,0,&led_value,1);
+//        led_value++;
+//    }
+//    rt_device_close(LED_dev);
+//    cmd("Initializing~");
+//    
+    
+//    for(i=0;i<1;i++)
+//    draw_bmp(i,63,"/background.bmp");
+//    
+//   // draw_bmp(0,43,"/24L01_1.bmp");
+//    draw_bmp(26,43,"/icon/AHKScript.bmp");
+//    draw_bmp(52,43,"/icon/KeyBoardOff.bmp");
+//    draw_bmp(78,43,"/icon/AHKScript_1.bmp");
+//    draw_bmp(104,43,"/icon/micoff.bmp");
+//    
+//    draw_bmp(0,23,"/icon/MouseOff.bmp");
+//    draw_bmp(26,23,"/icon/udisk_rd.bmp");
+//    draw_bmp(52,23,"/icon/udisk_rd.bmp");
+//    draw_bmp(78,23,"/icon/udisk_rd.bmp");
+//    draw_bmp(104,23,"/icon/udisk_rd.bmp");
+//    
+//    draw_bmp(0,63,"/icon/udisk_rd.bmp");
+//    draw_bmp(26,63,"/icon/udisk_rd.bmp");
+//    draw_bmp(52,63,"/icon/udisk_rd.bmp");
+//    draw_bmp(78,63,"/icon/udisk_rd.bmp");
+//    draw_bmp(104,63,"/icon/udisk_rd.bmp");
+    
+}
+char thread_test_stack[1024];
+struct rt_thread thread_test;
+void rt_thread_entry_test(void* parameter){
+	while(1){
+		rt_thread_delay(1000);
+//		rt_kprintf("found\n\r");
+//		u8 buf[8]={0,0,39};
+//		common_commu_send(buf,8,COMMU_TYPE(KEYBOARD_SM));		
+//		rt_thread_delay(1000);	
+//		u8 empty[8]={COMMU_TYPE(KEYBOARD_SM)};
+//		common_commu_send(empty,8);
+	}
+}
+
+char thread_key_sm_stack[1024];
+struct rt_thread thread_key_sm_send;
+void rt_thread_entry_key_sm(void* parameter){
+	while(1){
+		u8 buf[9];
+		rt_mq_recv(mq_key_sm,buf,9,RT_WAITING_FOREVER);
+		if(buf[8])//auto press
+		{
+			rt_thread_delay(10);
+		}else{//normal
+			
+		}
+		
+		common_commu_send(buf,8,COMMU_TYPE(KEYBOARD_SM));
+	}
+}
+
+
+char thread_commu_send_stack[1024];
+struct rt_thread thread_commu_send;
+
+extern void rt_thread_entry_commu_send(void* parameter);
+extern rt_mailbox_t mb_commu_send;
+extern rt_mq_t mq_commu_recv;
+extern rt_mq_t mq_flash_read;
+extern rt_mq_t mq_key_ms;
+extern rt_mq_t mq_key_sm;
 int rt_application_init()
 {
-    rt_thread_t tid;
+ 
+	rt_thread_init(&thread_commu_read,
+                   "commu",
+                   rt_thread_entry_commu,
+                   RT_NULL,
+                   &thread_commu_read_stack[0],
+            sizeof(thread_commu_read_stack),11,5);
+	rt_thread_init(&thread_test,
+                   "test",
+                   rt_thread_entry_test,
+                   RT_NULL,
+                   &thread_test_stack[0],
+            sizeof(thread_test_stack),13,5);
+	rt_thread_init(&thread_commu_send,
+                   "commu_send",
+                   rt_thread_entry_commu_send,
+                   RT_NULL,
+                   &thread_commu_send_stack[0],
+            sizeof(thread_commu_send_stack),13,5);
+	
+	rt_thread_init(&thread_init,
+			   "init",
+			   rt_thread_entry_init,
+			   RT_NULL,
+			   &thread_init_stack[0],
+		sizeof(thread_init_stack),1,5);
+	rt_thread_init(&thread_app,
+                   "app",
+                   rt_thread_entry_app,
+                   RT_NULL,
+                   &thread_app_stack[0],
+            sizeof(thread_app_stack),10,5);
+    rt_thread_startup(&thread_app);
+	
+	rt_thread_init(&thread_key_sm_send,
+                   "key_sm",
+                   rt_thread_entry_key_sm,
+                   RT_NULL,
+                   &thread_key_sm_stack[0],
+            sizeof(thread_key_sm_stack),3,5);
+    rt_thread_startup(&thread_key_sm_send);
+	
+	
+	
+	
+    rt_thread_startup(&thread_commu_read);
+	rt_thread_startup(&thread_test);
+	rt_thread_startup(&thread_commu_send);
+	rt_thread_startup(&thread_init);
+	
+	
+	sem_commu_self=rt_sem_create ("sem_commu_self", 0, RT_IPC_FLAG_FIFO);
+	mq_commu=rt_mq_create ("mq_commu", 9, 100, RT_IPC_FLAG_FIFO);
+	
+	mq_flash_read=rt_mq_create ("mq_flash_read", 600, 3, RT_IPC_FLAG_FIFO);
+	mb_commu_send=rt_mb_create ("mb_commu_send", 10, RT_IPC_FLAG_FIFO);
+	mq_commu_data=rt_mq_create ("mq_commu_data", 3, 600, RT_IPC_FLAG_FIFO);
+	mq_commu_recv=rt_mq_create ("mq_commu_recv", 600, 4, RT_IPC_FLAG_FIFO);
+	mq_key_ms=rt_mq_create ("mq_key_ms", 9, 40, RT_IPC_FLAG_FIFO);	
+	mq_key_sm=rt_mq_create ("mq_key_sm", 9, 100, RT_IPC_FLAG_FIFO);	
+	
+	mq_lua=rt_mq_create ("mq_lua", 10, 100, RT_IPC_FLAG_FIFO);
+    
+    sem_commu=rt_sem_create ("sem_commu", 0, RT_IPC_FLAG_FIFO);
+
+    sem_flash=rt_sem_create ("sem_flash", 1, RT_IPC_FLAG_FIFO);
+    sem_app_init=rt_sem_create ("sem_init", 0, RT_IPC_FLAG_FIFO);
+	
+	
+	
+	return 0;
+	while(1){
+		
+		delay_ms2(3000);
+	}
+
+    
+
+    rt_thread_init(&thread_usb,
+                   "thread_usb",
+                   rt_thread_entry_usb,
+                   RT_NULL,
+                   &thread_usb_stack[0],
+            sizeof(thread_usb_stack),6,5);
+    rt_thread_startup(&thread_usb);
 
 
-    tid = rt_thread_create("init",
-        rt_init_thread_entry, RT_NULL,
-        2048, RT_THREAD_PRIORITY_MAX/3, 20);
-    rt_thread_t tusb;
-    tusb = rt_thread_create("usb",
-        rt_usb_thread_entry, RT_NULL,
-        4096, 15, 20);
 
 
-    rt_thread_t tlua;
-    tlua = rt_thread_create("lua",
-        rt_lua_thread_entry, RT_NULL,
-        44096, 15, 20);
+    rt_thread_init(&thread_commu,
+                   "commu",
+                   rt_thread_entry_commu,
+                   RT_NULL,
+                   &thread_commu_stack[0],
+            sizeof(thread_commu_stack),7,5);
+    rt_thread_startup(&thread_commu);
 
-    if (tid != RT_NULL)
-        rt_thread_startup(tid);
-    if (tusb != RT_NULL)
-        rt_thread_startup(tusb);
-    if (tlua != RT_NULL)
-        rt_thread_startup(tlua);
-//    if (tusb != RT_NULL)
-//        rt_thread_startup(tusb);
+
+    rt_thread_init(&thread_Flash_Read,
+                   "flash",
+                   rt_thread_entry_Flash_Read,
+                   RT_NULL,
+                   &thread_Flash_Read_stack[0],
+            sizeof(thread_Flash_Read_stack),11,5);
+    rt_thread_startup(&thread_Flash_Read);
+
+    rt_thread_init(&thread_ld3320,
+                   "ld3320",
+                   rt_thread_entry_ld3320,
+                   RT_NULL,
+                   &thread_ld3320_stack[0],
+            sizeof(thread_ld3320_stack),12,5);
+    rt_thread_startup(&thread_ld3320);
+    
+    
+        
+  //  Jacob_appinit();
 
     return 0;
 }
-
-/*@}*/
