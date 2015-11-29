@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;D:\Keil\ARM\INC\ST\STM32F10x;..\HARDWARE\USB;..\USER;..\STM32lib;..\..\..\STM32_USB_CH341\DiscreteFile\SYSTEM\sys;..\HARDWARE\FLASH;..\HARDWARE\lib</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;D:\Keil\ARM\INC\ST\STM32F10x;..\HARDWARE\USB;..\USER;..\STM32lib;..\..\..\STM32_USB_CH341\DiscreteFile\SYSTEM\sys;..\HARDWARE\FLASH;..\HARDWARE\lib;..\FATFS;..\app</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -431,6 +431,16 @@
               <FileName>keyboard.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\keyboard.c</FilePath>
+            </File>
+            <File>
+              <FileName>app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app.c</FilePath>
+            </File>
+            <File>
+              <FileName>ahk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ahk.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -576,6 +586,21 @@
               <FileName>scsi_data.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USB\CONFIG\scsi_data.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FATFS</GroupName>
+          <Files>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FATFS\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FATFS\ff.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -27,11 +27,13 @@ extern u8 USB_STATUS_REG;
 //keyboard   2 ~
 extern u8 ptr_write;
 extern u8 ptr_read;
-u8 buf_test[512];
+
 u8 buf_try[]={0,0,20,0,0,0,0,0};
 extern bool keyboard_flag;
 extern u8 buf_send[9];
 extern u8 buf_key[9];
+u8 delegate=0;
+void app_init(void);
 int main(void)
 {
 	Stm32_Clock_Init(9);//系统时钟设置
@@ -48,27 +50,29 @@ int main(void)
 		delay_ms(500);
 
 	}
-	Set_USBClock();
-	USB_Interrupts_Config();  
-	USB_Init();	
-	delay_ms(500);			//等待初始化完成 
 	Mass_Memory_Size[0]=4000*512;
 	Mass_Block_Size[0] =512;
 	Mass_Block_Count[0]=4000;
+	Set_USBClock();
+	USB_Interrupts_Config();  
+	USB_Init();	
+	
+	
+	delay_ms(1000);			//等待初始化完成 
+	app_init();
 	keyboard_init();
+	
 	while(1){
 		keyboard_scan();
+		delay_ms(10);
 //		commu_send("miao\r\n",6,COMMU_TYPE(DEBUG));
-		for(u8 i=0;i<150;i++){
- 			if(keyboard_flag){				
-//				for(u8 j=0;j<8;j++){
-//					printf("%X",buf_key[j]);
-//				}
-				keyboard_flag=0;
-				keyborad_process(buf_key);
-			}
-			delay_us(100);
-		}
+//		for(u8 i=0;i<150;i++){
+// 			if(keyboard_flag){				
+//				keyboard_flag=0;
+//				keyborad_process(buf_key);
+//			}
+//			delay_us(100);
+//		}
 	}
 
 //	while(1)

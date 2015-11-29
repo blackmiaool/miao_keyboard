@@ -20,7 +20,7 @@ struct GPIO_struct keyboard_gpio_cols[COL_LEN];
 
 GPIO_TypeDef* char2port(char ch);
 u32 str2pin(char *str);
-u8 key_index[5][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
+const u8 key_index[5][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
 {57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 {225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
@@ -37,17 +37,17 @@ typedef struct {
   u8 key[6];                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 } key_t;
 extern void keyborad_process(u8* buf);
-void keyboard_send(key_t key_buf){
-	u8 buf[9];
-	buf[0]=0;
-	buf[1]=(key_buf.L_CTRL<<0)+(key_buf.L_SHIFT<<1)+(key_buf.L_ALT<<2)+(key_buf.L_GUI<<3)+(key_buf.R_CTRL<<4)+(key_buf.R_SHIFT<<5)+(key_buf.R_ALT<<6)+(key_buf.R_GUI<<7);
-	buf[2]=0;
-	for(u8 i=0;i<6;i++){
-		buf[3+i]=key_buf.key[i];
-	}
-	
-	keyborad_process(buf);
-}
+//void keyboard_send(key_t key_buf){
+//	u8 buf[9];
+//	buf[0]=0;
+//	buf[1]=(key_buf.L_CTRL<<0)+(key_buf.L_SHIFT<<1)+(key_buf.L_ALT<<2)+(key_buf.L_GUI<<3)+(key_buf.R_CTRL<<4)+(key_buf.R_SHIFT<<5)+(key_buf.R_ALT<<6)+(key_buf.R_GUI<<7);
+//	buf[2]=0;
+//	for(u8 i=0;i<6;i++){
+//		buf[3+i]=key_buf.key[i];
+//	}
+//	
+//	keyborad_process(buf);
+//}
 char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
 char rows[]="B5B6B7B8B9";
 
@@ -139,7 +139,7 @@ u32 str2pin(char *str){
 }
 
 
-void keyboard_send_commu(key_t key_buf);
+void keyboard_send_wrap(key_t key_buf);
 //static u8 key_index[5][14];
 u16 key_val[5];
 
@@ -231,26 +231,40 @@ void keyboard_scan(){
     }
 
     if(key_press){
-//		commu_send(key_buf+1,8,COMMU_TYPE(KEYBOARD_MS));
-        keyboard_send_commu(key_buf);
+        keyboard_send_wrap(key_buf);
 		
 //        rt_kprintf("key press %d  %d %d\n",j,i,Keyboard.key[0]);
     }
     else if(pre_press){
         pre_press=0;
 		
-        keyboard_send_commu(key_buf);
+        keyboard_send_wrap(key_buf);
     }
-
-end:
-		;
-
-//    rt_kprintf("\n");
-
+end:;
 }
 
 u8 commu_buf_pre[8];
-void keyboard_send_commu(key_t key_buf){
+extern u8 delegate;
+void app_press(u8 *buf){
+	
+//	u8 b[9];
+//	b[0]=1;
+//	
+//	for(u8 i=0;i<8;i++){
+//		b[i+1]=buf[i];
+//	}
+	keyborad_process(buf);
+}
+void app_handle(u8 *buf);
+void keyboard_send(u8 *buf){
+	if(delegate){
+			commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
+		}else{
+
+			app_handle(buf);
+	}
+}
+void keyboard_send_wrap(key_t key_buf){
 	u8 buf[8];
 	buf[0]=(key_buf.L_CTRL<<0)+(key_buf.L_SHIFT<<1)+(key_buf.L_ALT<<2)+(key_buf.L_GUI<<3)+(key_buf.R_CTRL<<4)+(key_buf.R_SHIFT<<5)+(key_buf.R_ALT<<6)+(key_buf.R_GUI<<7);
 	buf[1]=0;
@@ -259,17 +273,13 @@ void keyboard_send_commu(key_t key_buf){
 	}
 	u8 send=0;
 	for(u8 i=0;i<8;i++){
-		if(buf[i]!=commu_buf_pre[i]){
+		if(commu_buf_pre[i]!=buf[i]){
 			send=1;
-			break;
 		}
+		commu_buf_pre[i]=buf[i];
 	}
 	if(send){
-		for(u8 i=0;i<8;i++){
-			commu_buf_pre[i]=buf[i];
-		}
-		commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
-		
+		keyboard_send(buf);		
 	}
 } 
 
