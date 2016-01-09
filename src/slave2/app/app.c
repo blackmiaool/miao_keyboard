@@ -29,7 +29,7 @@ const u8  ascii2usb[]={
 
     31,4,5,6,  7,8,9,10,  11,12,13,14,  15,16,17,18, \
     19,20,21,22,  23,24,25,26,  27,28,29,0,  0,0,0,0, \
-    0,4,5,6,  7,8,9,10,  11,12,13,14,  15,16,17,18, \
+    53,4,5,6,  7,8,9,10,  11,12,13,14,  15,16,17,18, \
     19,20,21,22,  23,24,25,26,  27,28,29,0,  50,0,53,0, \
 };
 const u8  *const p_ascii2usb=ascii2usb;
@@ -195,7 +195,7 @@ void press_string(cap * cap_this)
 
 void  key_cap_add(cap* cap_this)
 {
-	printf("add%d %d %d %d",cap_free_head,cap_free_head->next,key_cap_cnt,key_cap_cnt_all);
+//	printf("add%d %d %d %d",cap_free_head,cap_free_head->next,key_cap_cnt,key_cap_cnt_all);
     u16 i=0;
     cap * cap_new;
     //DBG("++++++++++");
@@ -497,10 +497,12 @@ u8 key_capture(u8 *buf)
     
 }
 FATFS fs;
+#include "keyboard.h"
 void app_init()
 {
 	
-	
+	if(clean_mode)
+		return;
 	u16 i=0;
     for(i=0;i<key_cap_cnt_all-1;i++)
     {
@@ -540,15 +542,15 @@ void app_init()
 	
 }
 void app_handle(u8 *buf){
-	DBG("CNT=%d\r\n",key_cap_cnt);
-	for(u8 i=0;i<8;i++)
-	{
-		DBG("+%d",buf[i]);
-	}
+//	DBG("CNT=%d\r\n",key_cap_cnt);
+//	for(u8 i=0;i<8;i++)
+//	{
+//		DBG("+%d",buf[i]);
+//	}
 	
 	if(!key_capture(buf))
 	{ 
-		DBG("not");
+//		DBG("not");
 		app_press(buf);
 		
 	}else{

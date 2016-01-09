@@ -7,7 +7,7 @@
 
 
 
-u8 commu_buf[550];
+//u8 commu_buf[550];
 
 /************************config***********************************/
 #define SPI_COMMU_CS_H do{IOout(COMMU_BASE,COMMU_PIN,1);}while(0);   	//Ñ¡ÖÐFLASH	

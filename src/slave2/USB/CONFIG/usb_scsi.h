@@ -86,8 +86,8 @@
 #define BLKVFY                                      0x04
 
 extern  u8 Page00_Inquiry_Data[];
-extern  u8 Standard_Inquiry_Data[];
-extern  u8 Standard_Inquiry_Data2[];
+extern const u8 Standard_Inquiry_Data[];
+extern const  u8 Standard_Inquiry_Data2[];
 extern  u8 Mode_Sense6_data[];
 extern  u8 Mode_Sense10_data[];
 extern  u8 Scsi_Sense_Data[];

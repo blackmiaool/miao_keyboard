@@ -8,33 +8,52 @@
 #include "commu_mcu.h"
 typedef u16 uint16_t;
 
-struct GPIO_struct{
-    GPIO_TypeDef* port;
-    u32 pin;
-	  u8 num;
-};
-#define  COL_LEN 14
-#define  ROW_LEN 5
+
+
 struct GPIO_struct keyboard_gpio_rows[ROW_LEN];
 struct GPIO_struct keyboard_gpio_cols[COL_LEN];
 
 GPIO_TypeDef* char2port(char ch);
 u32 str2pin(char *str);
-const u8 key_index[5][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
+u8 clean_mode=0;
+u8 clean_key=41;
+u8 fn1=135;
+u8 fn2=136;
+const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
 {57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 {225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
-{224,227,82 ,226 ,44,44 ,0  ,0  ,228,80,79,80,79},};
+{224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,135,136},},
+{{41 ,58 ,59 ,60 ,61 ,62 ,63 ,64 ,65 ,66 ,67 ,68 ,69 ,42},//active when pressing fn1
+{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
+{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+{224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,0,0},},
+{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//active when pressed fn2 
+{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,82 ,18 ,19 ,47 ,48 ,49},
+{57 ,4  ,22/*s*/ ,7  ,9  ,10 /*g*/,11 ,80/*j*/ ,81 ,79 ,51/*;*/ ,52 ,40 ,40},
+{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+{224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,0,0},}};
+//const u8 key_index[ROW_LEN][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//long space
+//{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
+//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+//{224,227,226 ,44 ,44,44 ,44  ,44  ,44,44,228,230,80,79},};
+typedef struct{
+	u8 pos[2];
+} single_key_t;
 typedef struct {
-	u8 L_CTRL;  /*!< Left CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 L_ALT;   /*!< Left ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 L_SHIFT; /*!< Left SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 L_GUI;   /*!< Left GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 R_CTRL;  /*!< Right CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 R_ALT;   /*!< Right ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 R_SHIFT; /*!< Right SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	u8 R_GUI;   /*!< Right GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-  u8 key[6];                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
+//	u8 L_CTRL;  /*!< Left CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 L_ALT;   /*!< Left ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 L_SHIFT; /*!< Left SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 L_GUI;   /*!< Left GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 R_CTRL;  /*!< Right CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 R_ALT;   /*!< Right ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 R_SHIFT; /*!< Right SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+//	u8 R_GUI;   /*!< Right GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+	u8 control;
+	single_key_t key[6];                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
+	u8 key_cnt;
 } key_t;
 extern void keyborad_process(u8* buf);
 //void keyboard_send(key_t key_buf){
@@ -48,8 +67,8 @@ extern void keyborad_process(u8* buf);
 //	
 //	keyborad_process(buf);
 //}
-char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
-char rows[]="B5B6B7B8B9";
+const char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
+const char rows[]="B5B6B7B8B9";
 
 void keyboard_init(void){
 	SCPE(PERIOA);
@@ -63,7 +82,7 @@ void keyboard_init(void){
 		io->port=char2port(cols[i]);
 //		printf(" p:%c",cols[i]);
 		i++;
-		long num=atoi(cols+i);
+		long num=atoi((char *)cols+i);
 		io->pin=1<<(num%8*4);
 		io->num=num;
 		if(io->num>9)
@@ -83,7 +102,7 @@ void keyboard_init(void){
 		io->port=char2port(rows[i]);
 //		printf(" p:%c",rows[i]);
 		i++;
-		long num=atoi(rows+i);
+		long num=atoi((char *)(rows+i));
 		io->pin=1<<(num%8*4);
 		io->num=num;
 		if(io->num>9)
@@ -142,7 +161,7 @@ u32 str2pin(char *str){
 void keyboard_send_wrap(key_t key_buf);
 //static u8 key_index[5][14];
 u16 key_val[5];
-
+u8 start_check=1;
 void keyboard_scan(){
     u8 i=0,j=0;
     for(j=0;j<ROW_LEN;j++){
@@ -178,48 +197,41 @@ void keyboard_scan(){
     u8 key_data_index=0;
     static u8 pre_press=0;
     u8 key_press=0;
-	  key_t key_buf;
-		for(i=0;i<6;i++){
-			key_buf.key[i]=0;
-			
-		}
-		key_buf.L_ALT=0;
-		key_buf.L_CTRL=0;
-		key_buf.L_SHIFT=0;
-		key_buf.L_GUI=0;
-		key_buf.R_ALT=0;
-		key_buf.R_CTRL=0;
-		key_buf.R_SHIFT=0;
-		key_buf.R_GUI=0;
+	key_t key_buf;
+	key_buf.control=0;
+	key_buf.key_cnt=0;
     for(j=0;j<ROW_LEN;j++){
         for(i=0;i<COL_LEN;i++){
             if(key_val[j]&(1<<i))
             {
-                switch(key_index[j][i]){
+                switch(key_map[0][j][i]){
                 case 225:
-                    key_buf.L_SHIFT=1;
+                    key_buf.control|=(1<<1);
                     break;
                 case 224:
-                    key_buf.L_CTRL=1;
+                    key_buf.control|=(1<<0);
                     break;
                 case 227:
-                    key_buf.L_GUI=1;
+                    key_buf.control|=(1<<3);
                     break;
                 case 226:
-                    key_buf.L_ALT=1;
+                    key_buf.control|=(1<<2);
                     break;
                 case 228:
-                    key_buf.R_CTRL=1;
+                    key_buf.control|=(1<<4);
                     break;
                 case 229:
-                    key_buf.R_SHIFT=1;
+                    key_buf.control|=(1<<5);
                     break;
                 case 230:
-                    key_buf.R_ALT=1;
+                    key_buf.control|=(1<<6);
                     break;
                 default:
-                    key_buf.key[key_data_index++] = key_index[j][i];
+                    key_buf.key[key_data_index].pos[0]=j;
+					key_buf.key[key_data_index++].pos[1]=i;
+//				= key_index[j][i];
                 }
+				key_buf.key_cnt=key_data_index;
 //                printf("key press %d  %d %d\n",j,i, key_index[j][i]);
                 pre_press=1;
                 key_press=1;
@@ -243,7 +255,7 @@ void keyboard_scan(){
 end:;
 }
 
-u8 commu_buf_pre[8];
+
 extern u8 delegate;
 void app_press(u8 *buf){
 	
@@ -256,32 +268,114 @@ void app_press(u8 *buf){
 	keyborad_process(buf);
 }
 void app_handle(u8 *buf);
+void keyboard_send_wrap2(u8 *buf);
 void keyboard_send(u8 *buf){
 	if(delegate){
-			commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
-		}else{
+		commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
+	}else{
+		app_handle(buf);
+	}
+}
 
-			app_handle(buf);
+void find_pos(u8 **value,u8 index,u8* pos){
+	
+}
+
+//void keyboard_send_wrap2(u8 *buf){
+//	for(u8 i=2;i<8;i++){
+//		if(buf[i]==fn1){
+//			
+//		}else if(buf[i]==fn2){
+//			
+//		}
+//	}
+//	keyboard_send(buf);
+//}
+key_t commu_buf_pre;
+typedef const u8 Key_map[ROW_LEN][COL_LEN];
+typedef Key_map *key_map_t;
+u8 current_mode=0;
+void key_set(u8 *buf,key_map_t map,const key_t *key){
+	for(u8 i=0;i<key->key_cnt;i++){
+		buf[2+i]=(*map)[key->key[i].pos[0]][key->key[i].pos[1]];
 	}
 }
 void keyboard_send_wrap(key_t key_buf){
 	u8 buf[8];
-	buf[0]=(key_buf.L_CTRL<<0)+(key_buf.L_SHIFT<<1)+(key_buf.L_ALT<<2)+(key_buf.L_GUI<<3)+(key_buf.R_CTRL<<4)+(key_buf.R_SHIFT<<5)+(key_buf.R_ALT<<6)+(key_buf.R_GUI<<7);
+	buf[0]=key_buf.control;
 	buf[1]=0;
-	for(u8 i=0;i<6;i++){
-		buf[2+i]=key_buf.key[i];		
-	}
+	for(u8 i=2;i<8;i++)
+		buf[i]=0;
+//	for(u8 i=0;i<6;i++){
+//		buf[2+i]=key_buf.key[i];		
+//	}
 	u8 send=0;
-	for(u8 i=0;i<8;i++){
-		if(commu_buf_pre[i]!=buf[i]){
-			send=1;
-		}
-		commu_buf_pre[i]=buf[i];
+	if(commu_buf_pre.key_cnt!=key_buf.key_cnt)
+		send=1;
+	if(commu_buf_pre.control!=key_buf.control)
+		send=1;
+	if(current_mode!=2){
+			current_mode=0; 
 	}
+	if(start_check){
+		start_check=0;
+		for(u8 i=0;i<key_buf.key_cnt;i++){
+			u8 key_this=key_map[0][key_buf.key[i].pos[0]][key_buf.key[i].pos[1]];
+			if(key_this==clean_key){
+				clean_mode=1;
+				break;
+			}
+		}
+	}
+	for(u8 i=0;i<key_buf.key_cnt;i++){
+		u8 key_this=key_map[0][key_buf.key[i].pos[0]][key_buf.key[i].pos[1]];
+		if(key_this==fn1){
+			current_mode=1;
+			break;
+		}
+	}
+	for(u8 i=0;i<key_buf.key_cnt;i++){
+
+
+		if(commu_buf_pre.key[i].pos[0]!=key_buf.key[i].pos[0]||commu_buf_pre.key[i].pos[1]!=key_buf.key[i].pos[1]){
+			send=1;
+			commu_buf_pre.key[i].pos[0]=key_buf.key[i].pos[0];
+			commu_buf_pre.key[i].pos[1]=key_buf.key[i].pos[1];
+		}
+		
+	}
+	commu_buf_pre.key_cnt=key_buf.key_cnt;
+	commu_buf_pre.control=key_buf.control;
 	if(send){
+
+		for(u8 i=2;i<2+key_buf.key_cnt;i++){
+			u8 key_this=key_map[0][key_buf.key[i-2].pos[0]][key_buf.key[i-2].pos[1]];
+			if(key_this==fn2){
+				if(!current_mode)
+					current_mode=2;
+				else
+					current_mode=0;
+				break;
+			}
+		}
+		key_map_t map;
+		map=&key_map[current_mode];
+//		switch(current_mode){
+//			case 0:
+//				map=&key_index;
+//				break;
+//			case 1:
+//				    map=&key_index1;
+//				break;
+//			case 2:
+//				map=&key_index2;
+//				break;
+//		}
+		key_set(buf,map,&key_buf);
+//		led_reset();
 		keyboard_send(buf);		
 	}
-} 
+}
 
 //void keyboard_io_init(){
 //    u8 i=0,j=0;

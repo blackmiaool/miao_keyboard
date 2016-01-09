@@ -8,7 +8,11 @@
 
 ////////////////////////////
 ///ºËÐÄºê////////////////
-
+struct GPIO_struct{
+    GPIO_TypeDef* port;
+    u32 pin;
+	  u8 num;
+};
 #define uint16           u16
 #define uint8             u8
 #define uchar u8

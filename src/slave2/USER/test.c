@@ -12,6 +12,7 @@
 #include "commu.h"
 #include "commu_mcu.h"
 #include "w25q16.h"
+#include "led.h"
 extern u8 EP1BUSY;			//键盘数据发送忙标志 
 extern u8 EP2BUSY;			//鼠标数据发送忙标志
 extern u8 INIT_OK;
@@ -34,6 +35,9 @@ extern u8 buf_send[9];
 extern u8 buf_key[9];
 u8 delegate=0;
 void app_init(void);
+void routine(){
+	led_handle();
+}
 int main(void)
 {
 	Stm32_Clock_Init(9);//系统时钟设置
@@ -44,6 +48,7 @@ int main(void)
 	delay_ms(200);		
   
 	SPI_Flash_Init(); 
+	
 	while(SPI_Flash_ReadID()!=W25Q16)
 	{
 		printf("error%X\r\n",SPI_Flash_ReadID());
@@ -59,20 +64,23 @@ int main(void)
 	
 	
 	delay_ms(1000);			//等待初始化完成 
-	app_init();
-	keyboard_init();
+
 	
+	keyboard_init();
+	keyboard_scan();
+	app_init();
+	led_init();
 	while(1){
 		keyboard_scan();
-		delay_ms(10);
 //		commu_send("miao\r\n",6,COMMU_TYPE(DEBUG));
-//		for(u8 i=0;i<150;i++){
+		for(u8 i=0;i<110;i++){
 // 			if(keyboard_flag){				
 //				keyboard_flag=0;
 //				keyborad_process(buf_key);
 //			}
-//			delay_us(100);
-//		}
+			routine();			
+			delay_us(100);
+		}
 	}
 
 //	while(1)

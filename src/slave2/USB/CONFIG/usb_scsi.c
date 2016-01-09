@@ -56,11 +56,11 @@ void SCSI_Inquiry_Cmd(u8 lun)
 
     if ( lun == 0)
     {
-      Inquiry_Data = Standard_Inquiry_Data;
+      Inquiry_Data = (u8*)Standard_Inquiry_Data;
     }
     else
     {
-      Inquiry_Data = Standard_Inquiry_Data2;
+      Inquiry_Data = (u8*)Standard_Inquiry_Data2;
     }
 
     if (CBW.CB[4] <= STANDARD_INQUIRY_DATA_LEN)

@@ -24,7 +24,7 @@ u8 Page00_Inquiry_Data[] =
     0x00,
     0x00 /* Supported Pages 00*/
   };
-u8 Standard_Inquiry_Data[] =
+const u8 Standard_Inquiry_Data[] =
   {
     0x00,          /* Direct Access Device */
     0x80,          /* RMB = 1: Removable Medium */
@@ -43,7 +43,7 @@ u8 Standard_Inquiry_Data[] =
     /* Product Revision Level */
     '1', '.', '0', ' '
   };
-u8 Standard_Inquiry_Data2[] =
+const u8 Standard_Inquiry_Data2[] =
   {
     0x00,          /* Direct Access Device */
     0x80,          /* RMB = 1: Removable Medium */

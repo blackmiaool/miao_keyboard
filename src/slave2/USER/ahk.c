@@ -17,13 +17,13 @@ int ahk_init(char *path)
     u32 i=0;
     #define ahk_print(arg...) {do{if(true){DBG(arg);}else{ no_use_printf(arg);}}while(0);}
     #define ahk_putchar(arg) {do{if(false){putchar(arg);}else{no_use_putchar(arg);}}while(0);}
-    ahk_print("open:%d",f_open(&file,(const char*)path,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN));
+    ahk_print("ahkopen:%d",f_open(&file,(const char*)path,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN));
     ahk_print("read:%d",f_read(&file,read_buf,file.fsize,&cnt));
     ahk_print("size=%d\r\n",file.fsize);
 
     for(i=0;i<file.fsize;i++)
     {
-        ahk_putchar(read_buf[i]);
+//        ahk_putchar(read_buf[i]);
     }
     f_close(&file);
 
@@ -133,7 +133,7 @@ void token_Init(token* token_this)
 
 struct token_queue_struct
 {
-    token queue[100];//change when needed
+    token queue[80];//change when needed
     u8 state;
     u8 lenth;
 
@@ -374,7 +374,7 @@ u8 token_ana(token_q* token_queue,u8* read_buf,u32 ptr[2])
 
         // printf("ana=%c(%d)",char_this,char_ana(char_this));
     }
-	DBG("%d ",token_queue->lenth);
+//	DBG("%d ",token_queue->lenth);
     if(token_queue->queue[token_queue->lenth].state==token_raw)
         return 0;
     else
@@ -386,6 +386,7 @@ u8 token_ana(token_q* token_queue,u8* read_buf,u32 ptr[2])
 #define compile_DBG(a) do{DBG("error:line%d---",line_cnt);DBG(a);DBG("\r\n");}while(0)
 u16 token2usb(token* token_get)
 {
+	printf(" %d",(int)token_get->content);
     if(token_get->token_class==token_key)
     {
         return (shift_table[token_get->content]<<8)|ascii2usb[token_get->content];
