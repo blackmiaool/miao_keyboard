@@ -24,16 +24,42 @@ const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 
 {57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 {225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 {224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,135,136},},
+
 {{41 ,58 ,59 ,60 ,61 ,62 ,63 ,64 ,65 ,66 ,67 ,68 ,69 ,42},//active when pressing fn1
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
 {57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 {225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 {224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,0,0},},
+
 {{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//active when pressed fn2 
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,82 ,18 ,19 ,47 ,48 ,49},
 {57 ,4  ,22/*s*/ ,7  ,9  ,10 /*g*/,11 ,80/*j*/ ,81 ,79 ,51/*;*/ ,52 ,40 ,40},
 {225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 {224,227,82 ,226 ,44,44 ,44  ,44  ,228,80,79,80,0,0},}};
+
+
+
+//const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
+//{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
+//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,135,136},},
+
+//{{41 ,58 ,59 ,60 ,61 ,62 ,63 ,64 ,65 ,66 ,67 ,68 ,69 ,42},//active when pressing fn1
+//{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
+//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,0,0},},
+
+//{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//active when pressed fn2 
+//{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,82 ,18 ,19 ,47 ,48 ,49},
+//{57 ,4  ,22/*s*/ ,7  ,9  ,10 /*g*/,11 ,80/*j*/ ,81 ,79 ,51/*;*/ ,52 ,40 ,40},
+//{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
+//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,0,0},}};
+
+
+
+
 //const u8 key_index[ROW_LEN][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//long space
 //{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
 //{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
@@ -43,30 +69,11 @@ typedef struct{
 	u8 pos[2];
 } single_key_t;
 typedef struct {
-//	u8 L_CTRL;  /*!< Left CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 L_ALT;   /*!< Left ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 L_SHIFT; /*!< Left SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 L_GUI;   /*!< Left GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 R_CTRL;  /*!< Right CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 R_ALT;   /*!< Right ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 R_SHIFT; /*!< Right SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-//	u8 R_GUI;   /*!< Right GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
 	u8 control;
 	single_key_t key[6];                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	u8 key_cnt;
 } key_t;
 extern void keyborad_process(u8* buf);
-//void keyboard_send(key_t key_buf){
-//	u8 buf[9];
-//	buf[0]=0;
-//	buf[1]=(key_buf.L_CTRL<<0)+(key_buf.L_SHIFT<<1)+(key_buf.L_ALT<<2)+(key_buf.L_GUI<<3)+(key_buf.R_CTRL<<4)+(key_buf.R_SHIFT<<5)+(key_buf.R_ALT<<6)+(key_buf.R_GUI<<7);
-//	buf[2]=0;
-//	for(u8 i=0;i<6;i++){
-//		buf[3+i]=key_buf.key[i];
-//	}
-//	
-//	keyborad_process(buf);
-//}
 const char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
 const char rows[]="B5B6B7B8B9";
 
@@ -166,22 +173,15 @@ void keyboard_scan(){
     u8 i=0,j=0;
     for(j=0;j<ROW_LEN;j++){
         key_val[j]=0;
-       
-			  IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
+        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
     }
-//		delay_ms(1);
+
     for(j=0;j<ROW_LEN;j++){
         IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,0);
-//        delay_ms(1);
         for(i=0;i<COL_LEN;i++){
-					u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
-					
-//					printf("key %d %d",i,val);
+			u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
             key_val[j]+=((val>0)<<i);
-//					delay_ms(1);
         }
-//				printf("\r\n");
-//				delay_ms(1);
         u16 mask=1<<COL_LEN;
         mask--;
         key_val[j]=mask-key_val[j];
@@ -229,7 +229,6 @@ void keyboard_scan(){
                 default:
                     key_buf.key[key_data_index].pos[0]=j;
 					key_buf.key[key_data_index++].pos[1]=i;
-//				= key_index[j][i];
                 }
 				key_buf.key_cnt=key_data_index;
 //                printf("key press %d  %d %d\n",j,i, key_index[j][i]);
@@ -244,12 +243,9 @@ void keyboard_scan(){
 
     if(key_press){
         keyboard_send_wrap(key_buf);
-		
-//        rt_kprintf("key press %d  %d %d\n",j,i,Keyboard.key[0]);
     }
     else if(pre_press){
         pre_press=0;
-		
         keyboard_send_wrap(key_buf);
     }
 end:;
@@ -281,16 +277,6 @@ void find_pos(u8 **value,u8 index,u8* pos){
 	
 }
 
-//void keyboard_send_wrap2(u8 *buf){
-//	for(u8 i=2;i<8;i++){
-//		if(buf[i]==fn1){
-//			
-//		}else if(buf[i]==fn2){
-//			
-//		}
-//	}
-//	keyboard_send(buf);
-//}
 key_t commu_buf_pre;
 typedef const u8 Key_map[ROW_LEN][COL_LEN];
 typedef Key_map *key_map_t;
@@ -377,13 +363,4 @@ void keyboard_send_wrap(key_t key_buf){
 	}
 }
 
-//void keyboard_io_init(){
-//    u8 i=0,j=0;
-//    for(i=0;i<col_len;i++){
-//        TM_GPIO_Init(keyboard_gpio_cols[i].port, keyboard_gpio_cols[i].pin, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_High);
-//    }
-//    for(j=0;j<row_len;j++){
-//        TM_GPIO_Init(keyboard_gpio_rows[j].port, keyboard_gpio_rows[j].pin, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_High);
-//    }
-//}
 

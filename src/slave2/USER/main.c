@@ -24,19 +24,22 @@ extern u32 Mass_Block_Size[MAX_LUN+1];
 extern u32 Mass_Block_Count[MAX_LUN+1];
 extern u8 USB_STATUS_REG;
 
-//mouse      1 x y button  hua 
-//keyboard   2 ~
-extern u8 ptr_write;
-extern u8 ptr_read;
 
-u8 buf_try[]={0,0,20,0,0,0,0,0};
-extern bool keyboard_flag;
-extern u8 buf_send[9];
-extern u8 buf_key[9];
 u8 delegate=0;
 void app_init(void);
 void routine(){
 	led_handle();
+}
+int calc_free_memory(){
+	for(int i=10240;i>0;i--){
+		char *area=(char *)malloc(i*100);
+		if(area){
+			free(area);
+			return i;
+		}
+		
+	}
+	return 0;
 }
 int main(void)
 {
@@ -55,6 +58,7 @@ int main(void)
 		delay_ms(500);
 
 	}
+	printf("start");
 	Mass_Memory_Size[0]=4000*512;
 	Mass_Block_Size[0] =512;
 	Mass_Block_Count[0]=4000;
@@ -62,52 +66,23 @@ int main(void)
 	USB_Interrupts_Config();  
 	USB_Init();	
 	
-	
-	delay_ms(1000);			//等待初始化完成 
+//	while(!INIT_OK);//等待初始化完成 
+	delay_ms(1000);	
 
 	
 	keyboard_init();
-	keyboard_scan();
+	keyboard_scan();//exec before app_init to check if parse bmk files
 	app_init();
 	led_init();
+	printf("last memory=%d",calc_free_memory());
 	while(1){
 		keyboard_scan();
-//		commu_send("miao\r\n",6,COMMU_TYPE(DEBUG));
 		for(u8 i=0;i<110;i++){
-// 			if(keyboard_flag){				
-//				keyboard_flag=0;
-//				keyborad_process(buf_key);
-//			}
 			routine();			
 			delay_us(100);
 		}
 	}
 
-//	while(1)
-//	{
-//		if(ptr_write!=ptr_read)
-//		{
-//			commu_flag=2;
-//			//printf("---%d---cmb%d----kbd?%d---write%d\r\n",commu_buf[ptr_read][4],ptr_read,commu_buf[ptr_read][0],ptr_write);
-//			 
-//			for(i=0;i<9;i++)
-//			{
-//				//putchar(commu_buf[ptr_read][i]);
-//			}
-//			if(commu_buf[ptr_read][0]==1)
-//			{
-//				if(commu_buf[ptr_read][8]==90)
-//				mouse_process(commu_buf[ptr_read]);
-//			}
-//			else if(commu_buf[ptr_read][0]==0)
-//			{
-//				if(commu_buf[ptr_read][8]==92)
-//				keyborad_process(commu_buf[ptr_read]);
-//			}
-//			commu_lenth=0;
-//			ptr_read=(ptr_read+1)%50;
-//		}
-//	}
 
 }
 

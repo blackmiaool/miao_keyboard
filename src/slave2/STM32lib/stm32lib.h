@@ -35,6 +35,8 @@ u32 StringToInt(u8 * mm,u8 jinzhi);
 u32 min(short *miao,u32 len);
 void nop(void);
 long atoi(char*);
+extern void *malloc(unsigned int);
+extern void free(void*);
 #define pc(aa)			putchar(aa) //串口输出函数,printf用
 /////////////外设地址定义，第二位是1，则RCC->APB2ENR2，以此类推//////////////////
 #define abs(signed_data) (((signed_data)>0)?(signed_data):(-(signed_data)))

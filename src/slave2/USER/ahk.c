@@ -14,20 +14,20 @@ int ahk_init(char *path)
 {
     FIL file; 
     u32 cnt=0;
-    u32 i=0;
+
     #define ahk_print(arg...) {do{if(true){DBG(arg);}else{ no_use_printf(arg);}}while(0);}
     #define ahk_putchar(arg) {do{if(false){putchar(arg);}else{no_use_putchar(arg);}}while(0);}
+	
     ahk_print("ahkopen:%d",f_open(&file,(const char*)path,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN));
+	read_buf=(u8*)malloc(file.fsize);
     ahk_print("read:%d",f_read(&file,read_buf,file.fsize,&cnt));
-    ahk_print("size=%d\r\n",file.fsize);
-
-    for(i=0;i<file.fsize;i++)
-    {
+    ahk_print("size=%d\r\n",(int)file.fsize);
+	f_close(&file);
+	
+//    for(i=0;i<file.fsize;i++)
+//    {
 //        ahk_putchar(read_buf[i]);
-    }
-    f_close(&file);
-
-    
+//    }
     
     if(key_mode_process(read_buf,file.fsize))
     {
@@ -37,6 +37,7 @@ int ahk_init(char *path)
     {
         DBG("Key mode done");
     }
+	free(read_buf);
     return 0;
 }
 u8 control_key_decode(u8 key)
@@ -142,7 +143,7 @@ typedef struct token_queue_struct token_q;
 void token_q_Init(token_q* q)
 {
     u16 i=0;
-    for(i=0;i<100;i++)
+    for(i=0;i<80;i++)
     {
         token_Init(&q->queue[i]);
     }
@@ -386,7 +387,6 @@ u8 token_ana(token_q* token_queue,u8* read_buf,u32 ptr[2])
 #define compile_DBG(a) do{DBG("error:line%d---",line_cnt);DBG(a);DBG("\r\n");}while(0)
 u16 token2usb(token* token_get)
 {
-	printf(" %d",(int)token_get->content);
     if(token_get->token_class==token_key)
     {
         return (shift_table[token_get->content]<<8)|ascii2usb[token_get->content];
@@ -400,7 +400,7 @@ u16 token2usb(token* token_get)
 
 void press_string(cap * cap_this);
 void  key_cap_add(cap* cap_this);
-u16 string_storage[40][60];
+
 u16 string_index=0;
 u8 mode_line_process(u8* read_buf,u32 ptr[2])
 {
@@ -537,11 +537,8 @@ u8 mode_line_process(u8* read_buf,u32 ptr[2])
                     return 1;
                 }
             }
-            //DBG("line%d,%d general key gotton!\r\n",line_cnt,key_cnt);
-//            key_array=rt_malloc(key_cnt<<1);
-//			u8 string_storage[50][100];
-//			u16 string_index=0;
-			key_array=string_storage[string_index++];
+
+			key_array=malloc(key_cnt*2);
             for(k=i;k<token_queue.lenth;k++)
             {
                 key_array[k-i]=token2usb(&token_queue.queue[k]);
@@ -567,95 +564,6 @@ end:;
 
     line_cnt++;
 
- 
-//begin:
-
-//    ctrl_info_Init(&info_temp);
-
-//    {
-//        switch(block.state)
-//        {
-//        case 0:
-//            block_Init(&block);
-//            block.state=1;
-
-//            break;
-//        case 1:
-//		break;
-
-//        }
-//    }
-
-
-    //	for(i=ptr[0];i<ptr[1];i++)
-    //	{
-    //		u8 char_this=read_buf[i];
-    //		putchar(read_buf[i]);
-    //		switch(ana_state)
-    //		{
-    //		case 0://find quick key
-    //		{
-    //			switch(control_key_state)
-    //			{
-    //			case 0:
-    //			{
-    //				if(char_this=='>')
-    //				{
-    //					control_info[0]=2;
-    //					control_key_state=1;
-    //				}
-    //				else if(char_this=='<')
-    //				{
-    //					control_info[0]=1;
-    //					control_key_state=1;
-    //				}
-    //				else if(isCtrlKey(char_this))
-    //				{
-    //					control_info[0]=0;
-    //					control_key_state=0;
-    //					control_info[1]=char_this;
-    //					if(filter_add(&filter_temp,control_info))
-    //					{
-    //						printf("error:too lot control key");
-    //					}
-    //				}
-    //				else
-    //				{
-
-    //					DBG("error:no control key");
-    //					break;
-    //				}
-    //				break;
-    //			}
-    //			case 1:
-    //			{
-
-    //				break;
-    //			}
-    //			case 2:
-    //			{
-    //				break;
-    //			}
-    //			}
-
-
-    //			printf("control_info[0]=%d\r\n",control_info[0]);
-    //			break;
-    //		}
-    //		case 1://find which control key
-    //		{
-    //			break;
-    //		}
-    //		case 2:
-    //		{
-    //			break;
-    //		}
-    //		}
-    //	}
-    //if(ana_state!=?)
-
-
-    //printf("\r\n");
 	return 0;
 }
 u8 key_mode_process(u8* read_buf,u32 size)
@@ -682,12 +590,6 @@ u8 key_mode_process(u8* read_buf,u32 size)
 
         }
     }
-
-
-    //	for(i=0;i<write_cnt;i++)
-    //	{
-    //		putchar(read_buf[i]);
-    //	}
 
     for(i=0;i<=write_cnt;i++)
     {
@@ -720,19 +622,6 @@ u8 key_mode_process(u8* read_buf,u32 size)
                 line_ptr[0]=i;
                 read_state=1;
             }
-            //			if(read_buf[i]=='l'||read_buf[i]=='r')
-            //			{
-            //				cmd("Table file is OK");
-            //				read_state=1;
-            //			}
-            //			else
-            //			{
-            //				u8 send_buf[20];
-            //				cmd("Table file is wrong!");
-            //				sprintf(send_buf,"find %c!!",read_buf[write_cnt]);
-            //				cmd(send_buf);
-            //				goto end;
-            //			}
             break;
         }
         case 1:
@@ -753,36 +642,4 @@ u8 key_mode_process(u8* read_buf,u32 size)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////buf 0~7:USBcode 8:if press LShift 9:control_key add 10:control_key del
-
-
-
-
-
-

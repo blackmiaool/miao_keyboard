@@ -9,6 +9,7 @@
 #else	  
 #define	DBG(...)
 #endif
+
 u8 key_capture(u8 *buf);
 void key_cap_Init(void);
 void press_string_pure(u16 *buf,u32 lenth);
@@ -31,7 +32,7 @@ extern u8 blue_choose;
 extern const u8 shift_table[128];
 void cmd(u8* content);
 
-extern u8 read_buf[2000];
+extern u8 *read_buf;
 typedef struct block_information block_info;
 struct control_key_filter
 {
