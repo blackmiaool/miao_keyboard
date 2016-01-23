@@ -18,9 +18,9 @@ int ahk_init(char *path)
     #define ahk_print(arg...) {do{if(true){DBG(arg);}else{ no_use_printf(arg);}}while(0);}
     #define ahk_putchar(arg) {do{if(false){putchar(arg);}else{no_use_putchar(arg);}}while(0);}
 	
-    ahk_print("ahkopen:%d",f_open(&file,(const char*)path,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN));
+    ahk_print("ahk-open:%d\r\n",f_open(&file,(const char*)path,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN));
 	read_buf=(u8*)malloc(file.fsize);
-    ahk_print("read:%d",f_read(&file,read_buf,file.fsize,&cnt));
+    ahk_print("read:%d\r\n",f_read(&file,read_buf,file.fsize,&cnt));
     ahk_print("size=%d\r\n",(int)file.fsize);
 	f_close(&file);
 	
@@ -35,7 +35,7 @@ int ahk_init(char *path)
     }
     else
     {
-        DBG("Key mode done");
+//        DBG("Key mode done");
     }
 	free(read_buf);
     return 0;

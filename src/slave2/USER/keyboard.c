@@ -6,6 +6,7 @@
 #include "stm32f10x_gpio.h"
 #include "usart.h"
 #include "commu_mcu.h"
+#include "lua_inf.h"
 typedef u16 uint16_t;
 
 
@@ -269,6 +270,7 @@ void keyboard_send(u8 *buf){
 	if(delegate){
 		commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
 	}else{
+		
 		app_handle(buf);
 	}
 }

@@ -33,7 +33,7 @@ void io_bulk_parse(char *data,u16 size,struct GPIO_struct* buf){
 		}
 		i++;
 		delay_ms(10);
-		printf(" n:%d %d\r\n",io->pin,io->num);
+//		printf(" n:%d %d\r\n",io->pin,io->num);
 		delay_ms(10);
 		cnt++;
 	}
@@ -66,6 +66,8 @@ void led_init(){
 	
 	IOConfig(SCK595_io.port, SCK595_io.num>7, SCK595_io.pin, 3);
 	IOout(SCK595_io.port,SCK595_io.num,1);
+	u8 b=buf[0][0];
+	b=b;
 	for(u8 i=0;i<ROW_LEN;i++){
 		for(u8 j=0;j<COL_LEN;j++){
 			buf[i][j]=1;
@@ -112,7 +114,7 @@ void set_all(u8 value){
 
 
 void led_handle(){
-	static u8 i=0;
+//	static u8 i=0;
 //	if(tick>0)
 //		tick--;
 	

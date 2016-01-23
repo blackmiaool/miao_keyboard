@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;D:\Keil\ARM\INC\ST\STM32F10x;..\HARDWARE\USB;..\USER;..\STM32lib;..\..\..\STM32_USB_CH341\DiscreteFile\SYSTEM\sys;..\HARDWARE\FLASH;..\HARDWARE\lib;..\FATFS;..\app</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;D:\Keil\ARM\INC\ST\STM32F10x;..\HARDWARE\USB;..\USER;..\STM32lib;..\..\..\STM32_USB_CH341\DiscreteFile\SYSTEM\sys;..\HARDWARE\FLASH;..\HARDWARE\lib;..\FATFS;..\app;..\LUA</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -420,12 +420,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>USER</GroupName>
+          <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>keyboard.c</FileName>
+              <FileName>ahk.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\keyboard.c</FilePath>
+              <FilePath>..\app\ahk.c</FilePath>
             </File>
             <File>
               <FileName>app.c</FileName>
@@ -433,9 +433,19 @@
               <FilePath>..\app\app.c</FilePath>
             </File>
             <File>
-              <FileName>ahk.c</FileName>
+              <FileName>lua_inf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\ahk.c</FilePath>
+              <FilePath>..\app\lua_inf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>USER</GroupName>
+          <Files>
+            <File>
+              <FileName>keyboard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\keyboard.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
@@ -606,6 +616,186 @@
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FATFS\ff.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>LUA</GroupName>
+          <Files>
+            <File>
+              <FileName>lapi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lapi.c</FilePath>
+            </File>
+            <File>
+              <FileName>lauxlib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lauxlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lbaselib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lbaselib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lbitlib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lbitlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lcode.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcorolib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lcorolib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lctype.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lctype.c</FilePath>
+            </File>
+            <File>
+              <FileName>ldblib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ldblib.c</FilePath>
+            </File>
+            <File>
+              <FileName>ldebug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ldebug.c</FilePath>
+            </File>
+            <File>
+              <FileName>ldo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ldo.c</FilePath>
+            </File>
+            <File>
+              <FileName>ldump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ldump.c</FilePath>
+            </File>
+            <File>
+              <FileName>lfunc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lfunc.c</FilePath>
+            </File>
+            <File>
+              <FileName>lgc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lgc.c</FilePath>
+            </File>
+            <File>
+              <FileName>linit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\linit.c</FilePath>
+            </File>
+            <File>
+              <FileName>liolib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\liolib.c</FilePath>
+            </File>
+            <File>
+              <FileName>llex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\llex.c</FilePath>
+            </File>
+            <File>
+              <FileName>lmathlib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lmathlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lmem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lmem.c</FilePath>
+            </File>
+            <File>
+              <FileName>loadlib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\loadlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lobject.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lobject.c</FilePath>
+            </File>
+            <File>
+              <FileName>lopcodes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lopcodes.c</FilePath>
+            </File>
+            <File>
+              <FileName>loslib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\loslib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lparser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lparser.c</FilePath>
+            </File>
+            <File>
+              <FileName>lstate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lstate.c</FilePath>
+            </File>
+            <File>
+              <FileName>lstring.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lstring.c</FilePath>
+            </File>
+            <File>
+              <FileName>lstrlib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lstrlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>ltable.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ltable.c</FilePath>
+            </File>
+            <File>
+              <FileName>ltablib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ltablib.c</FilePath>
+            </File>
+            <File>
+              <FileName>ltm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\ltm.c</FilePath>
+            </File>
+            <File>
+              <FileName>lua.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lua.c</FilePath>
+            </File>
+            <File>
+              <FileName>luac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\luac.c</FilePath>
+            </File>
+            <File>
+              <FileName>lundump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lundump.c</FilePath>
+            </File>
+            <File>
+              <FileName>lutf8lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lutf8lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>lvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>lzio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LUA\lzio.c</FilePath>
             </File>
           </Files>
         </Group>

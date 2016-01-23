@@ -41,6 +41,17 @@ int calc_free_memory(){
 	}
 	return 0;
 }
+//int calc_free_memory(){
+//	for(int i=10240;i>0;i--){
+//		char *area=(char *)malloc(i*100);
+//		if(area){
+//			free(area);
+//			return i;
+//		}
+//		
+//	}
+//	return 0;
+//}
 int main(void)
 {
 	Stm32_Clock_Init(9);//系统时钟设置
@@ -57,8 +68,8 @@ int main(void)
 		printf("error%X\r\n",SPI_Flash_ReadID());
 		delay_ms(500);
 
-	}
-	printf("start");
+	}                        
+	printf("start\r\n");
 	Mass_Memory_Size[0]=4000*512;
 	Mass_Block_Size[0] =512;
 	Mass_Block_Count[0]=4000;
