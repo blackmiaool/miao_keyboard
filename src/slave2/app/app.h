@@ -16,7 +16,7 @@ void press_string_pure(u16 *buf,u32 lenth);
 s8 control_key_index(const char buf[]);
 extern const u8  ascii2usb[128];
 typedef u8 uint8_t;
-typedef char int8_t;
+//typedef char int8_t;
 extern u8 blue_choose;
 #define LCtrl       0x1
 #define LShift     0x2

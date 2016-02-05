@@ -39,8 +39,6 @@ void lua_init(){
 	char *entry_file="main.lua";
 	printf("==========lua print==========\r\n");
 	
-
-	
     u32 cnt=0;
 
     if(!f_open(&file,entry_file,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN)){

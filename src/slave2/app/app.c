@@ -411,16 +411,16 @@ result:
 }
 u8 key_capture(u8 *buf)
 {
-    int retval;
-	lua_handle(buf);
-    retval=key_handle(buf);
+    int through1,through2;
+//	through1=lua_handle(buf);
+    through2=key_handle(buf);
 //    if(lua_flag&LUA_MACRO_PLAY_MASK)
 //    {
 //        lua_flag&=(~LUA_MACRO_PLAY_MASK);
 //        return macro_play();
 
 //    }
-    return retval;
+    return through2;
     
 }
 FATFS fs;
