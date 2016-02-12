@@ -1,7 +1,7 @@
 #ifndef _LUA_INF_H_
 #define _LUA_INF_H_
 #include "stm32lib.h"
-int lua_handle(u8* buf);
+int lua_handle(key_t* );
 void lua_init(void);
 
 

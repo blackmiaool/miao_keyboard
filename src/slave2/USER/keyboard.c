@@ -66,14 +66,7 @@ const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 
 //{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 //{224,227,226 ,44 ,44,44 ,44  ,44  ,44,44,228,230,80,79},};
-typedef struct{
-	u8 pos[2];
-} single_key_t;
-typedef struct {
-	u8 control;
-	single_key_t key[6];                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
-	u8 key_cnt;
-} key_t;
+
 extern void keyborad_process(u8* buf);
 const char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
 const char rows[]="B5B6B7B8B9";
@@ -170,6 +163,30 @@ void keyboard_send_wrap(key_t key_buf);
 //static u8 key_index[5][14];
 u16 key_val[5];
 u8 start_check=1;
+
+
+u8 key_prevent_cycle=2;
+u8 key_state_map[256];
+void scan_update(){
+    for(int i=0;i<256;i++){
+        if(key_state_map[i]){
+            key_state_map[i]--;
+        }
+    }
+}
+
+
+u8 scan_push_check(u8 key){
+    if(!key_state_map[key]){
+       key_state_map[key]=key_prevent_cycle;
+       return 0; 
+    }else
+        return 1;
+        
+}
+
+
+
 void keyboard_scan(){
     u8 i=0,j=0;
     for(j=0;j<ROW_LEN;j++){
@@ -201,11 +218,16 @@ void keyboard_scan(){
 	key_t key_buf;
 	key_buf.control=0;
 	key_buf.key_cnt=0;
+//    scan_update();
     for(j=0;j<ROW_LEN;j++){
         for(i=0;i<COL_LEN;i++){
             if(key_val[j]&(1<<i))
             {
-                switch(key_map[0][j][i]){
+                u8 value=key_map[0][j][i];
+//                if(scan_push_check(value)){
+//                    continue;
+//                }
+                switch(value){
                 case 225:
                     key_buf.control|=(1<<1);
                     break;
@@ -267,14 +289,14 @@ void app_press(u8 *buf){
 //	}
 	keyborad_process(buf);
 }
-void app_handle(u8 *buf);
+void app_handle(u8 *buf,key_t* );
 void keyboard_send_wrap2(u8 *buf);
-void keyboard_send(u8 *buf){
+void keyboard_send(u8 *buf,key_t* bufp){
 	if(delegate){
 		commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
 	}else{
 		
-		app_handle(buf);
+		app_handle(buf,bufp);
 	}
 }
 
@@ -364,7 +386,8 @@ void keyboard_send_wrap(key_t key_buf){
 //		}
 		key_set(buf,map,&key_buf);
 //		led_reset();
-		keyboard_send(buf);		
+//        scan_push_check(buf);
+		keyboard_send(buf,&key_buf);		
 	}
 }
 

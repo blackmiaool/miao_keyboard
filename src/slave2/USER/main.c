@@ -36,8 +36,7 @@ int calc_free_memory(){
 		if(area){
 			free(area);
 			return i;
-		}
-		
+		}		
 	}
 	return 0;
 }
@@ -59,6 +58,12 @@ int main(void)
 	uart_init(72,256000);
 
 	JTAG_Set(1);//for free JTAG pins
+    
+    USB_Cable_Init();	
+    USB_Cable_Config (ENABLE);
+
+    
+    
 	delay_ms(200);		
   
 	SPI_Flash_Init(); 
@@ -88,7 +93,7 @@ int main(void)
 	printf("last memory=%d",calc_free_memory());
 	while(1){
 		keyboard_scan();
-		for(u8 i=0;i<110;i++){
+		for(u8 i=0;i<70;i++){
 			routine();			
 			delay_us(100);
 		}

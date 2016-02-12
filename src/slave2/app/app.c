@@ -239,7 +239,10 @@ void  key_cap_add(cap* cap_this)
 void reset_system(struct st_key_cap* a)
 {
 //NVIC_SystemReset();
-	printf("resetting");
+    u16 output=0;
+    press_string_pure(&output,1);
+    press_string_pure(&output,1);
+	printf("resetting\r\n");
 	SCB->AIRCR = 0x05FA0000| (u32)0x04;
 }
 
@@ -409,10 +412,12 @@ result:
 //        buf_pre[i]=buf[i];
     return result;
 }
-u8 key_capture(u8 *buf)
+extern u8 use_lua;
+u8 key_capture(u8 *buf,key_t* bufp)
 {
     int through1,through2;
-//	through1=lua_handle(buf);
+    if(use_lua)
+        through1=lua_handle(bufp);
     through2=key_handle(buf);
 //    if(lua_flag&LUA_MACRO_PLAY_MASK)
 //    {
@@ -477,7 +482,7 @@ void app_init()
 	
 	lua_init();
 }
-void app_handle(u8 *buf){
+void app_handle(u8 *buf,key_t* bufp){
 //	DBG("CNT=%d\r\n",key_cap_cnt);
 //	for(u8 i=0;i<8;i++)
 //	{
@@ -487,13 +492,13 @@ void app_handle(u8 *buf){
 		app_press(buf);
 	}
 	else{
-		if(!key_capture(buf))
-	{ 
-		app_press(buf);
-		
-	}else{
-		DBG("capture");
-	}
+		if(!key_capture(buf, bufp))
+        { 
+            app_press(buf);
+            
+        }else{
+            DBG("capture");
+        }
 	}
 	
 }

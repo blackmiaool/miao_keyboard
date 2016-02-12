@@ -3,6 +3,7 @@
 #include "stm32lib.h"
 #include "ff.h"
 #include "stdio.h"
+#include "keyboard.h"
 #define DEBUG
 #ifdef 	DEBUG
 #define	DBG(...)  printf(__VA_ARGS__)
@@ -10,7 +11,7 @@
 #define	DBG(...)
 #endif
 
-u8 key_capture(u8 *buf);
+u8 key_capture(u8 *buf,key_t * bufp);
 void key_cap_Init(void);
 void press_string_pure(u16 *buf,u32 lenth);
 s8 control_key_index(const char buf[]);
