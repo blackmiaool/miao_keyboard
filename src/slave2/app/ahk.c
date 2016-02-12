@@ -215,14 +215,14 @@ const u8 general_key_value[]={0,
                              };
 const u8* general_key_map[]={"",
                              "enter",            "esc",      "delete",       "tab",
-                             "space",            "caps lock","f1",           "f2",
+                             "space",            "capsLock","f1",           "f2",
                              "f3",               "f4",       "f5",           "f6",
                              "f7",               "f8",       "f9",           "f10",
 
-                             "f11",              "f12",      "printscreen",  "scroll lock",
-                             "pause",            "intert",   "home",         "pageup",
+                             "f11",              "f12",      "printscreen",  "scrollLock",
+                             "pause",            "insert",   "home",         "pageup",
                              "deleteforward",   "end",      "pagedown",     "right",
-                             "left",             "down",     "up",           "num lock"
+                             "left",             "down",     "up",           "numLock"
                             };
 u8 general_key_ana(u8* read_buf,u32 general_key_pos,u8 general_key_cnt)
 {

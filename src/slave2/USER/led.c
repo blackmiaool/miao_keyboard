@@ -60,10 +60,10 @@ void led_init(){
 	}
 	IOConfig(SER595_io.port, SER595_io.num>7, SER595_io.pin, 3);
 	IOout(SER595_io.port,SER595_io.num,0);
-	
+	delay_us(1);
 	IOConfig(RCK595_io.port, RCK595_io.num>7, RCK595_io.pin, 3);
 	IOout(RCK595_io.port,RCK595_io.num,1);
-	
+	delay_us(1);
 	IOConfig(SCK595_io.port, SCK595_io.num>7, SCK595_io.pin, 3);
 	IOout(SCK595_io.port,SCK595_io.num,1);
 	u8 b=buf[0][0];
@@ -130,14 +130,15 @@ void led_handle(){
 	u32 chu=1;
 	u8 row=tick/chu%5;
 	for(u8 i=0;i<5;i++){
-		IOout(rows_io[i].port,rows_io[i].num,1);
+		IOout(rows_io[i].port,rows_io[i].num,0);
 	}
 	for(u8 i=0;i<16;i++){
 		IOout(RCK595_io.port,RCK595_io.num,0);
 		IOout(SCK595_io.port,SCK595_io.num,0);		
 		IOout(RCK595_io.port,RCK595_io.num,1);
 		IOout(SCK595_io.port,SCK595_io.num,1);
-		IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]&&current_mode!=0);
+//		IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]&&current_mode!=0);
+        IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]);
 	}
 	
 	IOout(rows_io[row].port,rows_io[row].num,1);

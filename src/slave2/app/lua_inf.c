@@ -13,7 +13,7 @@ lua_State *L;
 u8 use_lua=false;
 int lua_handle(key_t* buf)
 {
-        int sum;
+        int ret;
 /*the function name*/
         lua_getglobal(L,"key_input");
 /*the first argument*/
@@ -30,12 +30,31 @@ int lua_handle(key_t* buf)
 //		}
 /*call the function with 2 arguments, return 1 result.*/
         lua_call(L, buf->key_cnt+2, 1);
-/*get the result.*/
-//        sum = (int)lua_tonumber(L, -1);
-/*cleanup the return*/
-        lua_pop(L,1);
-        return sum;
+
+
+        ret=lua_toboolean(L, -1);        /*get the result.*/
+        lua_pop(L,1);/*cleanup the return*/
+        return ret;
 }
+
+
+extern const u8 general_key_value[33];
+extern const u8* general_key_map[33];
+    
+static int get_key_index(lua_State *L){
+    const char *str=lua_tostring(L,1);
+    u8 cnt=32;
+    for(int i=1;i<cnt;i++){
+        if(strcmp((const char*)general_key_map[i],str)==0)
+        {
+             lua_pushnumber(L, general_key_value[i]);
+            return 1;
+        }
+    }
+     lua_pushnumber(L, 0);
+    return 1;
+}
+
 static int lua_delay_ms(lua_State *L)
 {
     int ms=lua_tonumber(L,1);
@@ -59,6 +78,9 @@ void lua_init(){
 	L=(lua_State *) luaL_newstate();      
     luaL_openlibs(L);
     lua_register(L, "output",lua_output);
+    lua_register(L, "delay",lua_delay_ms);
+    lua_register(L, "get_key_index",get_key_index);
+
     lua_pop(L, 1);  // remove _PRELOAD table
 	char *entry_file="main.lua";
 	printf("==========lua print==========\r\n");

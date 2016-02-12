@@ -416,9 +416,11 @@ extern u8 use_lua;
 u8 key_capture(u8 *buf,key_t* bufp)
 {
     int through1,through2;
-    if(use_lua)
-        through1=lua_handle(bufp);
+    
     through2=key_handle(buf);
+    if(use_lua){
+        through2|=lua_handle(bufp);
+    }
 //    if(lua_flag&LUA_MACRO_PLAY_MASK)
 //    {
 //        lua_flag&=(~LUA_MACRO_PLAY_MASK);
@@ -497,7 +499,7 @@ void app_handle(u8 *buf,key_t* bufp){
             app_press(buf);
             
         }else{
-            DBG("capture");
+//            DBG("capture");
         }
 	}
 	
