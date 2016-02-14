@@ -30,13 +30,20 @@ void app_init(void);
 void routine(){
 	led_handle();
 }
-int calc_free_memory(){
-	for(int i=10240;i>0;i--){
-		char *area=(char *)malloc(i*100);
-		if(area){
+int calc_free_memory(u32 last,u32 base){
+
+	for(int i=0;i<=10;i++){
+		char *area=(char *)malloc(i*base+last);
+		if(!area){
+			if(base!=1){
+				return calc_free_memory(last+(i-1)*base,base/10);
+			}else{
+				return last+i;
+			}
+		}else{
 			free(area);
-			return i;
-		}		
+		}
+	
 	}
 	return 0;
 }
@@ -83,14 +90,14 @@ int main(void)
 	USB_Init();	
 	
 //	while(!INIT_OK);//等待初始化完成 
-	delay_ms(1000);	
+	delay_ms(2000);	
 
 	
 	keyboard_init();
 	keyboard_scan();//exec before app_init to check if parse bmk files
 	app_init();
 	led_init();
-	printf("last memory=%d",calc_free_memory());
+	printf("last memory= %.3f KB",(float)calc_free_memory(0,100000)/1000);
 	while(1){
 		keyboard_scan();
 		for(u8 i=0;i<70;i++){

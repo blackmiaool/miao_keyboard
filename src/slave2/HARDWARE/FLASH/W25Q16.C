@@ -332,7 +332,6 @@ u8 SPI_FLASH_BUF[4096];
 void SPI_Flash_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)   
 
 { 
-
 	u32 secpos;
 
 	u16 secoff;

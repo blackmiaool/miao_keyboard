@@ -29,7 +29,7 @@ int lua_handle(key_t* buf)
 //			lua_pushnumber(L, 0);
 //		}
 /*call the function with 2 arguments, return 1 result.*/
-        lua_call(L, buf->key_cnt+2, 1);
+        lua_pcall(L, buf->key_cnt+2, 1,0);
 
 
         ret=lua_toboolean(L, -1);        /*get the result.*/
@@ -72,6 +72,41 @@ static int lua_output(lua_State* L){
     app_press(buf);
     return 0;
 }
+static void str_trim(char*pStr)  
+{  
+    char *pTmp = pStr;  
+      
+    while (*pStr != '\0')   
+    {  
+        if (*pStr != ' '&&*pStr != '\n'&&*pStr != '\r')  
+        {  
+            *pTmp++ = *pStr;  
+        }  
+        ++pStr;  
+    }  
+    *pTmp = '\0';  
+} 
+static int read_file(lua_State *L){
+	FIL file;
+	int n = lua_gettop(L);	
+	const char *file_name=lua_tostring(L,1);
+	u8 trim=0;
+	if(n==2)
+		trim=lua_tonumber(L,2);
+	 if(!f_open(&file,file_name,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA__WRITTEN)){
+		char *read_buf=(char *)malloc(file.fsize+1);
+		u32 cnt=0;
+		f_read(&file,read_buf,file.fsize,&cnt);
+		f_close(&file);
+		if(trim){
+			str_trim(read_buf);
+		}
+		lua_pushstring(L, read_buf);
+		free(read_buf);
+		return 1;
+	}
+	return 0;
+}
 void lua_init(){
 	if(L)
 		lua_close(L);
@@ -80,19 +115,21 @@ void lua_init(){
     lua_register(L, "output",lua_output);
     lua_register(L, "delay",lua_delay_ms);
     lua_register(L, "get_key_index",get_key_index);
-
+	lua_register(L, "read_file",read_file);
+	
     lua_pop(L, 1);  // remove _PRELOAD table
 	char *entry_file="main.lua";
 	printf("==========lua print==========\r\n");
 	
     u32 cnt=0;
 
-    if(!f_open(&file,entry_file,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA_OPEN_ALWAYS|FA__WRITTEN)){
-        use_lua=true;
+    if(!f_open(&file,entry_file,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA__WRITTEN)){
+        
 		char *read_buf=(char *)malloc(file.fsize);
 		f_read(&file,read_buf,file.fsize,&cnt);
 		luaL_dostring(L,read_buf);
 		f_close(&file);
 		free(read_buf);
+		use_lua=true;
 	}
 }

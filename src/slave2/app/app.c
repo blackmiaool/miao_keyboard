@@ -464,7 +464,7 @@ void app_init()
         DBG("FS mount failed!!\r\n%d",result);
 		return;
     }
-    ahk_init((char*)"/mode_1");
+//    ahk_init((char*)"/mode_1");
 
 
 
