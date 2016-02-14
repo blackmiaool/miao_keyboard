@@ -95,8 +95,9 @@ int main(void)
 	
 	keyboard_init();
 	keyboard_scan();//exec before app_init to check if parse bmk files
-	app_init();
 	led_init();
+	app_init();
+	
 	printf("last memory= %.3f KB",(float)calc_free_memory(0,100000)/1000);
 	while(1){
 		keyboard_scan();

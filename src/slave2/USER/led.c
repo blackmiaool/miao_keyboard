@@ -7,7 +7,8 @@
 #include "usart.h"
 #include "commu_mcu.h"
 #include "keyboard.h"
-static u8 buf[14][5];
+u8 led_buf[14][5];
+u8 led_mode=0;
 static char SER595[]="A0";
 static char RCK595[]="A1";
 static char SCK595[]="A2";
@@ -66,11 +67,11 @@ void led_init(){
 	delay_us(1);
 	IOConfig(SCK595_io.port, SCK595_io.num>7, SCK595_io.pin, 3);
 	IOout(SCK595_io.port,SCK595_io.num,1);
-	u8 b=buf[0][0];
+	u8 b=led_buf[0][0];
 	b=b;
 	for(u8 i=0;i<ROW_LEN;i++){
 		for(u8 j=0;j<COL_LEN;j++){
-			buf[i][j]=1;
+			led_buf[j][i]=1;
 		}
 	}
 }
@@ -112,7 +113,7 @@ void set_all(u8 value){
 }
 
 
-
+extern u8 use_lua;
 void led_handle(){
 //	static u8 i=0;
 //	if(tick>0)
@@ -125,23 +126,50 @@ void led_handle(){
 //	if(tick>call_times_per_s){
 //		value=!value;
 //	}
-	tick++;
+	if(use_lua){
+		tick++;
 
-	u32 chu=1;
-	u8 row=tick/chu%5;
-	for(u8 i=0;i<5;i++){
-		IOout(rows_io[i].port,rows_io[i].num,0);
+		u32 chu=1;
+		u8 row=tick/chu%5;
+		if(led_mode==0){
+			for(u8 i=0;i<5;i++){
+				IOout(rows_io[i].port,rows_io[i].num,0);
+			}
+		}else if(led_mode==1){
+			for(u8 i=0;i<5;i++){
+				IOout(rows_io[i].port,rows_io[i].num,1);
+			}
+		}
+		
+		for(u8 i=0;i<16;i++){
+			IOout(RCK595_io.port,RCK595_io.num,0);
+			IOout(SCK595_io.port,SCK595_io.num,0);		
+			IOout(RCK595_io.port,RCK595_io.num,1);
+			IOout(SCK595_io.port,SCK595_io.num,1);
+			IOout(SER595_io.port,SER595_io.num,led_buf[i>13?13:i][row]);
+		}
+		
+		IOout(rows_io[row].port,rows_io[row].num,1);
+	}else{
+		tick++;
+
+		u32 chu=1;
+		u8 row=tick/chu%5;
+		for(u8 i=0;i<5;i++){
+			IOout(rows_io[i].port,rows_io[i].num,0);
+		}
+		for(u8 i=0;i<16;i++){
+			IOout(RCK595_io.port,RCK595_io.num,0);
+			IOout(SCK595_io.port,SCK595_io.num,0);		
+			IOout(RCK595_io.port,RCK595_io.num,1);
+			IOout(SCK595_io.port,SCK595_io.num,1);
+	//		IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]&&current_mode!=0);
+			IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]);
+		}
+		
+		IOout(rows_io[row].port,rows_io[row].num,1);
 	}
-	for(u8 i=0;i<16;i++){
-		IOout(RCK595_io.port,RCK595_io.num,0);
-		IOout(SCK595_io.port,SCK595_io.num,0);		
-		IOout(RCK595_io.port,RCK595_io.num,1);
-		IOout(SCK595_io.port,SCK595_io.num,1);
-//		IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]&&current_mode!=0);
-        IOout(SER595_io.port,SER595_io.num,key_map[current_mode][row][COL_LEN-1-i]==key_map[0][row][COL_LEN-1-i]);
-	}
-	
-	IOout(rows_io[row].port,rows_io[row].num,1);
+
 //	set_all(1);
 	
 	
