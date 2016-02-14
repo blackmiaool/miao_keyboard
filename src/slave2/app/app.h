@@ -13,9 +13,9 @@
 
 u8 key_capture(u8 *buf,key_t * bufp);
 void key_cap_Init(void);
-void press_string_pure(u16 *buf,u32 lenth);
-s8 control_key_index(const char buf[]);
-extern const u8  ascii2usb[128];
+
+//s8 control_key_index(const char buf[]);
+//extern const u8  ascii2usb[128];
 typedef u8 uint8_t;
 //typedef char int8_t;
 extern u8 blue_choose;
@@ -29,8 +29,8 @@ extern u8 blue_choose;
 #define RWin    0x80
 #define key_string_num 8
 #define key_stinrg_max_word 6
-#define key_cap_cnt_all 70
-extern const u8 shift_table[128];
+#define key_cap_cnt_all 10
+//extern const u8 shift_table[128];
 void cmd(u8* content);
 
 extern u8 *read_buf;
@@ -63,8 +63,8 @@ extern u8 buf_out[10];
 void buf_clear(void );
 extern void app_press(u8 *buf);
 #define press  do{app_press(buf_out+1);}while(0);
-extern const u8 key_string[key_string_num][key_stinrg_max_word];
-extern u8  key_changetable[8];
+//extern const u8 key_string[key_string_num][key_stinrg_max_word];
+//extern u8  key_changetable[8];
 void  key_cap_add(cap* cap_this);
 #endif//_APP_INTERFACE_H_
 

@@ -29,18 +29,50 @@ int lua_handle(key_t* buf)
 //			lua_pushnumber(L, 0);
 //		}
 /*call the function with 2 arguments, return 1 result.*/
-        lua_pcall(L, buf->key_cnt+2, 1,0);
+        if(lua_pcall(L, buf->key_cnt+2, 1,0)==0){
+			ret=lua_toboolean(L, -1); 
+			lua_pop(L,1);
+		}else{
+			ret=0;
+		}
 
 
-        ret=lua_toboolean(L, -1);        /*get the result.*/
-        lua_pop(L,1);/*cleanup the return*/
+               /*get the result.*/
+        /*cleanup the return*/
         return ret;
 }
 
 
 extern const u8 general_key_value[33];
 extern const u8* general_key_map[33];
-    
+const u8 general_key_value[]={0,
+                              40,41,42,43,
+                              44,57,58,59,
+                              60,61,62,63,
+                              64,65,66,67,
+
+                              68,69,70,71,
+                              72,73,74,75,
+                              76,77,78,79,
+                              80,81,82,83
+                             };
+ const u8* general_key_map[]={"",
+                             "enter",            "esc",      "delete",       "tab",
+                             "space",            "capsLock","f1",           "f2",
+                             "f3",               "f4",       "f5",           "f6",
+                             "f7",               "f8",       "f9",           "f10",
+
+                             "f11",              "f12",      "printscreen",  "scrollLock",
+                             "pause",            "insert",   "home",         "pageup",
+                             "deleteforward",   "end",      "pagedown",     "right",
+                             "left",             "down",     "up",           "numLock"
+                            };
+static int restart_keyboard(lua_State *L)
+{
+	printf("resetting\r\n");
+	SCB->AIRCR = 0x05FA0000| (u32)0x04;
+	return 0;
+}
 static int get_key_index(lua_State *L){
     const char *str=lua_tostring(L,1);
     u8 cnt=32;
@@ -116,6 +148,7 @@ void lua_init(){
     lua_register(L, "delay",lua_delay_ms);
     lua_register(L, "get_key_index",get_key_index);
 	lua_register(L, "read_file",read_file);
+	lua_register(L, "restart_keyboard",restart_keyboard);
 	
     lua_pop(L, 1);  // remove _PRELOAD table
 	char *entry_file="main.lua";
