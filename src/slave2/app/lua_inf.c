@@ -191,19 +191,24 @@ static int read_datasheet(lua_State *L){
 	lua_pushinteger(L,arr[index]);
 	return 1;
 }
+u8 *key_index_lua_buf;
 static int init_datasheet(lua_State *L){
 	FIL file;
 
 	const char *file_name=lua_tostring(L,1);
 	u8 width=lua_tointeger(L,2);
-
+	
 	if(!f_open(&file,file_name,FA_OPEN_EXISTING|FA_WRITE|FA_READ|FA__WRITTEN)){
 		char *read_buf=(char *)malloc(file.fsize+1);
 		u32 cnt=0;
 		f_read(&file,read_buf,file.fsize,&cnt);
 		f_close(&file);
 		str_trim(read_buf);
-		lua_pushinteger(L,(int)handle_datasheet(read_buf,cnt,width));
+		int buf_p=handle_datasheet(read_buf,cnt,width);
+		if(!strcmp(file_name,"config/key_index.txt")){
+			key_index_lua_buf=(u8 *)buf_p;
+		}
+		lua_pushinteger(L,buf_p);
 		free(read_buf);
 		return 1;
 	}

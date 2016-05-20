@@ -42,35 +42,42 @@ const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 
 
 //const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
 //{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
-//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{224,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
-//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,135,136},},
+//{135,226,227 ,44 ,44,44 ,44  ,44 ,44,44 ,231,230,228,136},},
 
 //{{41 ,58 ,59 ,60 ,61 ,62 ,63 ,64 ,65 ,66 ,67 ,68 ,69 ,42},//active when pressing fn1
 //{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
-//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{224 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
-//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,0,0},},
+//{0,226,227 ,44 ,44,44 ,44  ,44 ,44,44 ,231,230,228,0},},
 
 //{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//active when pressed fn2 
 //{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,82 ,18 ,19 ,47 ,48 ,49},
-//{57 ,4  ,22/*s*/ ,7  ,9  ,10 /*g*/,11 ,80/*j*/ ,81 ,79 ,51/*;*/ ,52 ,40 ,40},
+//{224 ,4  ,22/*s*/ ,7  ,9  ,10 /*g*/,11 ,80/*j*/ ,81 ,79 ,51/*;*/ ,52 ,40 ,40},
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
-//{224,227,226 ,44 ,44,44 ,44  ,44 ,44,44 ,228,230,0,0},}};
+//{0,226,227 ,44 ,44,44 ,44  ,44 ,44,44 ,231,230,228,0},}};
 
 
 
 
 //const u8 key_index[ROW_LEN][14]={{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},//long space
 //{43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
-//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
+//{57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 j,40 ,40},
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 //{224,227,226 ,44 ,44,44 ,44  ,44  ,44,44,228,230,80,79},};
 
 extern void keyborad_process(u8* buf);
 const char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
 const char rows[]="B5B6B7B8B9";
-
+u8 get_key(u8 index,u8 row,u8 col){
+	if(key_index_lua_buf){
+		return key_index_lua_buf[index*ROW_LEN*16+row*16+col];
+	}else{
+		return key_map[index][row][col];
+	}
+	
+}
 void keyboard_init(void){
 	SCPE(PERIOA);
 	SCPE(PERIOB);
@@ -223,7 +230,7 @@ void keyboard_scan(){
         for(i=0;i<COL_LEN;i++){
             if(key_val[j]&(1<<i))
             {
-                u8 value=key_map[0][j][i];
+                u8 value=get_key(0,j,i);
 //                if(scan_push_check(value)){
 //                    continue;
 //                }
@@ -305,12 +312,12 @@ void find_pos(u8 **value,u8 index,u8* pos){
 }
 
 key_t commu_buf_pre;
-typedef const u8 Key_map[ROW_LEN][COL_LEN];
-typedef Key_map *key_map_t;
+//typedef const u8 Key_map[ROW_LEN][COL_LEN];
+//typedef Key_map *key_map_t;
 u8 current_mode=0;
-void key_set(u8 *buf,key_map_t map,const key_t *key){
+void key_set(u8 *buf,u8 index,const key_t *key){
 	for(u8 i=0;i<key->key_cnt;i++){
-		buf[2+i]=(*map)[key->key[i].pos[0]][key->key[i].pos[1]];
+		buf[2+i]=get_key(index,key->key[i].pos[0],key->key[i].pos[1]);
 	}
 }
 void keyboard_send_wrap(key_t key_buf){
@@ -333,7 +340,7 @@ void keyboard_send_wrap(key_t key_buf){
 	if(start_check){
 		start_check=0;
 		for(u8 i=0;i<key_buf.key_cnt;i++){
-			u8 key_this=key_map[0][key_buf.key[i].pos[0]][key_buf.key[i].pos[1]];
+			u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
 			if(key_this==clean_key){
 				clean_mode=1;
 				break;
@@ -341,7 +348,7 @@ void keyboard_send_wrap(key_t key_buf){
 		}
 	}
 	for(u8 i=0;i<key_buf.key_cnt;i++){
-		u8 key_this=key_map[0][key_buf.key[i].pos[0]][key_buf.key[i].pos[1]];
+		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
 		if(key_this==fn1){
 			current_mode=1;
 			break;
@@ -362,7 +369,7 @@ void keyboard_send_wrap(key_t key_buf){
 	if(send){
 
 		for(u8 i=2;i<2+key_buf.key_cnt;i++){
-			u8 key_this=key_map[0][key_buf.key[i-2].pos[0]][key_buf.key[i-2].pos[1]];
+			u8 key_this=get_key(0,key_buf.key[i-2].pos[0],key_buf.key[i-2].pos[1]);
 			if(key_this==fn2){
 				if(!current_mode)
 					current_mode=2;
@@ -371,8 +378,8 @@ void keyboard_send_wrap(key_t key_buf){
 				break;
 			}
 		}
-		key_map_t map;
-		map=&key_map[current_mode];
+//		key_map_t map;
+//		map=&key_map[current_mode];
 //		switch(current_mode){
 //			case 0:
 //				map=&key_index;
@@ -384,7 +391,7 @@ void keyboard_send_wrap(key_t key_buf){
 //				map=&key_index2;
 //				break;
 //		}
-		key_set(buf,map,&key_buf);
+		key_set(buf,current_mode,&key_buf);
 //		led_reset();
 //        scan_push_check(buf);
 		keyboard_send(buf,&key_buf);		
