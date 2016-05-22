@@ -194,26 +194,59 @@ u8 scan_push_check(u8 key){
         
 }
 
+static u16 matrix_debouncing[ROW_LEN];
+#define DEBOUNCE 5
+u8 debouncing=DEBOUNCE;
+u8 hardware_scan(u16 *map){
+//    for(u8 j=0;j<ROW_LEN;j++){
+//        map[j]=0;
+//        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
+//    }
 
-void hardware_scan(u16 *map){
-
+//    for(u8 j=0;j<ROW_LEN;j++){
+//        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,0);
+//        for(u8 i=0;i<COL_LEN;i++){
+//			u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
+//            map[j]+=((val>0)<<i);
+//        }
+//        u16 mask=1<<COL_LEN;
+//        mask--;
+//        map[j]=mask-map[j];
+//        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
+//    }
 	
-    for(u8 j=0;j<ROW_LEN;j++){
-        map[j]=0;
-        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
+	for (u8 i = 0; i < ROW_LEN; i++) {
+        IOout(keyboard_gpio_rows[i].port,keyboard_gpio_rows[i].num,0);
+        delay_us(30);
+        u16 cols = 0;
+		for(u8 i=0;i<COL_LEN;i++){
+			u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
+            cols+=((val>0)<<i);
+        }
+		u16 mask=1<<COL_LEN;
+        mask--;
+		cols=mask-cols;
+		
+        if (matrix_debouncing[i] != cols) {
+            matrix_debouncing[i] = cols;
+            debouncing = DEBOUNCE;
+        }
+        IOout(keyboard_gpio_rows[i].port,keyboard_gpio_rows[i].num,1);
     }
 
-    for(u8 j=0;j<ROW_LEN;j++){
-        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,0);
-        for(u8 i=0;i<COL_LEN;i++){
-			u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
-            map[j]+=((val>0)<<i);
+    if (debouncing) {
+        if (--debouncing) {
+            delay_ms(1);
+			return 0;
+        } else {
+            for (u8 i = 0; i < ROW_LEN; i++) {
+                map[i] = matrix_debouncing[i];
+            }
+			return 1;
         }
-        u16 mask=1<<COL_LEN;
-        mask--;
-        map[j]=mask-map[j];
-        IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
+		
     }
+	return 0;
 }
 static key_t keys_pre={0,0};
 void key_t_add(key_t *keys,u8 p0,u8 p1){
@@ -260,9 +293,11 @@ u8 has_key(key_t *keys,single_key_t key){
 	}
 	return 0;
 }
-
+#define DEBOUNCE 5
 void keyboard_scan(){
-	hardware_scan(key_val);
+	if(!hardware_scan(key_val)){
+		return;
+	}
 	
 //    for(j=0;j<ROW_LEN;j++){
 //		printf("key value %d %3d",j,key_val[j]);
@@ -289,13 +324,13 @@ void keyboard_scan(){
         }
     }
 	scan_end:;	
-	update_list(&keys_list_press,FILTER_TIME_AFTER_PRESS);
-	update_list(&keys_list_release,FILTER_TIME_AFTER_RELEASE);
+//	update_list(&keys_list_press,FILTER_TIME_AFTER_PRESS);
+//	update_list(&keys_list_release,FILTER_TIME_AFTER_RELEASE);
 	for(u8 i=0;i<keys_pressing.cnt;i++){//check new pressed
 		single_key_t key=keys_pressing.key[i];
 				
 		if(!has_key(&keys_pre,key)){			
-			if(try_modify_key(&keys_list_press,&key)){
+			if(1||try_modify_key(&keys_list_press,&key)){
 				changes=1;
 				key_t_add(&keys_next,key.pos[0],key.pos[1]);
 			}else{
@@ -309,7 +344,7 @@ void keyboard_scan(){
 		single_key_t key=keys_pre.key[i];
 		
 		if(!has_key(&keys_pressing,key)){			
-			if(try_modify_key(&keys_list_release,&key)){
+			if(1||try_modify_key(&keys_list_release,&key)){
 				changes=1;
 			}else{				
 				key_t_add(&keys_next,key.pos[0],key.pos[1]);

@@ -7,8 +7,8 @@ void keyboard_scan(void);
 #define  COL_LEN 14
 #define  ROW_LEN 5
 #define  KEY_BUF_LEN 14
-#define  FILTER_TIME_AFTER_PRESS 10
-#define  FILTER_TIME_AFTER_RELEASE 40
+#define  FILTER_TIME_AFTER_PRESS 100
+#define  FILTER_TIME_AFTER_RELEASE 100
 typedef struct{
 	u8 pos[2];
 } single_key_t;
