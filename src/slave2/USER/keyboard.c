@@ -16,10 +16,13 @@ struct GPIO_struct keyboard_gpio_cols[COL_LEN];
 
 GPIO_TypeDef* char2port(char ch);
 u32 str2pin(char *str);
-u8 clean_mode=0;
-u8 clean_key=41;
+u8 clean_mode=0;//disable app programs
+u8 clean_key=41;//press esc to enter clean mode 
 u8 fn1=135;
 u8 fn2=136;
+u8 time1=10;
+u8 time2=40;
+u8 key_time[ROW_LEN][COL_LEN];
 const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
 {57 ,4  ,22 ,7  ,9  ,10 ,11 ,13 ,14 ,15 ,51 ,52 ,40 ,40},
@@ -286,23 +289,13 @@ end:;
 
 
 extern u8 delegate;
-void app_press(u8 *buf){
-	
-//	u8 b[9];
-//	b[0]=1;
-//	
-//	for(u8 i=0;i<8;i++){
-//		b[i+1]=buf[i];
-//	}
-	keyborad_process(buf);
-}
+
 void app_handle(u8 *buf,key_t* );
 void keyboard_send_wrap2(u8 *buf);
 void keyboard_send(u8 *buf,key_t* bufp){
 	if(delegate){
 		commu_send(buf,8,COMMU_TYPE(KEYBOARD_MS));
-	}else{
-		
+	}else{	
 		app_handle(buf,bufp);
 	}
 }
@@ -320,77 +313,70 @@ void key_set(u8 *buf,u8 index,const key_t *key){
 		buf[2+i]=get_key(index,key->key[i].pos[0],key->key[i].pos[1]);
 	}
 }
+u8 check_clean_mode(key_t key_buf){
+	for(u8 i=0;i<key_buf.key_cnt;i++){
+		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
+		if(key_this==clean_key){
+			return 1;
+		}
+	}
+	return 0;
+}
 void keyboard_send_wrap(key_t key_buf){
 	u8 buf[8];
 	buf[0]=key_buf.control;
 	buf[1]=0;
-	for(u8 i=2;i<8;i++)
+	for(u8 i=2;i<8;i++){
 		buf[i]=0;
-//	for(u8 i=0;i<6;i++){
-//		buf[2+i]=key_buf.key[i];		
-//	}
-	u8 send=0;
-	if(commu_buf_pre.key_cnt!=key_buf.key_cnt)
-		send=1;
-	if(commu_buf_pre.control!=key_buf.control)
-		send=1;
-	if(current_mode!=2){
-			current_mode=0; 
 	}
-	if(start_check){
+	
+	u8 changed=0;//if key state change
+	if(commu_buf_pre.key_cnt!=key_buf.key_cnt)//if key cnt changes
+		changed=1;
+	if(commu_buf_pre.control!=key_buf.control)//if control key changes
+		changed=1;
+	if(current_mode!=2){
+		current_mode=0; 
+	}
+	
+	if(start_check){//just check once when power on. If clean_mode, disable all app programs.
 		start_check=0;
-		for(u8 i=0;i<key_buf.key_cnt;i++){
+		clean_mode=check_clean_mode(key_buf);
+	}
+	
+	if(clean_mode){
+		for(u8 i=0;i<key_buf.key_cnt;i++){//if enter mode 1
 			u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
-			if(key_this==clean_key){
-				clean_mode=1;
+			if(key_this==fn1){
+				current_mode=1;
 				break;
 			}
 		}
 	}
-	for(u8 i=0;i<key_buf.key_cnt;i++){
-		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
-		if(key_this==fn1){
-			current_mode=1;
-			break;
-		}
-	}
-	for(u8 i=0;i<key_buf.key_cnt;i++){
-
-
+	
+	for(u8 i=0;i<key_buf.key_cnt;i++){//if key changes
 		if(commu_buf_pre.key[i].pos[0]!=key_buf.key[i].pos[0]||commu_buf_pre.key[i].pos[1]!=key_buf.key[i].pos[1]){
-			send=1;
+			changed=1;
 			commu_buf_pre.key[i].pos[0]=key_buf.key[i].pos[0];
 			commu_buf_pre.key[i].pos[1]=key_buf.key[i].pos[1];
 		}
-		
 	}
 	commu_buf_pre.key_cnt=key_buf.key_cnt;
 	commu_buf_pre.control=key_buf.control;
-	if(send){
-
-		for(u8 i=2;i<2+key_buf.key_cnt;i++){
-			u8 key_this=get_key(0,key_buf.key[i-2].pos[0],key_buf.key[i-2].pos[1]);
-			if(key_this==fn2){
-				if(!current_mode)
-					current_mode=2;
-				else
-					current_mode=0;
-				break;
+	if(changed){
+		if(clean_mode){
+			for(u8 i=2;i<2+key_buf.key_cnt;i++){
+				u8 key_this=get_key(0,key_buf.key[i-2].pos[0],key_buf.key[i-2].pos[1]);
+				if(key_this==fn2){
+					if(!current_mode)
+						current_mode=2;
+					else
+						current_mode=0;
+					break;
+				}
 			}
 		}
-//		key_map_t map;
-//		map=&key_map[current_mode];
-//		switch(current_mode){
-//			case 0:
-//				map=&key_index;
-//				break;
-//			case 1:
-//				    map=&key_index1;
-//				break;
-//			case 2:
-//				map=&key_index2;
-//				break;
-//		}
+
 		key_set(buf,current_mode,&key_buf);
 //		led_reset();
 //        scan_push_check(buf);

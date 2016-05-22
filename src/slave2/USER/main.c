@@ -58,6 +58,12 @@ int calc_free_memory(u32 last,u32 base){
 //	}
 //	return 0;
 //}
+void timer_init(){
+	SCPE(PERTIMER1);
+	TIM1->ARR=1000;
+	TIM1->PSC=7199; //0.1ms
+	TIM1->CR1|=0x01;
+}
 int main(void)
 {
 	Stm32_Clock_Init(9);//系统时钟设置
@@ -68,7 +74,7 @@ int main(void)
     
     USB_Cable_Init();	
     USB_Cable_Config (ENABLE);
-
+	timer_init();
     
     
 	delay_ms(200);		

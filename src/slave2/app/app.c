@@ -79,6 +79,10 @@ void app_init()
 
 	lua_init();
 }
+extern void keyborad_process(u8* buf);
+void app_press(u8 *buf){
+	keyborad_process(buf);
+}
 void app_handle(u8 *buf,key_t* bufp){
 //	DBG("CNT=%d\r\n",key_cap_cnt);
 //	for(u8 i=0;i<8;i++)
