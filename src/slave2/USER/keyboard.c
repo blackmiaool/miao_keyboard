@@ -20,8 +20,7 @@ u8 clean_mode=0;//disable app programs
 u8 clean_key=41;//press esc to enter clean mode 
 u8 fn1=135;
 u8 fn2=136;
-u8 time1=10;
-u8 time2=40;
+
 u8 key_time[ROW_LEN][COL_LEN];
 const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,45 ,46 ,42},
 {43 ,20 ,26 ,8  ,21 ,23 ,28 ,24 ,12 ,18 ,19 ,47 ,48 ,49},
@@ -216,6 +215,52 @@ void hardware_scan(u16 *map){
         IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
     }
 }
+static key_t keys_pre={0,0};
+void key_t_add(key_t *keys,u8 p0,u8 p1){
+	keys->key[keys->cnt].pos[0]=p0;
+	keys->key[keys->cnt].pos[1]=p1;
+	keys->cnt++;
+}
+key_filter_list_t keys_list_press={0};
+key_filter_list_t keys_list_release={0};
+#define TIMER_DIFF(a, b, max)   ((a) >= (b) ?  (a) - (b) : (max) - (b) + (a))
+
+void update_list(key_filter_list_t *list,u16 time){
+	for(u8 i=0;i<list->cnt;i++){
+		key_filter_t *filter=&list->filter[i];
+		if(TIMER_DIFF(TIM1->CNT,filter->time,9999)/10>=time){//timeout, remove
+			for(u8 j=i;j<list->cnt-1;j++){
+				list->filter[j]=list->filter[j+1];
+			}
+			list->cnt--;
+		}
+	}
+}
+u8 try_modify_key(key_filter_list_t* list,single_key_t* key){
+	for(u8 i=0;i<list->cnt;i++){
+		key_filter_t *filter=&list->filter[i];
+		if(filter->key.pos[0]==key->pos[0]&&filter->key.pos[1]==key->pos[1]){
+			return false;
+		}
+	}
+	if(list->cnt<KEY_BUF_LEN){
+		list->filter[list->cnt].key=*key;
+		list->filter[list->cnt].time=TIM1->CNT;
+		list->cnt++;
+		return true;
+	}else{
+		return false;
+	}	
+}
+u8 has_key(key_t *keys,single_key_t key){
+	for(u8 j=0;j<keys->cnt;j++){
+		if(key.pos[0]==keys->key[j].pos[0]&&key.pos[1]==keys->key[j].pos[1]){
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void keyboard_scan(){
 	hardware_scan(key_val);
 	
@@ -223,69 +268,106 @@ void keyboard_scan(){
 //		printf("key value %d %3d",j,key_val[j]);
 //    }
 
-    u8 key_pressing_cnt=0;
-    static u8 pre_press=0;
-    u8 key_press=0;
-	key_t key_buf;
-	key_buf.control=0;
-	key_buf.key_cnt=0;
-
+    u8 changes=false;
+	
+	key_t keys_pressing={0,0};
+	key_t keys_send={0,0};
+	key_t keys_next={0,0};
+	
     for(u8 j=0;j<ROW_LEN;j++){
         for(u8 i=0;i<COL_LEN;i++){
             if(key_val[j]&(1<<i))
             {
                 u8 value=get_key(0,j,i);
+				key_t_add(&keys_pressing,j,i);
 
-                switch(value){
-                case 225:
-                    key_buf.control|=(1<<1);
-                    break;
-                case 224:
-                    key_buf.control|=(1<<0);
-                    break;
-                case 227:
-                    key_buf.control|=(1<<3);
-                    break;
-                case 226:
-                    key_buf.control|=(1<<2);
-                    break;
-                case 228:
-                    key_buf.control|=(1<<4);
-                    break;
-                case 229:
-                    key_buf.control|=(1<<5);
-                    break;
-                case 230:
-                    key_buf.control|=(1<<6);
-                    break;
-                case 231:
-                    key_buf.control|=(1<<7);
-                    break;
-                default:
-                    key_buf.key[key_pressing_cnt].pos[0]=j;
-					key_buf.key[key_pressing_cnt].pos[1]=i;
-					key_pressing_cnt++;
-                }
-				key_buf.key_cnt=key_pressing_cnt;
 //                printf("key press %d  %d %d\n",j,i, key_index[j][i]);
-                pre_press=1;
-                key_press=1;
-                if(key_pressing_cnt==KEY_BUF_LEN){
-                   goto end;
+                if(keys_pressing.cnt==KEY_BUF_LEN){
+                   goto scan_end;
                 }
             }
         }
     }
+	scan_end:;	
+	update_list(&keys_list_press,FILTER_TIME_AFTER_PRESS);
+	update_list(&keys_list_release,FILTER_TIME_AFTER_RELEASE);
+	for(u8 i=0;i<keys_pressing.cnt;i++){//check new pressed
+		single_key_t key=keys_pressing.key[i];
+				
+		if(!has_key(&keys_pre,key)){			
+			if(try_modify_key(&keys_list_press,&key)){
+				changes=1;
+				key_t_add(&keys_next,key.pos[0],key.pos[1]);
+			}else{
+				//pass
+			}
+		}
+	}
 	
 	
-    if(key_press){
-        keyboard_send_wrap(key_buf);
-    }
-    else if(pre_press){
-        pre_press=0;
-        keyboard_send_wrap(key_buf);
-    }
-end:;
+	for(u8 i=0;i<keys_pre.cnt;i++){//check new pressed
+		single_key_t key=keys_pre.key[i];
+		
+		if(!has_key(&keys_pressing,key)){			
+			if(try_modify_key(&keys_list_release,&key)){
+				changes=1;
+			}else{				
+				key_t_add(&keys_next,key.pos[0],key.pos[1]);
+			}
+		}else{
+			key_t_add(&keys_next,key.pos[0],key.pos[1]);
+		}
+	}
+	keys_pre=keys_next;
+	
+	
+	u8 modify_key=0;
+	for(u8 i=0;i<keys_next.cnt;i++){//check new pressed
+		single_key_t key=keys_next.key[i];
+		u8 value=get_key(0,key.pos[0],key.pos[1]);
+		switch(value){
+			case 225:
+				modify_key|=(1<<1);
+				break;
+			case 224:
+				modify_key|=(1<<0);
+				break;
+			case 227:
+				modify_key|=(1<<3);
+				break;
+			case 226:
+				modify_key|=(1<<2);
+				break;
+			case 228:
+				modify_key|=(1<<4);
+				break;
+			case 229:
+				modify_key|=(1<<5);
+				break;
+			case 230:
+				modify_key|=(1<<6);
+				break;
+			case 231:
+				modify_key|=(1<<7);
+				break;
+			default:
+				key_t_add(&keys_send,key.pos[0],key.pos[1]);
+		}
+	}
+	keys_send.control=modify_key;
+	
+
+	if(changes){
+		keyboard_send_wrap(keys_send);
+	}
+//    if(key_press){
+//        keyboard_send_wrap(keys_pressing);
+//    }
+//    else if(pre_press){
+//        pre_press=0;
+//        keyboard_send_wrap(keys_pressing);
+//    }
+
 }
 
 
@@ -310,12 +392,12 @@ key_t commu_buf_pre;
 //typedef Key_map *key_map_t;
 u8 current_mode=0;
 void key_set(u8 *buf,u8 index,const key_t *key){
-	for(u8 i=0;i<key->key_cnt;i++){
+	for(u8 i=0;i<key->cnt;i++){
 		buf[2+i]=get_key(index,key->key[i].pos[0],key->key[i].pos[1]);
 	}
 }
 u8 check_clean_mode(key_t key_buf){
-	for(u8 i=0;i<key_buf.key_cnt;i++){
+	for(u8 i=0;i<key_buf.cnt;i++){
 		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
 		if(key_this==clean_key){
 			return 1;
@@ -332,7 +414,7 @@ void keyboard_send_wrap(key_t key_buf){
 	}
 	
 	u8 changed=0;//if key state change
-	if(commu_buf_pre.key_cnt!=key_buf.key_cnt)//if key cnt changes
+	if(commu_buf_pre.cnt!=key_buf.cnt)//if key cnt changes
 		changed=1;
 	if(commu_buf_pre.control!=key_buf.control)//if control key changes
 		changed=1;
@@ -346,7 +428,7 @@ void keyboard_send_wrap(key_t key_buf){
 	}
 	
 	if(clean_mode){
-		for(u8 i=0;i<key_buf.key_cnt;i++){//if enter mode 1
+		for(u8 i=0;i<key_buf.cnt;i++){//if enter mode 1
 			u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
 			if(key_this==fn1){
 				current_mode=1;
@@ -355,18 +437,18 @@ void keyboard_send_wrap(key_t key_buf){
 		}
 	}
 	
-	for(u8 i=0;i<key_buf.key_cnt;i++){//if key changes
+	for(u8 i=0;i<key_buf.cnt;i++){//if key changes
 		if(commu_buf_pre.key[i].pos[0]!=key_buf.key[i].pos[0]||commu_buf_pre.key[i].pos[1]!=key_buf.key[i].pos[1]){
 			changed=1;
 			commu_buf_pre.key[i].pos[0]=key_buf.key[i].pos[0];
 			commu_buf_pre.key[i].pos[1]=key_buf.key[i].pos[1];
 		}
 	}
-	commu_buf_pre.key_cnt=key_buf.key_cnt;
+	commu_buf_pre.cnt=key_buf.cnt;
 	commu_buf_pre.control=key_buf.control;
 	if(changed){
 		if(clean_mode){
-			for(u8 i=2;i<2+key_buf.key_cnt;i++){
+			for(u8 i=2;i<2+key_buf.cnt;i++){
 				u8 key_this=get_key(0,key_buf.key[i-2].pos[0],key_buf.key[i-2].pos[1]);
 				if(key_this==fn2){
 					if(!current_mode)

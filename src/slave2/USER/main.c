@@ -28,7 +28,7 @@ extern u8 USB_STATUS_REG;
 u8 delegate=0;
 void app_init(void);
 void routine(){
-	led_handle();
+	
 }
 int calc_free_memory(u32 last,u32 base){
 
@@ -60,8 +60,8 @@ int calc_free_memory(u32 last,u32 base){
 //}
 void timer_init(){
 	SCPE(PERTIMER1);
-	TIM1->ARR=1000;
-	TIM1->PSC=7199; //0.1ms
+	TIM1->ARR=10000;//1s per second
+	TIM1->PSC=7199; //0.1ms per tick
 	TIM1->CR1|=0x01;
 }
 int main(void)
@@ -95,10 +95,8 @@ int main(void)
 	USB_Interrupts_Config();  
 	USB_Init();	
 	
-//	while(!INIT_OK);//等待初始化完成 
+	while(!INIT_OK);//等待初始化完成 
 	delay_ms(2000);	
-
-	
 	keyboard_init();
 	keyboard_scan();//exec before app_init to check if parse bmk files
 	led_init();
@@ -106,11 +104,9 @@ int main(void)
 	
 	printf("last memory= %.3f KB",(float)calc_free_memory(0,100000)/1000);
 	while(1){
+		led_handle();
 		keyboard_scan();
-		for(u8 i=0;i<70;i++){
-			routine();			
-			delay_us(100);
-		}
+		delay_us(100);
 	}
 
 

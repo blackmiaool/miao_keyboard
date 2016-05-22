@@ -21,15 +21,15 @@ int lua_handle(key_t* buf)
 /*the second argument*/
 //        lua_pushnumber(L, buf[2]);
         lua_pushnumber(L, buf->control);
-        lua_pushnumber(L,buf->key_cnt);
-		for(int i=0;i<buf->key_cnt;i++){
+        lua_pushnumber(L,buf->cnt);
+		for(int i=0;i<buf->cnt;i++){
 			lua_pushnumber(L, (buf->key[i].pos[0]<<4)+buf->key[i].pos[1]);
 		}
 //        for(int i=0;i<6-buf->key_cnt;i++){
 //			lua_pushnumber(L, 0);
 //		}
 /*call the function with 2 arguments, return 1 result.*/
-        if(lua_pcall(L, buf->key_cnt+2, 1,0)==0){
+        if(lua_pcall(L, buf->cnt+2, 1,0)==0){
 			ret=lua_toboolean(L, -1); 
 			lua_pop(L,1);
 		}else{
