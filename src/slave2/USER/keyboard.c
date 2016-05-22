@@ -196,47 +196,46 @@ u8 scan_push_check(u8 key){
 }
 
 
+void hardware_scan(u16 *map){
 
-void keyboard_scan(){
-    u8 i=0,j=0;
-    for(j=0;j<ROW_LEN;j++){
-        key_val[j]=0;
+	
+    for(u8 j=0;j<ROW_LEN;j++){
+        map[j]=0;
         IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
     }
 
-    for(j=0;j<ROW_LEN;j++){
+    for(u8 j=0;j<ROW_LEN;j++){
         IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,0);
-        for(i=0;i<COL_LEN;i++){
+        for(u8 i=0;i<COL_LEN;i++){
 			u8 val=IOin(keyboard_gpio_cols[i].port,keyboard_gpio_cols[i].num);
-            key_val[j]+=((val>0)<<i);
+            map[j]+=((val>0)<<i);
         }
         u16 mask=1<<COL_LEN;
         mask--;
-        key_val[j]=mask-key_val[j];
+        map[j]=mask-map[j];
         IOout(keyboard_gpio_rows[j].port,keyboard_gpio_rows[j].num,1);
     }
+}
+void keyboard_scan(){
+	hardware_scan(key_val);
+	
+//    for(j=0;j<ROW_LEN;j++){
+//		printf("key value %d %3d",j,key_val[j]);
+//    }
 
-    for(j=0;j<ROW_LEN;j++){
-//        printf("key value %d %3d",j,key_val[j]);
-    }
-//		delay_ms(200);
-
-
-    u8 key_data_index=0;
+    u8 key_pressing_cnt=0;
     static u8 pre_press=0;
     u8 key_press=0;
 	key_t key_buf;
 	key_buf.control=0;
 	key_buf.key_cnt=0;
-//    scan_update();
-    for(j=0;j<ROW_LEN;j++){
-        for(i=0;i<COL_LEN;i++){
+
+    for(u8 j=0;j<ROW_LEN;j++){
+        for(u8 i=0;i<COL_LEN;i++){
             if(key_val[j]&(1<<i))
             {
                 u8 value=get_key(0,j,i);
-//                if(scan_push_check(value)){
-//                    continue;
-//                }
+
                 switch(value){
                 case 225:
                     key_buf.control|=(1<<1);
@@ -263,20 +262,22 @@ void keyboard_scan(){
                     key_buf.control|=(1<<7);
                     break;
                 default:
-                    key_buf.key[key_data_index].pos[0]=j;
-					key_buf.key[key_data_index++].pos[1]=i;
+                    key_buf.key[key_pressing_cnt].pos[0]=j;
+					key_buf.key[key_pressing_cnt].pos[1]=i;
+					key_pressing_cnt++;
                 }
-				key_buf.key_cnt=key_data_index;
+				key_buf.key_cnt=key_pressing_cnt;
 //                printf("key press %d  %d %d\n",j,i, key_index[j][i]);
                 pre_press=1;
                 key_press=1;
-                if(key_data_index==6){
+                if(key_pressing_cnt==KEY_BUF_LEN){
                    goto end;
                 }
             }
         }
     }
-
+	
+	
     if(key_press){
         keyboard_send_wrap(key_buf);
     }

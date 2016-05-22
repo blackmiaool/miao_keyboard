@@ -35,7 +35,7 @@ static char Output[]={ OUTPUT };	/* default output file name */
 static const char* output=Output;	/* actual output file name */
 static const char* progname=PROGNAME;	/* actual program name */
 void exit(int a){
-	
+
 }
 static void fatal(const char* message)
 {
