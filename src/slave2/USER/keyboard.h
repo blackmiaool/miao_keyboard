@@ -30,4 +30,5 @@ typedef struct {
 extern const unsigned char key_map[3][ROW_LEN][COL_LEN];
 extern unsigned char current_mode;
 extern unsigned char clean_mode;
+extern unsigned char udisk_mode;
 #endif //_KEYBOARD_H_

@@ -13,8 +13,8 @@
 #include "commu_mcu.h"
 #include "w25q16.h"
 #include "led.h"
-extern u8 EP1BUSY;			//键盘数据发送忙标志 
-extern u8 EP2BUSY;			//鼠标数据发送忙标志
+extern u8 EP1BUSY;			// kb busy flag
+extern u8 EP2BUSY;			// mouse busy flag
 extern u8 INIT_OK;
 
 
@@ -58,7 +58,7 @@ int main(void)
 {
 	Stm32_Clock_Init(9);
 	delay_init(72);
-	uart_init(72,256000);
+	uart_init(72,115200);
 
 	// free JTAG pins
 	JTAG_Set(1);
@@ -81,6 +81,11 @@ int main(void)
 	Mass_Block_Count[0]=4000;
 	
 	// init usb
+	keyboard_init();
+	
+	//exec before app_init to check if parse bmk files
+	keyboard_scan();
+	
 	Set_USBClock();
 	USB_Interrupts_Config();  
 	USB_Init();	
@@ -90,11 +95,7 @@ int main(void)
 	
 	// wait for udisk mounting
 	delay_ms(2000);	
-	
-	keyboard_init();
-	
-	//exec before app_init to check if parse bmk files
-	keyboard_scan();
+	printf("start memory= %.3f KB",(float)calc_free_memory(0,100000)/1000);
 	
 	led_init();
 	app_init();

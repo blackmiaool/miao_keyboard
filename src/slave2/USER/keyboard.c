@@ -17,7 +17,9 @@ struct GPIO_struct keyboard_gpio_cols[COL_LEN];
 GPIO_TypeDef* char2port(char ch);
 u32 str2pin(char *str);
 u8 clean_mode=0;//disable app programs
+u8 udisk_mode=0;
 u8 clean_key=41;//press esc to enter clean mode 
+u8 udisk_key=30;//press esc to enter clean mode 
 u8 fn1=135;
 u8 fn2=136;
 
@@ -431,6 +433,15 @@ void key_set(u8 *buf,u8 index,const key_t *key){
 		buf[2+i]=get_key(index,key->key[i].pos[0],key->key[i].pos[1]);
 	}
 }
+u8 check_udisk_mode(key_t key_buf){
+	for(u8 i=0;i<key_buf.cnt;i++){
+		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
+		if(key_this==udisk_key){
+			return 1;
+		}
+	}
+	return 0;
+}
 u8 check_clean_mode(key_t key_buf){
 	for(u8 i=0;i<key_buf.cnt;i++){
 		u8 key_this=get_key(0,key_buf.key[i].pos[0],key_buf.key[i].pos[1]);
@@ -460,6 +471,7 @@ void keyboard_send_wrap(key_t key_buf){
 	if(start_check){//just check once when power on. If clean_mode, disable all app programs.
 		start_check=0;
 		clean_mode=check_clean_mode(key_buf);
+		udisk_mode=check_udisk_mode(key_buf);
 	}
 	
 	if(clean_mode){

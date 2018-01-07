@@ -99,24 +99,22 @@ function set_key_map_index(index,led)
     end
 end
 set_key_map_index(1,true);
--- return true to capture the input, prevent default handling
-function key_input(c1,cnt,k1,k2,k3,k4,k5,k6)
 
-    local k={k1,k2,k3,k4,k5,k6};
-    local keys={};
+local previous_cnt=0;
+local previous_key_map_index=1;
+function key_input_underlying(controls,cnt,key_arr)
+    local final_normal_keys={};
 
-    local previous_key_map_index=key_map_index;
-    
     if key_map_index==2 then
     	key_map_index=1;
     end
     -- decide current key_map_index
     for i=1,cnt do
-        if key_index_table(k[i],1)==135  then
+        if key_index_table(key_arr[i],1)==135  then
             set_key_map_index(2,true); 	
         end
 
-        if key_index_table(k[i],1)==136  then
+        if key_index_table(key_arr[i],1)==136  then
             if key_map_index~=3 then
                 set_key_map_index(3,true);
             else
@@ -125,44 +123,49 @@ function key_input(c1,cnt,k1,k2,k3,k4,k5,k6)
         end
     end
 
-    -- handle mode 2 race condition
+    -- handle mode2 race condition
     if key_map_index ~=2 and previous_key_map_index == 2 then
     	output(0,0,0,0,0,0,0,0);
-    	return true;
+    	return;
     end
     
     -- get final key values 
     for i=1,6 do        
-        if k[i] then
-            keys[i]=key_index_table(k[i]);            
+        if key_arr[i] then
+            final_normal_keys[i]=key_index_table(key_arr[i]);            
         else
-            keys[i]=0;
+            final_normal_keys[i]=0;
         end                
     end
-
+    
+    -- wait for releasing all normal keys
     if cnt==0 then
         wait_release=false;
     end
 
-    if c1>0 and ahk_data[keys[1]] then
-        for k,expression in pairs(ahk_data[keys[1]]) do
-            if control_cmp(c1,k) then
+    if controls>0 and ahk_data[final_normal_keys[1]] then
+        for key_arr,expression in pairs(ahk_data[final_normal_keys[1]]) do
+            if control_cmp(controls,key_arr) then
                 output_ahk(expression);
                 wait_release=true;
-
-                return true;
+                return;
             end
             
         end
     end
 
     if not wait_release then
-        output(c1,0,table.unpack(keys))
-        return true;
-    else
-        return true;
+        output(controls,0,table.unpack(final_normal_keys))
     end
-
+end
+-- return true to capture the input, prevent default handling
+-- cnt: pressing normal keys' count
+function key_input(controls,cnt,k1,k2,k3,k4,k5,k6)	
+    local key_arr={k1,k2,k3,k4,k5,k6};
+    key_input_underlying(controls,cnt,key_arr);
+    previous_cnt=cnt;
+    previous_key_map_index=key_map_index;
+    return true;
 end
 
 

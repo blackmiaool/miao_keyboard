@@ -15,6 +15,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "platform_config.h"  	 
+#include "keyboard.h"
 //#include "mmc_sd.h"
 #include "commu.h"
 #include "mass_mal.h"
@@ -112,9 +113,12 @@ u16 MAL_GetStatus (u8 lun)
     switch(lun)
     {
     case 0:
-        return MAL_OK;
-    case 1:
-        return MAL_OK;
+		case 1:
+			  if(udisk_mode){
+					return MAL_OK;
+				}else{
+					return MAL_FAIL;
+				}        
     case 2:
         return MAL_FAIL;
     default:

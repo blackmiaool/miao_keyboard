@@ -231,7 +231,14 @@ void lua_init(){
         
 		char *read_buf=(char *)malloc(file.fsize);
 		f_read(&file,read_buf,file.fsize,&cnt);
-		luaL_dostring(L,read_buf);
+		int result=luaL_dostring(L,read_buf);
+		if ( result != 0 )  
+        {  
+          int t = lua_type(L, -1);  
+          const char* err = lua_tostring(L,-1);  
+          printf("Error: %s\n", err); 
+        }
+		printf("==========lua init result %d==========\r\n",result);
 		f_close(&file);
 		free(read_buf);
 		use_lua=true;
