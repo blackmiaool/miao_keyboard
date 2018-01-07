@@ -47,17 +47,7 @@ int calc_free_memory(u32 last,u32 base){
 	}
 	return 0;
 }
-//int calc_free_memory(){
-//	for(int i=10240;i>0;i--){
-//		char *area=(char *)malloc(i*100);
-//		if(area){
-//			free(area);
-//			return i;
-//		}
-//		
-//	}
-//	return 0;
-//}
+
 void timer_init(){
 	SCPE(PERTIMER1);
 	TIM1->ARR=10000;//1s per second
@@ -72,8 +62,8 @@ int main(void)
 
 	JTAG_Set(1);//for free JTAG pins
     
-    USB_Cable_Init();	
-    USB_Cable_Config (ENABLE);
+  USB_Cable_Init();	
+  USB_Cable_Config (ENABLE);
 	timer_init();
     
     
@@ -81,7 +71,7 @@ int main(void)
   
 	SPI_Flash_Init(); 
 	
-	while(SPI_Flash_ReadID()!=W25Q16)
+	while(SPI_Flash_ReadID()!=W25Q16&&0)
 	{
 		printf("error%X\r\n",SPI_Flash_ReadID());
 		delay_ms(500);
@@ -108,7 +98,5 @@ int main(void)
 		keyboard_scan();
 		delay_us(100);
 	}
-
-
 }
 
