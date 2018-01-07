@@ -99,22 +99,23 @@ function set_key_map_index(index,led)
     end
 end
 set_key_map_index(1,true);
-function key_input(c1,c2,k1,k2,k3,k4,k5,k6)
+-- return true to capture the input, prevent default handling
+function key_input(c1,cnt,k1,k2,k3,k4,k5,k6)
 
     local k={k1,k2,k3,k4,k5,k6};
     local keys={};
-    local clear=false;
-    local dont_clear=false;
+
+    local previous_key_map_index=key_map_index;
     
-    
-    for i=1,c2 do
+    if key_map_index==2 then
+    	key_map_index=1;
+    end
+    -- decide current key_map_index
+    for i=1,cnt do
         if key_index_table(k[i],1)==135  then
-        	dont_clear=true;
-            set_key_map_index(2,true);
-        elseif key_map_index==2 then
-        	clear=true;
-        	
+            set_key_map_index(2,true); 	
         end
+
         if key_index_table(k[i],1)==136  then
             if key_map_index~=3 then
                 set_key_map_index(3,true);
@@ -124,10 +125,13 @@ function key_input(c1,c2,k1,k2,k3,k4,k5,k6)
         end
     end
 
-    if c2==0 and key_map_index==2 then
-    	set_key_map_index(1,true); 
+    -- handle mode 2 race condition
+    if key_map_index ~=2 and previous_key_map_index == 2 then
+    	output(0,0,0,0,0,0,0,0);
+    	return true;
     end
-
+    
+    -- get final key values 
     for i=1,6 do        
         if k[i] then
             keys[i]=key_index_table(k[i]);            
@@ -136,13 +140,7 @@ function key_input(c1,c2,k1,k2,k3,k4,k5,k6)
         end                
     end
 
-	if clear and not dont_clear then
-    	output(0,0,0,0,0,0,0,0);
-    	set_key_map_index(1,true);
-    	return true;
-    end
-
-    if  c2==0 then
+    if cnt==0 then
         wait_release=false;
     end
 
@@ -157,7 +155,6 @@ function key_input(c1,c2,k1,k2,k3,k4,k5,k6)
             
         end
     end
-
 
     if not wait_release then
         output(c1,0,table.unpack(keys))

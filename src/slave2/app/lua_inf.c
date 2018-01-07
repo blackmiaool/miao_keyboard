@@ -13,33 +13,22 @@ lua_State *L;
 u8 use_lua=false;
 int lua_handle(key_t* buf)
 {
-        int ret;
-/*the function name*/
-        lua_getglobal(L,"key_input");
-/*the first argument*/
-//        lua_pushnumber(L, buf[0]);
-/*the second argument*/
-//        lua_pushnumber(L, buf[2]);
-        lua_pushnumber(L, buf->control);
-        lua_pushnumber(L,buf->cnt);
-		for(int i=0;i<buf->cnt;i++){
-			lua_pushnumber(L, (buf->key[i].pos[0]<<4)+buf->key[i].pos[1]);
-		}
-//        for(int i=0;i<6-buf->key_cnt;i++){
-//			lua_pushnumber(L, 0);
-//		}
-/*call the function with 2 arguments, return 1 result.*/
-        if(lua_pcall(L, buf->cnt+2, 1,0)==0){
-			ret=lua_toboolean(L, -1); 
-			lua_pop(L,1);
-		}else{
-			ret=0;
-		}
+	int ret;
+	lua_getglobal(L,"key_input");
+	lua_pushnumber(L, buf->control);
+	lua_pushnumber(L,buf->cnt);
+	for(int i=0;i<buf->cnt;i++){
+		lua_pushnumber(L, (buf->key[i].pos[0]<<4)+buf->key[i].pos[1]);
+	}
 
+	if(lua_pcall(L, buf->cnt+2, 1,0)==0){
+		ret=lua_toboolean(L, -1); 
+		lua_pop(L,1);
+	}else{
+		ret=0;
+	}
 
-               /*get the result.*/
-        /*cleanup the return*/
-        return ret;
+  return ret;
 }
 
 

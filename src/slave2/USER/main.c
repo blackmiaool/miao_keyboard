@@ -56,39 +56,46 @@ void timer_init(){
 }
 int main(void)
 {
-	Stm32_Clock_Init(9);//系统时钟设置
-	delay_init(72);		//延时初始化
+	Stm32_Clock_Init(9);
+	delay_init(72);
 	uart_init(72,256000);
 
-	JTAG_Set(1);//for free JTAG pins
-    
+	// free JTAG pins
+	JTAG_Set(1);
+  
+	// init usb hardware
   USB_Cable_Init();	
   USB_Cable_Config (ENABLE);
+	
 	timer_init();
     
-    
+  // wait for flash
 	delay_ms(200);		
-  
 	SPI_Flash_Init(); 
-	
-	while(SPI_Flash_ReadID()!=W25Q16&&0)
-	{
-		printf("error%X\r\n",SPI_Flash_ReadID());
-		delay_ms(500);
-
-	}                        
+	                     
 	printf("start\r\n");
+	
+	// init flash descriptor for udisk
 	Mass_Memory_Size[0]=4000*512;
 	Mass_Block_Size[0] =512;
 	Mass_Block_Count[0]=4000;
+	
+	// init usb
 	Set_USBClock();
 	USB_Interrupts_Config();  
 	USB_Init();	
 	
-	while(!INIT_OK);//等待初始化完成 
+	// wait for usb 
+	while(!INIT_OK);
+	
+	// wait for udisk mounting
 	delay_ms(2000);	
+	
 	keyboard_init();
-	keyboard_scan();//exec before app_init to check if parse bmk files
+	
+	//exec before app_init to check if parse bmk files
+	keyboard_scan();
+	
 	led_init();
 	app_init();
 	
