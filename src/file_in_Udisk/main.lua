@@ -143,7 +143,7 @@ function key_input_underlying(controls,cnt,key_arr)
         wait_release=false;
     end
 
-    if controls>0 and ahk_data[final_normal_keys[1]] then
+    if previous_cnt < cnt and controls>0 and ahk_data[final_normal_keys[1]] then
         for key_arr,expression in pairs(ahk_data[final_normal_keys[1]]) do
             if control_cmp(controls,key_arr) then
                 output_ahk(expression);
