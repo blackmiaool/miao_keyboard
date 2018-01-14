@@ -147,13 +147,12 @@ function key_input_underlying(controls,cnt,key_arr)
     end
     -- decide current key_map_mode
     for i=1,cnt do
-        if get_key_from_position(key_arr[i],1)==mode2_key  then
-            key_arr[i]=0;
+        local value=get_key_from_position(key_arr[i],1);
+        if value==mode2_key  then
+            key_arr[i]=nil;
             set_key_map_mode(2,true); 	
-        end
-
-        if get_key_from_position(key_arr[i],1)==mode3_key  then
-            key_arr[i]=0;
+        elseif value==mode3_key  then
+            key_arr[i]=nil;
             if key_map_mode~=3 then
                 set_key_map_mode(3,true);
             else
@@ -171,7 +170,7 @@ function key_input_underlying(controls,cnt,key_arr)
     -- get final key values 
     local valid_key_cnt=0;
     for i=1,cnt do        
-        if key_arr[i] ~= 0 then
+        if key_arr[i] ~= nil then
             local value=get_key_from_position(key_arr[i]);
             if media_map[value] then
                 media_output(media_map[value]);
