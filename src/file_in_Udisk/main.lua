@@ -1,36 +1,57 @@
 -- Don't use chinese comment.
-local ahk_data={};
-local config_string=read_file("config/config.txt");  
+-- ahk's map ahk_data[normal_key][modifier_key]
+local ahk_data={}; 
+local ahk_file=read_file("config/config.txt");  
 
+-- init_datasheet(file_name, data_width): lua parse the table file,return a table for lua
+-- shift_table: (user shouldn't modify it) which key needs to be output with a shift key 
+-- key_index: (most user may modify it) record 3 modes' usb value in a key map
+-- asciiusb: (user shouldn't modify it) ascii value to usb value
 local shift_table_data=init_datasheet("config/shift_table.txt",1); 
 local key_index_data=init_datasheet("config/key_index.txt",3); 
 local ascii2usb_data=init_datasheet("config/ascii2usb.txt",3);
 
+-- count of rows and column in the "key_index.txt" file
+local rows=5;
+local columns=16;
+
+-- for quick calc 
 local two_mods={1,2,4,8,16,32,64,128,256};
+
+-- functions that can be invoked in ahk file
 local ahk_avaliable_function={
     restart= function() clear_key();restart_keyboard(); end,
 }
+
+-- mode2 and mode3's value in key_index.txt file
+local mode2_key=135;
+local mode3_key=136;
+-- wait for user releasing all the key, do nothing before releasing
 local wait_release=false;
-local key_map_index=1;
+
+-- currently using key map
+local key_map_mode=1;
 
 function ascii2usb(ascii)
-
     return read_datasheet(ascii2usb_data,ascii)
 end
+
 function shift_table(ascii)
 
     return read_datasheet(shift_table_data,ascii)
 end
-function key_index_table(pos,index)
+
+function get_key_from_position(pos,index)
     if not index then
-        index=key_map_index;
+        index=key_map_mode;
     end
 
-    local num=read_datasheet(key_index_data,pos+(index-1)*16*5);
+    local num=read_datasheet(key_index_data,pos+(index-1)*columns*rows);
 
     return num;
 end
 
+-- extend original string class, now we can use brackets to get a sub string from a string like: a[2]
 getmetatable('').__index = function(str,i) return string.sub(str,i,i) end
 getmetatable('').__call = function(str,i,j)
     if type(i)~='table' then return string.sub(str,i,j)
@@ -51,12 +72,14 @@ end
 function get_bit(num,index)
     return math.floor(num/two_mods[index]%2)==1;
 end
-function control_cmp(now,target)
+
+-- if the modifier keys satisfy the target one
+function modifier_compare(modifier,target)
     for i=1,4 do
         local tleft=get_bit(target,i);
-        local nleft=get_bit(now,i);
+        local nleft=get_bit(modifier,i);
         local tright=get_bit(target,i+4);        
-        local nright=get_bit(now,i+4);
+        local nright=get_bit(modifier,i+4);
         local both=false;
         if tleft and tright then
             both=true;
@@ -80,15 +103,15 @@ function control_cmp(now,target)
     return true;
 end
 
-function set_key_map_index(index,led)
-    key_map_index=index;
-    if index~=1 and led then
+function set_key_map_mode(mode,led)
+    key_map_mode=mode;
+    if mode~=1 and led then
         led_clear();
         led_set_mode(0);
 
         for i=0,13 do
             for j=0,4 do
-                if key_index_table(j*16+i,index)~=key_index_table(j*16+i,1) then
+                if get_key_from_position(j*16+i,mode)~=get_key_from_position(j*16+i,1) then
                     led_set_bit(i,j,1);
                 end
             end
@@ -98,54 +121,83 @@ function set_key_map_index(index,led)
         led_set_mode(1);
     end
 end
-set_key_map_index(1,true);
+set_key_map_mode(1,true);
 
 local previous_cnt=0;
-local previous_key_map_index=1;
+local previous_key_map_mode=1;
+-- if k1==27 then
+--     mouse_output(3,0xe9,0,0,0);
+--     print("!!!");
+--     return true;
+-- end
+local media_map={
+    [127]=0xe2,
+    [128]=0xe9,
+    [129]=0xea
+}
+function media_output(value)
+    mouse_output(3,value%256,math.floor(value/256),0,0);
+end
+local pressed_media=false;
 function key_input_underlying(controls,cnt,key_arr)
     local final_normal_keys={};
 
-    if key_map_index==2 then
-    	key_map_index=1;
+    if key_map_mode==2 then
+    	key_map_mode=1;
     end
-    -- decide current key_map_index
+    -- decide current key_map_mode
     for i=1,cnt do
-        if key_index_table(key_arr[i],1)==135  then
-            set_key_map_index(2,true); 	
+        if get_key_from_position(key_arr[i],1)==mode2_key  then
+            key_arr[i]=0;
+            set_key_map_mode(2,true); 	
         end
 
-        if key_index_table(key_arr[i],1)==136  then
-            if key_map_index~=3 then
-                set_key_map_index(3,true);
+        if get_key_from_position(key_arr[i],1)==mode3_key  then
+            key_arr[i]=0;
+            if key_map_mode~=3 then
+                set_key_map_mode(3,true);
             else
-                set_key_map_index(1,true);
+                set_key_map_mode(1,true);
             end
         end
     end
 
     -- handle mode2 race condition
-    if key_map_index ~=2 and previous_key_map_index == 2 then
+    if key_map_mode ~=2 and previous_key_map_mode == 2 then
     	output(0,0,0,0,0,0,0,0);
     	return;
     end
     
     -- get final key values 
-    for i=1,6 do        
-        if key_arr[i] then
-            final_normal_keys[i]=key_index_table(key_arr[i]);            
-        else
-            final_normal_keys[i]=0;
+    local valid_key_cnt=0;
+    for i=1,cnt do        
+        if key_arr[i] ~= 0 then
+            local value=get_key_from_position(key_arr[i]);
+            if media_map[value] then
+                media_output(media_map[value]);
+                pressed_media=true;
+                return ;
+            end
+            final_normal_keys[valid_key_cnt+1]=value;            
+            valid_key_cnt=valid_key_cnt+1;        
         end                
     end
+    for i=valid_key_cnt,cnt do
+        final_normal_keys[i+1]=0;
+    end
     
+    if pressed_media then
+        media_output(0);
+        pressed_media=false;
+    end
     -- wait for releasing all normal keys
     if cnt==0 then
         wait_release=false;
     end
 
-    if controls>0 and ahk_data[final_normal_keys[1]] then
+    if previous_cnt < cnt and controls>0 and ahk_data[final_normal_keys[1]] then
         for key_arr,expression in pairs(ahk_data[final_normal_keys[1]]) do
-            if control_cmp(controls,key_arr) then
+            if modifier_compare(controls,key_arr) then
                 output_ahk(expression);
                 wait_release=true;
                 return;
@@ -161,10 +213,10 @@ end
 -- return true to capture the input, prevent default handling
 -- cnt: pressing normal keys' count
 function key_input(controls,cnt,k1,k2,k3,k4,k5,k6)	
-    local key_arr={k1,k2,k3,k4,k5,k6};
+    local key_arr={k1,k2,k3,k4,k5,k6};    
     key_input_underlying(controls,cnt,key_arr);
     previous_cnt=cnt;
-    previous_key_map_index=key_map_index;
+    previous_key_map_mode=key_map_mode;
     return true;
 end
 
@@ -279,5 +331,5 @@ function output_ahk(expression)
 
 end
 
-ahk_parse(config_string);
-config_string=nil;
+ahk_parse(ahk_file);
+ahk_file=nil;

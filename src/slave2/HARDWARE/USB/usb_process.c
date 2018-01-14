@@ -21,9 +21,8 @@ void SetEPTxValid(u8 bEpNum);
 #define ENDP2   ((u8)2)
 void mouse_process(u8* buf){
 	u8 buf_wrap[6];
-	buf_wrap[0]=1;
-	for(u8 i=0;i<5;i++){
-		buf_wrap[i+1]=buf[i];
+	for(u8 i=0;i<6;i++){
+		buf_wrap[i]=buf[i];
 	}
 	while(EP2BUSY!=0){;}
 	EP2BUSY = 1; 

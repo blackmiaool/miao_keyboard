@@ -20,12 +20,16 @@ int lua_handle(key_t* buf)
 	for(int i=0;i<buf->cnt;i++){
 		lua_pushnumber(L, (buf->key[i].pos[0]<<4)+buf->key[i].pos[1]);
 	}
-
-	if(lua_pcall(L, buf->cnt+2, 1,0)==0){
+	int result=lua_pcall(L, buf->cnt+2, 1,0);
+ 
+	if(result==0){
 		ret=lua_toboolean(L, -1); 
 		lua_pop(L,1);
 	}else{
 		ret=0;
+		int t = lua_type(L, -1);  
+    const char* err = lua_tostring(L,-1);  
+    printf("Error: %s\n", err);
 	}
 
   return ret;
