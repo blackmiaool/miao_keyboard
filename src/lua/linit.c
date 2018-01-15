@@ -1,6 +1,6 @@
 /*
-** $Id: linit.c,v 1.14.1.1 2007/12/27 13:02:25 roberto Exp $
-** Initialization of libraries for lua.c
+** $Id: linit.c,v 1.38 2015/01/05 13:48:33 roberto Exp $
+** Initialization of libraries for lua.c and other clients
 ** See Copyright Notice in lua.h
 */
 
@@ -8,73 +8,61 @@
 #define linit_c
 #define LUA_LIB
 
+/*
+** If you embed Lua in your program and need to open the standard
+** libraries, call luaL_openlibs in your program. If you need a
+** different set of libraries, copy this file to your project and edit
+** it to suit your needs.
+**
+** You can also *preload* libraries, so that a later 'require' can
+** open the library, which is already linked to the application.
+** For that, do the following code:
+**
+**  luaL_getsubtable(L, LUA_REGISTRYINDEX, "_PRELOAD");
+**  lua_pushcfunction(L, luaopen_modname);
+**  lua_setfield(L, -2, modname);
+**  lua_pop(L, 1);  // remove _PRELOAD table
+*/
+
+#include "lprefix.h"
+
+
+#include <stddef.h>
+
 #include "lua.h"
 
 #include "lualib.h"
 #include "lauxlib.h"
-#include "lrotable.h"
-#include "luaconf.h"
 
-#if defined(RT_LUA_USE_EXLIBS)
-#include "lexlibs.h"
-#endif
 
-#if defined(LUA_EXLIBS_ROM)
-#undef _ROM
-#define _ROM( name, openf, table ) extern int openf(lua_State *);
-LUA_EXLIBS_ROM
-#endif
-
-static const luaL_Reg lualibs[] = {
-  {"", luaopen_base},
+/*
+** these libs are loaded by lua.c and are readily available to any Lua
+** program
+*/
+static const luaL_Reg loadedlibs[] = {
+  {"_G", luaopen_base},
   {LUA_LOADLIBNAME, luaopen_package},
+  {LUA_COLIBNAME, luaopen_coroutine},
+  {LUA_TABLIBNAME, luaopen_table},
   {LUA_IOLIBNAME, luaopen_io},
-  {LUA_STRLIBNAME, luaopen_string},    
-#if LUA_OPTIMIZE_MEMORY == 0
+  {LUA_OSLIBNAME, luaopen_os},
+  {LUA_STRLIBNAME, luaopen_string},
   {LUA_MATHLIBNAME, luaopen_math},
-  {LUA_TABLIBNAME, luaopen_table},  
-  {LUA_DBLIBNAME, luaopen_debug},  
-#endif
-#if defined(LUA_EXLIBS_ROM)
-#undef _ROM
-#define _ROM( name, openf, table ) { name, openf },
-  LUA_EXLIBS_ROM
+  {LUA_UTF8LIBNAME, luaopen_utf8},
+  {LUA_DBLIBNAME, luaopen_debug},
+#if defined(LUA_COMPAT_BITLIB)
+  {LUA_BITLIBNAME, luaopen_bit32},
 #endif
   {NULL, NULL}
 };
 
-extern const luaR_entry strlib[];
-extern const luaR_entry syslib[];
-extern const luaR_entry tab_funcs[];
-extern const luaR_entry dblib[];
-extern const luaR_entry co_funcs[];
-#if defined(LUA_EXLIBS_ROM) && LUA_OPTIMIZE_MEMORY == 2
-#undef _ROM
-#define _ROM( name, openf, table ) extern const luaR_entry table[];
-LUA_EXLIBS_ROM
-#endif
-const luaR_table lua_rotable[] = 
-{
-#if LUA_OPTIMIZE_MEMORY > 0
-  {LUA_STRLIBNAME, strlib},
-  {LUA_TABLIBNAME, tab_funcs},
-  {LUA_DBLIBNAME, dblib},
-  {LUA_COLIBNAME, co_funcs},
-#if defined(LUA_EXLIBS_ROM) && LUA_OPTIMIZE_MEMORY == 2
-#undef _ROM
-#define _ROM( name, openf, table ) { name, table },
-  LUA_EXLIBS_ROM
-#endif
-#endif
-  {NULL, NULL}
-};
 
 LUALIB_API void luaL_openlibs (lua_State *L) {
-  const luaL_Reg *lib = lualibs;
-  for (; lib->func; lib++) {
-    lua_pushcfunction(L, lib->func);
-    lua_pushstring(L, lib->name);
-    lua_call(L, 1, 0);
+  const luaL_Reg *lib;
+  /* "require" functions from 'loadedlibs' and set results to global table */
+  for (lib = loadedlibs; lib->func; lib++) {
+    luaL_requiref(L, lib->name, lib->func, 1);
+    lua_pop(L, 1);  /* remove lib */
   }
 }
 
