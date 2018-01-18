@@ -50,8 +50,11 @@ function get_key_from_position(pos,index)
     end
 
     local num=read_datasheet(key_index_data,pos+(index-1)*columns*rows);
-
-    return num;
+    if index~=1 and num==0 then
+        return get_key_from_position(pos,1);
+    else
+        return num;
+    end    
 end
 
 -- extend original string class, now we can use brackets to get a sub string from a string like: a[2]
