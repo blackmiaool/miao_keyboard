@@ -1,6 +1,5 @@
 #include "app.h"
 #include "string.h"
-#include "ahk.h"
 #include "keyboard.h"
 #include "lua_inf.h"
 /******************macro area******************/

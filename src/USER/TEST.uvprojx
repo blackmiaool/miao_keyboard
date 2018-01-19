@@ -391,11 +391,6 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>ahk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\app\ahk.c</FilePath>
-            </File>
-            <File>
               <FileName>app.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\app\app.c</FilePath>
