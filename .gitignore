@@ -27,6 +27,7 @@
 *.map
 *.hex
 *.plg
+src/USER/JLinkLog.txt
 
 
 
