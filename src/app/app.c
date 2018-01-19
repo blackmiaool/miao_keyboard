@@ -15,7 +15,7 @@ void reset_system() {
 }
 
 extern u8 use_lua;
-u8 key_capture(u8 *buf, key_t* bufp) {
+static u8 key_capture(key_t* bufp) {
 	if (use_lua) {
 		return lua_handle(bufp);
 	}else{
@@ -26,7 +26,6 @@ u8 key_capture(u8 *buf, key_t* bufp) {
 static FATFS fs;
 
 void app_init() {
-
 	if (clean_mode)
 		return;
 
@@ -48,7 +47,7 @@ void app_handle(u8 *buf, key_t* bufp) {
 //	}
 	if (clean_mode) {
 		keyboard_process(buf);
-	} else if (!key_capture(buf, bufp)) {
+	} else if (!key_capture(bufp)) {
 		keyboard_process(buf);
 	}
 

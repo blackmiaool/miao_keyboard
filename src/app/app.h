@@ -11,7 +11,6 @@
 #define	DBG(...)
 #endif
 
-extern u8 key_capture(u8 *buf,key_t * bufp);
 
 typedef u8 uint8_t;
 extern u8 blue_choose;
