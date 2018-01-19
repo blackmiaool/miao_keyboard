@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "*.js": "javascriptreact",
+        "*.lessx": "less",
+        "lua_inf.h": "c",
+        "app.h": "c",
+        "keyboard.h": "c",
+        "stm32lib.h": "c",
+        "delay.h": "c",
+        "stm32f10x_lib.h": "c",
+        "stm32f10x_wwdg.h": "c",
+        "stm32f10x_map.h": "c",
+        "stm32f10x_type.h": "c",
+        "cortexm3_macro.h": "c",
+        "ff.h": "c",
+        "stm32f10x_conf.h": "c"
+    },
+    "c-cpp-flylint.cppcheck.enable": false,
+    "c-cpp-flylint.flexelint.enable": false    
+}
