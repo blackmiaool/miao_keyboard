@@ -2,29 +2,29 @@
 #define __SPI_H
 #include "sys.h"
 //////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌÐòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßÐí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//Mini STM32¿ª·¢°å
-//SPI Çý¶¯º¯Êý	   
-//ÕýµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ÐÞ¸ÄÈÕÆÚ:2010/6/13 
-//°æ±¾£ºV1.0
-//°æÈ¨ËùÓÐ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ÕýµãÔ­×Ó 2009-2019
+//æœ¬ç¨‹åºåªä¾›å­¦ä¹ ä½¿ç”¨ï¼Œæœªç»ä½œè€…è®¸å¯ï¼Œä¸å¾—ç”¨äºŽå…¶å®ƒä»»ä½•ç”¨é€”
+//Mini STM32å¼€å‘æ¿
+//SPI é©±åŠ¨å‡½æ•°
+//æ­£ç‚¹åŽŸå­@ALIENTEK
+//æŠ€æœ¯è®ºå›:www.openedv.com
+//ä¿®æ”¹æ—¥æœŸ:2010/6/13
+//ç‰ˆæœ¬ï¼šV1.0
+//ç‰ˆæƒæ‰€æœ‰ï¼Œç›—ç‰ˆå¿…ç©¶ã€‚
+//Copyright(C) æ­£ç‚¹åŽŸå­ 2009-2019
 //All rights reserved
 ////////////////////////////////////////////////////////////////////////////////// 	  
 
 
-// SPI×ÜÏßËÙ¶ÈÉèÖÃ 
+// SPIæ€»çº¿é€Ÿåº¦è®¾ç½®
 #define SPI_SPEED_2   0
 #define SPI_SPEED_4   1
 #define SPI_SPEED_8   1
 #define SPI_SPEED_16  2
 #define SPI_SPEED_256 3
 						  	    													  
-void SPIx_Init(void);			 //³õÊ¼»¯SPI¿Ú
-void SPIx_SetSpeed(u8 SpeedSet); //ÉèÖÃSPIËÙ¶È   
-u8 SPIx_ReadWriteByte(u8 TxData);//SPI×ÜÏß¶ÁÐ´Ò»¸ö×Ö½Ú
+void SPIx_Init(void);			 //åˆå§‹åŒ–SPIå£
+void SPIx_SetSpeed(u8 SpeedSet); //è®¾ç½®SPIé€Ÿåº¦
+u8 SPIx_ReadWriteByte(u8 TxData);//SPIæ€»çº¿è¯»å†™ä¸€ä¸ªå­—èŠ‚
 		 
 #endif
 

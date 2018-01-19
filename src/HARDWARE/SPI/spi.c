@@ -1,22 +1,22 @@
 #include "spi.h"
 #include "stm32lib.h"
 //////////////////////////////////////////////////////////////////////////////////	 
-//±æ≥Ã–Ú÷ªπ©—ßœ∞ π”√£¨Œ¥æ≠◊˜’ﬂ–Ìø…£¨≤ªµ√”√”⁄∆‰À¸»Œ∫Œ”√Õæ
-//Mini STM32ø™∑¢∞Â
-//SPI «˝∂Ø∫Ø ˝	   
-//’˝µ„‘≠◊”@ALIENTEK
-//ºº ı¬€Ã≥:www.openedv.com
-//–ﬁ∏ƒ»’∆⁄:2010/6/13 
-//∞Ê±æ£∫V1.0
-//∞Ê»®À˘”–£¨µ¡∞Ê±ÿæø°£
-//Copyright(C) ’˝µ„‘≠◊” 2009-2019
+//Êú¨Á®ãÂ∫èÂè™‰æõÂ≠¶‰π†‰ΩøÁî®ÔºåÊú™Áªè‰ΩúËÄÖËÆ∏ÂèØÔºå‰∏çÂæóÁî®‰∫éÂÖ∂ÂÆÉ‰ªª‰ΩïÁî®ÈÄî
+//Mini STM32ÂºÄÂèëÊùø
+//SPI È©±Âä®ÂáΩÊï∞
+//Ê≠£ÁÇπÂéüÂ≠ê@ALIENTEK
+//ÊäÄÊúØËÆ∫Âùõ:www.openedv.com
+//‰øÆÊîπÊó•Êúü:2010/6/13
+//ÁâàÊú¨ÔºöV1.0
+//ÁâàÊùÉÊâÄÊúâÔºåÁõóÁâàÂøÖÁ©∂„ÄÇ
+//Copyright(C) Ê≠£ÁÇπÂéüÂ≠ê 2009-2019
 //All rights reserved
 ////////////////////////////////////////////////////////////////////////////////// 	  
  
 
-//“‘œ¬ «SPIƒ£øÈµƒ≥ı ºªØ¥˙¬Î£¨≈‰÷√≥…÷˜ª˙ƒ£ Ω£¨∑√Œ SD Card/W25X16/24L01/JF24C							  
-//SPIø⁄≥ı ºªØ
-//’‚¿Ô’Î «∂‘SPI1µƒ≥ı ºªØ
+//‰ª•‰∏ãÊòØSPIÊ®°ÂùóÁöÑÂàùÂßãÂåñ‰ª£Á†ÅÔºåÈÖçÁΩÆÊàê‰∏ªÊú∫Ê®°ÂºèÔºåËÆøÈóÆSD Card/W25X16/24L01/JF24C
+//SPIÂè£ÂàùÂßãÂåñ
+//ËøôÈáåÈíàÊòØÂØπSPI1ÁöÑÂàùÂßãÂåñ
 static u8 initted=0;
 void SPIx_slave_Init(void){
 	
@@ -25,36 +25,36 @@ void SPIx_slave_Init(void){
 //	IOConfig(IOAB,high,PIN15,4);
 //	IOConfig(IOBB,low,PIN6,3);
 //	PBout(6)=0;
-	RCC->APB2ENR|=1<<2;       //PORTA ±÷” πƒ‹ 	 
-	RCC->APB2ENR|=1<<12;      //SPI1 ±÷” πƒ‹ 
-		RCC->APB2ENR|=1<<0;     //ø™∆Ù∏®÷˙ ±÷”   
-	//’‚¿Ô÷ª’Î∂‘SPIø⁄≥ı ºªØ
+	RCC->APB2ENR|=1<<2;       //PORTAÊó∂Èíü‰ΩøËÉΩ
+	RCC->APB2ENR|=1<<12;      //SPI1Êó∂Èíü‰ΩøËÉΩ
+		RCC->APB2ENR|=1<<0;     //ÂºÄÂêØËæÖÂä©Êó∂Èíü
+	//ËøôÈáåÂè™ÈíàÂØπSPIÂè£ÂàùÂßãÂåñ
 //	GPIOA->CRL&=0X0f0FF000; 
-//	GPIOA->CRL|=0XB0B00BBB;//PA5.6.7∏¥”√
+//	GPIOA->CRL|=0XB0B00BBB;//PA5.6.7Â§çÁî®
 	IOConfig(IOAB,0,PIN5,0X0B);
 	IOConfig(IOAB,0,PIN6,0X0B);
 	IOConfig(IOAB,0,PIN7,0X0B);
 	
 		   
-	AFIO->MAPR&=0XFFFFFFFE; //«Â≥˝MAPRµƒ[11:10]
-	AFIO->MAPR|=1<<0;      //≤ø∑÷÷ÿ”≥œÒ,TIM3_CH2->PB5
+	AFIO->MAPR&=0XFFFFFFFE; //Ê∏ÖÈô§MAPRÁöÑ[11:10]
+	AFIO->MAPR|=1<<0;      //ÈÉ®ÂàÜÈáçÊò†ÂÉè,TIM3_CH2->PB5
 	
 	SPI1->CR1=0;
-	SPI1->CR1|=0<<10;//»´À´π§ƒ£ Ω	
-	SPI1->CR1|=0<<9; //»Ìº˛nssπ‹¿Ì
+	SPI1->CR1|=0<<10;//ÂÖ®ÂèåÂ∑•Ê®°Âºè
+	SPI1->CR1|=0<<9; //ËΩØ‰ª∂nssÁÆ°ÁêÜ
 	//SPI1->CR1|=1<<8;  
 
 	SPI1->CR1|=0<<2; //SPI slave
-	SPI1->CR1|=0<<11;//8bit ˝æ›∏Ò Ω	
-	//∂‘24L01“™…Ë÷√ CPHA=0;CPOL=0;
+	SPI1->CR1|=0<<11;//8bitÊï∞ÊçÆÊ†ºÂºè
+	//ÂØπ24L01Ë¶ÅËÆæÁΩÆ CPHA=0;CPOL=0;
 	
-	SPI1->CR1|=1<<1; //ø’œ–ƒ£ Ωœ¬SCKŒ™1 CPOL=1			   
-	SPI1->CR1|=1<<0; //µ⁄“ª∏ˆ ±÷”µƒœ¬Ωµ—ÿ,CPHA=1 CPOL=1	   
+	SPI1->CR1|=1<<1; //Á©∫Èó≤Ê®°Âºè‰∏ãSCK‰∏∫1 CPOL=1
+	SPI1->CR1|=1<<0; //Á¨¨‰∏Ä‰∏™Êó∂ÈíüÁöÑ‰∏ãÈôçÊ≤ø,CPHA=1 CPOL=1
 	SPI1->CR1|=0<<3; //Fsck=Fcpu/256
 	SPI1->CR1|=0<<7; //MSBfirst   
 	SPI1->CR2|=1<<6;  
 	MY_NVIC_Init(0,0,SPI1_IRQChannel,2); 
-	SPI1->CR1|=1<<6; //SPI…Ë±∏ πƒ‹
+	SPI1->CR1|=1<<6; //SPIËÆæÂ§á‰ΩøËÉΩ
   SPIx_SetSpeed(SPI_SPEED_256);
 }
 void SPIx_Init(void)
@@ -65,77 +65,77 @@ void SPIx_Init(void)
 		return;
 	}
 	
-	RCC->APB2ENR|=1<<2;       //PORTA ±÷” πƒ‹ 	 
-	RCC->APB2ENR|=1<<12;      //SPI1 ±÷” πƒ‹ 
+	RCC->APB2ENR|=1<<2;       //PORTAÊó∂Èíü‰ΩøËÉΩ
+	RCC->APB2ENR|=1<<12;      //SPI1Êó∂Èíü‰ΩøËÉΩ
 		   
-	//’‚¿Ô÷ª’Î∂‘SPIø⁄≥ı ºªØ
+	//ËøôÈáåÂè™ÈíàÂØπSPIÂè£ÂàùÂßãÂåñ
 //	GPIOA->CRL&=0X0f0FF000; 
-//	GPIOA->CRL|=0XB0B00BBB;//PA5.6.7∏¥”√
+//	GPIOA->CRL|=0XB0B00BBB;//PA5.6.7Â§çÁî®
 	IOConfig(IOAB,0,PIN5,0X0B);
 	IOConfig(IOAB,0,PIN6,0X0B);
 	IOConfig(IOAB,0,PIN7,0X0B);
 	
-	GPIOA->ODR|=0X7<<5;    //PA5.6.7…œ¿≠
+	GPIOA->ODR|=0X7<<5;    //PA5.6.7‰∏äÊãâ
 	SPI1->CR1=0;	
-	SPI1->CR1|=0<<10;//»´À´π§ƒ£ Ω	
-	SPI1->CR1|=1<<9; //»Ìº˛nssπ‹¿Ì
+	SPI1->CR1|=0<<10;//ÂÖ®ÂèåÂ∑•Ê®°Âºè
+	SPI1->CR1|=1<<9; //ËΩØ‰ª∂nssÁÆ°ÁêÜ
 	SPI1->CR1|=1<<8;  
 
-	SPI1->CR1|=1<<2; //SPI÷˜ª˙
-	SPI1->CR1|=0<<11;//8bit ˝æ›∏Ò Ω	
-	//∂‘24L01“™…Ë÷√ CPHA=0;CPOL=0;
-	SPI1->CR1|=0<<1; //CPOL=0 ±ø’œ–ƒ£ Ωœ¬SCKŒ™1 
-	//SPI1->CR1|=1<<1; //ø’œ–ƒ£ Ωœ¬SCKŒ™1 CPOL=1			   
-	SPI1->CR1|=0<<0; //µ⁄“ª∏ˆ ±÷”µƒœ¬Ωµ—ÿ,CPHA=1 CPOL=1	   
+	SPI1->CR1|=1<<2; //SPI‰∏ªÊú∫
+	SPI1->CR1|=0<<11;//8bitÊï∞ÊçÆÊ†ºÂºè
+	//ÂØπ24L01Ë¶ÅËÆæÁΩÆ CPHA=0;CPOL=0;
+	SPI1->CR1|=0<<1; //CPOL=0Êó∂Á©∫Èó≤Ê®°Âºè‰∏ãSCK‰∏∫1
+	//SPI1->CR1|=1<<1; //Á©∫Èó≤Ê®°Âºè‰∏ãSCK‰∏∫1 CPOL=1
+	SPI1->CR1|=0<<0; //Á¨¨‰∏Ä‰∏™Êó∂ÈíüÁöÑ‰∏ãÈôçÊ≤ø,CPHA=1 CPOL=1
 	SPI1->CR1|=7<<3; //Fsck=Fcpu/256
 	SPI1->CR1|=0<<7; //MSBfirst   
-	SPI1->CR1|=1<<6; //SPI…Ë±∏ πƒ‹
-	SPIx_ReadWriteByte(0xff);//∆Ù∂Ø¥´ ‰		 
+	SPI1->CR1|=1<<6; //SPIËÆæÂ§á‰ΩøËÉΩ
+	SPIx_ReadWriteByte(0xff);//ÂêØÂä®‰º†Ëæì
 	
 }   
-//SPI ÀŸ∂»…Ë÷√∫Ø ˝
+//SPI ÈÄüÂ∫¶ËÆæÁΩÆÂáΩÊï∞
 //SpeedSet:
-//SPI_SPEED_2   2∑÷∆µ   (SPI 36M@sys 72M)
-//SPI_SPEED_8   8∑÷∆µ   (SPI 9M@sys 72M)
-//SPI_SPEED_16  16∑÷∆µ  (SPI 4.5M@sys 72M)
-//SPI_SPEED_256 256∑÷∆µ (SPI 281.25K@sys 72M)
+//SPI_SPEED_2   2ÂàÜÈ¢ë   (SPI 36M@sys 72M)
+//SPI_SPEED_8   8ÂàÜÈ¢ë   (SPI 9M@sys 72M)
+//SPI_SPEED_16  16ÂàÜÈ¢ë  (SPI 4.5M@sys 72M)
+//SPI_SPEED_256 256ÂàÜÈ¢ë (SPI 281.25K@sys 72M)
 void SPIx_SetSpeed(u8 SpeedSet)
 {
 	SPI1->CR1&=0XFFC7;//Fsck=Fcpu/256
-	if(SpeedSet==SPI_SPEED_2)//∂˛∑÷∆µ
+	if(SpeedSet==SPI_SPEED_2)//‰∫åÂàÜÈ¢ë
 	{
 		SPI1->CR1|=0<<3;//Fsck=Fpclk/2=36Mhz	
-	}else if(SpeedSet==SPI_SPEED_8)//∞À∑÷∆µ 
+	}else if(SpeedSet==SPI_SPEED_8)//ÂÖ´ÂàÜÈ¢ë
 	{
 		SPI1->CR1|=2<<3;//Fsck=Fpclk/8=9Mhz	
-	}else if(SpeedSet==SPI_SPEED_16)// Æ¡˘∑÷∆µ
+	}else if(SpeedSet==SPI_SPEED_16)//ÂçÅÂÖ≠ÂàÜÈ¢ë
 	{
 		SPI1->CR1|=3<<3;//Fsck=Fpclk/16=4.5Mhz
-	}else			 	 //256∑÷∆µ
+	}else			 	 //256ÂàÜÈ¢ë
 	{
-		SPI1->CR1|=7<<3; //Fsck=Fpclk/256=281.25Khz µÕÀŸƒ£ Ω
+		SPI1->CR1|=7<<3; //Fsck=Fpclk/256=281.25Khz ‰ΩéÈÄüÊ®°Âºè
 	}
-	SPI1->CR1|=1<<6; //SPI…Ë±∏ πƒ‹	  
+	SPI1->CR1|=1<<6; //SPIËÆæÂ§á‰ΩøËÉΩ
 } 
-//SPIx ∂¡–¥“ª∏ˆ◊÷Ω⁄
-//TxData:“™–¥»Îµƒ◊÷Ω⁄
-//∑µªÿ÷µ:∂¡»°µΩµƒ◊÷Ω⁄
+//SPIx ËØªÂÜô‰∏Ä‰∏™Â≠óËäÇ
+//TxData:Ë¶ÅÂÜôÂÖ•ÁöÑÂ≠óËäÇ
+//ËøîÂõûÂÄº:ËØªÂèñÂà∞ÁöÑÂ≠óËäÇ
 u8 SPIx_ReadWriteByte(u8 TxData)
 {		
 	u8 retry=0;				 
-	while((SPI1->SR&1<<1)==0)//µ»¥˝∑¢ÀÕ«¯ø’	
+	while((SPI1->SR&1<<1)==0)//Á≠âÂæÖÂèëÈÄÅÂå∫Á©∫
 	{
 		retry++;
 		if(retry>200)return 0;
 	}			  
-	SPI1->DR=TxData;	 	  //∑¢ÀÕ“ª∏ˆbyte 
+	SPI1->DR=TxData;	 	  //ÂèëÈÄÅ‰∏Ä‰∏™byte
 	retry=0;
-	while((SPI1->SR&1<<0)==0) //µ»¥˝Ω” ’ÕÍ“ª∏ˆbyte  
+	while((SPI1->SR&1<<0)==0) //Á≠âÂæÖÊé•Êî∂ÂÆå‰∏Ä‰∏™byte
 	{
 		retry++;
 		if(retry>200)return 0;
 	}	  						    
-	return SPI1->DR;          //∑µªÿ ’µΩµƒ ˝æ›				    
+	return SPI1->DR;          //ËøîÂõûÊî∂Âà∞ÁöÑÊï∞ÊçÆ
 }
 
 

@@ -50,7 +50,7 @@ RESULT PowerOn(void)
 {
   u16 wRegVal;
   USB_Cable_Init();
-  USB_Cable_Config(ENABLE);//使能1.5K上拉 
+  USB_Cable_Config(ENABLE);//浣胯兘1.5K涓婃媺
   /*** CNTR_PWDN = 0 ***/
   wRegVal = CNTR_FRES;
   _SetCNTR(wRegVal);	 
@@ -79,7 +79,7 @@ RESULT PowerOff()
   /* clear interrupt status register */
   _SetISTR(0);				 
   /* Disable the Pull-Up*/
-  USB_Cable_Config(DISABLE);//禁止1.5K上拉
+  USB_Cable_Config(DISABLE);//绂佹1.5K涓婃媺
   /* switch-off device */
   _SetCNTR(CNTR_FRES + CNTR_PDWN);
   /* sw variables reset */

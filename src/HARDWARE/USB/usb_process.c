@@ -1,6 +1,6 @@
 #include "usb_process.h"
-extern u8 EP1BUSY;			//键盘数据发送忙标志 
-extern u8 EP2BUSY;			//鼠标数据发送忙标志
+extern u8 EP1BUSY;			//閿洏鏁版嵁鍙戦�佸繖鏍囧織
+extern u8 EP2BUSY;			//榧犳爣鏁版嵁鍙戦�佸繖鏍囧織
 
 //void mouse_process(u8* buf)
 //{

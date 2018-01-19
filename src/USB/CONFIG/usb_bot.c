@@ -47,11 +47,11 @@ extern u32 Max_Lun;
 * Input          : None.
 * Output         : None.
 * Return         : None.
-//Éè±¸->USB
+//è®¾å¤‡->USB
 *******************************************************************************/
 void Mass_Storage_In (void)
 {
-	USB_STATUS_REG|=0X10;//±ê¼ÇÂÖÑ¯
+	USB_STATUS_REG|=0X10;//æ ‡è®°è½®è¯¢
 	//printf("Bot_State_in:%d",Bot_State);
 	switch (Bot_State)
 	{
@@ -60,11 +60,11 @@ void Mass_Storage_In (void)
 			Bot_State = BOT_IDLE;
 			SetEPRxStatus(ENDP4, EP_RX_VALID);/* enable the Endpoint to recive the next cmd*/
 			break;
-		case BOT_DATA_IN:  //USB´ÓÉè±¸¶ÁÊý¾Ý
+		case BOT_DATA_IN:  //USBä»Žè®¾å¤‡è¯»æ•°æ®
 			switch (CBW.CB[0])
 			{
 				case SCSI_READ10:
-					USB_STATUS_REG|=0X02;//±ê¼ÇÕýÔÚ¶ÁÊý¾Ý
+					USB_STATUS_REG|=0X02;//æ ‡è®°æ­£åœ¨è¯»æ•°æ®
 					SCSI_Read10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
 					break;
 			}
@@ -85,12 +85,12 @@ void Mass_Storage_In (void)
 * Input          : None.
 * Output         : None.
 * Return         : None.
-//USB->Éè±¸
+//USB->è®¾å¤‡
 *******************************************************************************/
 void Mass_Storage_Out (void)
 {
 	u8 CMD;
-	USB_STATUS_REG|=0X10;//±ê¼ÇÂÖÑ¯
+	USB_STATUS_REG|=0X10;//æ ‡è®°è½®è¯¢
 	
 	CMD = CBW.CB[0];
 	Data_Len = GetEPRxCount(ENDP4);
@@ -101,10 +101,10 @@ void Mass_Storage_Out (void)
 		case BOT_IDLE:
 			CBW_Decode();
 			break;
-		case BOT_DATA_OUT://USB·¢ËÍÊý¾Ýµ½Éè±¸
+		case BOT_DATA_OUT://USBå‘é€æ•°æ®åˆ°è®¾å¤‡
 			if (CMD == SCSI_WRITE10)
 			{
-				USB_STATUS_REG|=0X01;//±ê¼ÇÕýÔÚÐ´Êý¾Ý
+				USB_STATUS_REG|=0X01;//æ ‡è®°æ­£åœ¨å†™æ•°æ®
 				SCSI_Write10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
 				break;
 			}

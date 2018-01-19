@@ -33,15 +33,15 @@ vu32 Block_offset;
 vu32 Counter = 0;
 
 u32  Idx;
-u32 Data_Buffer[BULK_MAX_PACKET_SIZE *2]; //²»Ê¹ÓÃmalloc 
+u32 Data_Buffer[BULK_MAX_PACKET_SIZE *2]; //ä¸ä½¿ç”¨malloc
 u8 TransferState = TXFR_IDLE;
 
-////////////////////////////×Ô¼º¶¨ÒåµÄÒ»¸ö±ê¼ÇUSB×´Ì¬µÄ¼Ä´æÆ÷///////////////////
-//bit0:±íÊ¾µçÄÔÕıÔÚÏòSD¿¨Ğ´ÈëÊı¾İ
-//bit1:±íÊ¾µçÄÔÕı´ÓSD¿¨¶Á³öÊı¾İ
-//bit2:SD¿¨Ğ´Êı¾İ´íÎó±êÖ¾Î»
-//bit3:SD¿¨¶ÁÊı¾İ´íÎó±êÖ¾Î»
-//bit4:1,±íÊ¾µçÄÔÓĞÂÖÑ¯²Ù×÷(±íÃ÷Á¬½Ó»¹±£³Ö×Å)
+////////////////////////////è‡ªå·±å®šä¹‰çš„ä¸€ä¸ªæ ‡è®°USBçŠ¶æ€çš„å¯„å­˜å™¨///////////////////
+//bit0:è¡¨ç¤ºç”µè„‘æ­£åœ¨å‘SDå¡å†™å…¥æ•°æ®
+//bit1:è¡¨ç¤ºç”µè„‘æ­£ä»SDå¡è¯»å‡ºæ•°æ®
+//bit2:SDå¡å†™æ•°æ®é”™è¯¯æ ‡å¿—ä½
+//bit3:SDå¡è¯»æ•°æ®é”™è¯¯æ ‡å¿—ä½
+//bit4:1,è¡¨ç¤ºç”µè„‘æœ‰è½®è¯¢æ“ä½œ(è¡¨æ˜è¿æ¥è¿˜ä¿æŒç€)
 u8 USB_STATUS_REG=0;
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +82,7 @@ void Read_Memory(u8 lun, u32 Memory_Offset, u32 Transfer_Length)
 					     Offset ,
 			   	  		 Data_Buffer,
 		    	   	 	 Mass_Block_Size[lun]);
-			if(STA)USB_STATUS_REG|=0X08;//SD¿¨¶Á´íÎó!
+			if(STA)USB_STATUS_REG|=0X08;//SDå¡è¯»é”™è¯¯!
 			UserToPMABufferCopy((u8 *)Data_Buffer, ENDP3_TXADDR, BULK_MAX_PACKET_SIZE);
 			Block_Read_count = Mass_Block_Size[lun] - BULK_MAX_PACKET_SIZE;
 			Block_offset = BULK_MAX_PACKET_SIZE;
@@ -99,7 +99,7 @@ void Read_Memory(u8 lun, u32 Memory_Offset, u32 Transfer_Length)
 		Length -= BULK_MAX_PACKET_SIZE;
 		
 		CSW.dDataResidue -= BULK_MAX_PACKET_SIZE;
-		//Led_RW_ON();//ÌáÊ¾ÕıÔÚ¶ÁĞ´
+		//Led_RW_ON();//æç¤ºæ­£åœ¨è¯»å†™
 	}
 	if (Length == 0)
 	{
@@ -108,7 +108,7 @@ void Read_Memory(u8 lun, u32 Memory_Offset, u32 Transfer_Length)
 		Offset = 0;
 		Bot_State = BOT_DATA_IN_LAST;
 		TransferState = TXFR_IDLE;
-		//Led_RW_OFF();//¶ÁĞ´Íê³ÉÁË
+		//Led_RW_OFF();//è¯»å†™å®Œæˆäº†
 	}					 
 }
 
@@ -148,18 +148,18 @@ void Write_Memory (u8 lun, u32 Memory_Offset, u32 Transfer_Length)
 					  	  W_Offset - Mass_Block_Size[lun],
 					  	  Data_Buffer,
 					  	  Mass_Block_Size[lun]);
-			if(STA)USB_STATUS_REG|=0X04;//SD¿¨Ğ´´íÎó!	 
+			if(STA)USB_STATUS_REG|=0X04;//SDå¡å†™é”™è¯¯!
 		}				  
 		CSW.dDataResidue -= Data_Len;
 		SetEPRxStatus(ENDP4, EP_RX_VALID); /* enable the next transaction*/		 
-		//Led_RW_ON();//ÌáÊ¾ÕıÔÚ¶ÁĞ´
+		//Led_RW_ON();//æç¤ºæ­£åœ¨è¯»å†™
 	}	   
 	if ((W_Length == 0) || (Bot_State == BOT_CSW_Send))
 	{
 		Counter = 0;
 		Set_CSW (CSW_CMD_PASSED, SEND_CSW_ENABLE);
 		TransferState = TXFR_IDLE;
-		//Led_RW_OFF();//¶ÁĞ´Íê³ÉÁË
+		//Led_RW_OFF();//è¯»å†™å®Œæˆäº†
 	}
 } 
 

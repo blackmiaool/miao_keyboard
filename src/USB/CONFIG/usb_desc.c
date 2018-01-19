@@ -55,95 +55,95 @@ const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =
 
 const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
 {
-    /***************ÅäÖÃÃèÊö·û***********************/
-    0x09,		//bLength×Ö¶Î
-    USB_CONFIGURATION_DESCRIPTOR_TYPE,		//bDescriptorType×Ö¶Î
-    //wTotalLength×Ö¶Î
+    /***************é…ç½®æè¿°ç¬¦***********************/
+    0x09,		//bLengthå­—æ®µ
+    USB_CONFIGURATION_DESCRIPTOR_TYPE,		//bDescriptorTypeå­—æ®µ
+    //wTotalLengthå­—æ®µ
     JOYSTICK_SIZ_CONFIG_DESC%128,
     /* wTotalLength: Bytes returned */
     JOYSTICK_SIZ_CONFIG_DESC/128,
 
-    0x03,	//bNumInterfaces×Ö¶Î
-    0x01,	//bConfiguration×Ö¶Î
-    0x00,	//iConfigurationz×Ö¶Î
-    0x80,	//bmAttributes×Ö¶Î
-    0x32,	//bMaxPower×Ö¶Î
+    0x03,	//bNumInterfaceså­—æ®µ
+    0x01,	//bConfigurationå­—æ®µ
+    0x00,	//iConfigurationzå­—æ®µ
+    0x80,	//bmAttributeså­—æ®µ
+    0x32,	//bMaxPowerå­—æ®µ
 
-    /*******************µÚÒ»¸ö½Ó¿ÚÃèÊö·û*********************/
-    0x09,	//bLength×Ö¶Î
-    0x04,	//bDescriptorType×Ö¶Î
-    0x00,	//bInterfaceNumber×Ö¶Î
-    0x00,	//bAlternateSetting×Ö¶Î
-    0x02,	//bNumEndpoints×Ö¶Î
-    0x03,	//bInterfaceClass×Ö¶Î
-    0x01,	//bInterfaceSubClass×Ö¶Î
-    0x01,	//bInterfaceProtocol×Ö¶Î
-    0x00,	//iConfiguration×Ö¶Î
+    /*******************ç¬¬ä¸€ä¸ªæ¥å£æè¿°ç¬¦*********************/
+    0x09,	//bLengthå­—æ®µ
+    0x04,	//bDescriptorTypeå­—æ®µ
+    0x00,	//bInterfaceNumberå­—æ®µ
+    0x00,	//bAlternateSettingå­—æ®µ
+    0x02,	//bNumEndpointså­—æ®µ
+    0x03,	//bInterfaceClasså­—æ®µ
+    0x01,	//bInterfaceSubClasså­—æ®µ
+    0x01,	//bInterfaceProtocolå­—æ®µ
+    0x00,	//iConfigurationå­—æ®µ
 
-    /******************HIDÃèÊö·û************************/
-    0x09,	//bLength×Ö¶Î
-    0x21,	//bDescriptorType×Ö¶Î
-    0x10,	//bcdHID×Ö¶Î
+    /******************HIDæè¿°ç¬¦************************/
+    0x09,	//bLengthå­—æ®µ
+    0x21,	//bDescriptorTypeå­—æ®µ
+    0x10,	//bcdHIDå­—æ®µ
     0x01,
-    0x21,	//bCountyCode×Ö¶Î
-    0x01,	//bNumDescriptors×Ö¶Î
-    0x22,	//bDescriptorType×Ö¶Î
+    0x21,	//bCountyCodeå­—æ®µ
+    0x01,	//bNumDescriptorså­—æ®µ
+    0x22,	//bDescriptorTypeå­—æ®µ
 
-    //bDescriptorLength×Ö¶Î¡£
-    //ÏÂ¼¶ÃèÊö·ûµÄ³¤¶È¡£ÏÂ¼¶ÃèÊö·ûÎª¼üÅÌ±¨¸æÃèÊö·û¡£
+    //bDescriptorLengthå­—æ®µã€‚
+    //ä¸‹çº§æè¿°ç¬¦çš„é•¿åº¦ã€‚ä¸‹çº§æè¿°ç¬¦ä¸ºé”®ç›˜æŠ¥å‘Šæè¿°ç¬¦ã€‚
     sizeof(KeyboardReportDescriptor)&0xFF,
     (sizeof(KeyboardReportDescriptor)>>8)&0xFF,
 
-    /**********************ÊäÈë¶ËµãÃèÊö·û***********************/
-    0x07,	//bLength×Ö¶Î
-    0x05,	//bDescriptorType×Ö¶Î
-    0x81,	//bEndpointAddress×Ö¶Î
-    0x03,	//bmAttributes×Ö¶Î
-    0x10,	//wMaxPacketSize×Ö¶Î
+    /**********************è¾“å…¥ç«¯ç‚¹æè¿°ç¬¦***********************/
+    0x07,	//bLengthå­—æ®µ
+    0x05,	//bDescriptorTypeå­—æ®µ
+    0x81,	//bEndpointAddresså­—æ®µ
+    0x03,	//bmAttributeså­—æ®µ
+    0x10,	//wMaxPacketSizeå­—æ®µ
     0x00,
-    0x0A,	//bInterval×Ö¶Î
+    0x0A,	//bIntervalå­—æ®µ
 
-    /**********************Êä³ö¶ËµãÃèÊö·û***********************/
-    0x07,	//bLength×Ö¶Î
-    0x05,	//bDescriptorType×Ö¶Î
-    0x01,	//bEndpointAddress×Ö¶Î
-    0x03,	//bmAttributes×Ö¶Î
-    0x10,	//wMaxPacketSize×Ö¶Î
+    /**********************è¾“å‡ºç«¯ç‚¹æè¿°ç¬¦***********************/
+    0x07,	//bLengthå­—æ®µ
+    0x05,	//bDescriptorTypeå­—æ®µ
+    0x01,	//bEndpointAddresså­—æ®µ
+    0x03,	//bmAttributeså­—æ®µ
+    0x10,	//wMaxPacketSizeå­—æ®µ
     0x00,
-    0x0A,	//bInterval×Ö¶Î
+    0x0A,	//bIntervalå­—æ®µ
 
-    /*******************µÚ¶ş¸ö½Ó¿ÚÃèÊö·û*********************/
-    0x09,	//bLength×Ö¶Î
-    0x04,	//bDescriptorType×Ö¶Î
-    0x01,	//bInterfaceNumber×Ö¶Î
-    0x00,	//bAlternateSetting×Ö¶Î
-    0x01,	//bNumEndpoints×Ö¶Î
-    0x03,	//bInterfaceClass×Ö¶Î
-    0x01,	//bInterfaceSubClass×Ö¶Î
-    0x02,	//bInterfaceProtocol×Ö¶Î
-    0x00,	//iConfiguration×Ö¶Î
+    /*******************ç¬¬äºŒä¸ªæ¥å£æè¿°ç¬¦*********************/
+    0x09,	//bLengthå­—æ®µ
+    0x04,	//bDescriptorTypeå­—æ®µ
+    0x01,	//bInterfaceNumberå­—æ®µ
+    0x00,	//bAlternateSettingå­—æ®µ
+    0x01,	//bNumEndpointså­—æ®µ
+    0x03,	//bInterfaceClasså­—æ®µ
+    0x01,	//bInterfaceSubClasså­—æ®µ
+    0x02,	//bInterfaceProtocolå­—æ®µ
+    0x00,	//iConfigurationå­—æ®µ
 
-    /******************HIDÃèÊö·û************************/
-    0x09,	//bLength×Ö¶Î
-    0x21,	//bDescriptorType×Ö¶Î
-    0x10,	//bcdHID×Ö¶Î
+    /******************HIDæè¿°ç¬¦************************/
+    0x09,	//bLengthå­—æ®µ
+    0x21,	//bDescriptorTypeå­—æ®µ
+    0x10,	//bcdHIDå­—æ®µ
     0x01,
-    0x21,	//bCountyCode×Ö¶Î
-    0x01,	//bNumDescriptors×Ö¶Î
-    0x22,	//bDescriptorType×Ö¶Î
-    sizeof(MouseReportDescriptor)&0xFF,		//bDescriptorLength×Ö¶Î
+    0x21,	//bCountyCodeå­—æ®µ
+    0x01,	//bNumDescriptorså­—æ®µ
+    0x22,	//bDescriptorTypeå­—æ®µ
+    sizeof(MouseReportDescriptor)&0xFF,		//bDescriptorLengthå­—æ®µ
     (sizeof(MouseReportDescriptor)>>8)&0xFF,
 
-    /**********************ÊäÈë¶ËµãÃèÊö·û***********************/
-    0x07,	//bLength×Ö¶Î
-    0x05,	//bDescriptorType×Ö¶Î
-    0x82,	//bEndpointAddress×Ö¶Î
-    0x03,	//bmAttributes×Ö¶Î¡£D1~D0Îª¶Ëµã´«ÊäÀàĞÍÑ¡Ôñ
-    0x40,	//wMaxPacketSize×Ö¶Î
+    /**********************è¾“å…¥ç«¯ç‚¹æè¿°ç¬¦***********************/
+    0x07,	//bLengthå­—æ®µ
+    0x05,	//bDescriptorTypeå­—æ®µ
+    0x82,	//bEndpointAddresså­—æ®µ
+    0x03,	//bmAttributeså­—æ®µã€‚D1~D0ä¸ºç«¯ç‚¹ä¼ è¾“ç±»å‹é€‰æ‹©
+    0x40,	//wMaxPacketSizeå­—æ®µ
     0x00,
-    0x0A, 	//bInterval×Ö¶Î
+    0x0A, 	//bIntervalå­—æ®µ
 
-    /*******************µÚÈı¸ö½Ó¿ÚÃèÊö·û*********************/
+    /*******************ç¬¬ä¸‰ä¸ªæ¥å£æè¿°ç¬¦*********************/
     0x09,   /* bLength: Interface Descriptor size */
     0x04,   /* bDescriptorType: */
     /*      Interface descriptor type */
@@ -173,8 +173,8 @@ const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
     /*32*/
 
 };
-////////////////////////ÅäÖÃÃèÊö·û¼¯ºÏÍê±Ï//////////////////////////
-//USB¼üÅÌ±¨¸æÃèÊö·ûµÄ¶¨Òå
+////////////////////////é…ç½®æè¿°ç¬¦é›†åˆå®Œæ¯•//////////////////////////
+//USBé”®ç›˜æŠ¥å‘Šæè¿°ç¬¦çš„å®šä¹‰
 const u8 KeyboardReportDescriptor[KP_ReportDescriptor_Size]=
 {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)	//63
@@ -211,9 +211,9 @@ const u8 KeyboardReportDescriptor[KP_ReportDescriptor_Size]=
     0xc0,                           // END_COLLECTION
 	//0xc0,
   }; /* Joystick_ReportDescriptor */
-///////////////////////////¼üÅÌ±¨¸æÃèÊö·ûÍê±Ï////////////////////////////
+///////////////////////////é”®ç›˜æŠ¥å‘Šæè¿°ç¬¦å®Œæ¯•////////////////////////////
 
-//USBÊó±ê±¨¸æÃèÊö·ûµÄ¶¨Òå
+//USBé¼ æ ‡æŠ¥å‘Šæè¿°ç¬¦çš„å®šä¹‰
 const u8 MouseReportDescriptor[Mouse_ReportDescriptor_Size]=
 {
  0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
@@ -289,7 +289,7 @@ const u8 MouseReportDescriptor[Mouse_ReportDescriptor_Size]=
     0x81, 0x00,                    //   INPUT (Data,Array,Abs)
     0xc0,                          // END_COLLECTION
 };
-///////////////////////////±¨¸æÃèÊö·ûÍê±Ï////////////////////////////
+///////////////////////////æŠ¥å‘Šæè¿°ç¬¦å®Œæ¯•////////////////////////////
 /* USB String Descriptors (optional) */
 const u8 Joystick_StringLangID[JOYSTICK_SIZ_STRING_LANGID] =
   {

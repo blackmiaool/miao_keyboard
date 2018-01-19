@@ -68,7 +68,7 @@ void IOConfig(GPIO_TypeDef*  IOBase,u8 ishigh,u32 PIN,u8 state)	  //(IOCB,0,PIN3
 		IOBase->CRL|=state*PIN;
 	}
 }
-    // πƒ‹PORTA ±÷”
+    //‰ΩøËÉΩPORTAÊó∂Èíü
 
 void zhongduanConfig(u8 NVIC_Channel,int i)
 {
@@ -89,19 +89,19 @@ void waibuzhongduanConfig(GPIO_TypeDef*  IOBase,u8 BITx,u8 TRIM,u8 youxianji)
 {
 	u8 EXTADDR;
 	u8 EXTOFFSET;
-	EXTADDR=BITx/4;//µ√µΩ÷–∂œºƒ¥Ê∆˜◊Èµƒ±‡∫≈
+	EXTADDR=BITx/4;//ÂæóÂà∞‰∏≠Êñ≠ÂØÑÂ≠òÂô®ÁªÑÁöÑÁºñÂè∑
 	EXTOFFSET=(BITx%4)*4;
 
-	RCC->APB2ENR|=0x01;// πƒ‹io∏¥”√ ±÷”			 
+	RCC->APB2ENR|=0x01;//‰ΩøËÉΩioÂ§çÁî®Êó∂Èíü
 
-	AFIO->EXTICR[EXTADDR]&=~(0x000F<<EXTOFFSET);//«Â≥˝‘≠¿¥…Ë÷√£°£°£°
-	AFIO->EXTICR[EXTADDR]|=((((u32)IOBase)-APB2PERIPH_BASE)/0x400-2)<<EXTOFFSET;//EXTI.BITx”≥…‰µΩGPIOx.BITx
+	AFIO->EXTICR[EXTADDR]&=~(0x000F<<EXTOFFSET);//Ê∏ÖÈô§ÂéüÊù•ËÆæÁΩÆÔºÅÔºÅÔºÅ
+	AFIO->EXTICR[EXTADDR]|=((((u32)IOBase)-APB2PERIPH_BASE)/0x400-2)<<EXTOFFSET;//EXTI.BITxÊò†Â∞ÑÂà∞GPIOx.BITx
 	
-	//◊‘∂Ø…Ë÷√
-	EXTI->IMR|=1<<BITx;//  ø™∆Ùline BITx…œµƒ÷–∂œ
-	//EXTI->EMR|=1<<BITx;//≤ª∆¡±Œline BITx…œµƒ ¬º˛ (»Áπ˚≤ª∆¡±Œ’‚æ‰,‘⁄”≤º˛…œ «ø…“‘µƒ,µ´ «‘⁄»Ìº˛∑¬’Êµƒ ±∫ÚŒﬁ∑®Ω¯»Î÷–∂œ!)
- 	if(TRIM&0x01)EXTI->FTSR|=1<<BITx;//line BITx…œ ¬º˛œ¬Ωµ—ÿ¥•∑¢
-	if(TRIM&0x02)EXTI->RTSR|=1<<BITx;//line BITx…œ ¬º˛…œ…˝Ωµ—ÿ¥•∑¢
+	//Ëá™Âä®ËÆæÁΩÆ
+	EXTI->IMR|=1<<BITx;//  ÂºÄÂêØline BITx‰∏äÁöÑ‰∏≠Êñ≠
+	//EXTI->EMR|=1<<BITx;//‰∏çÂ±èËîΩline BITx‰∏äÁöÑ‰∫ã‰ª∂ (Â¶ÇÊûú‰∏çÂ±èËîΩËøôÂè•,Âú®Á°¨‰ª∂‰∏äÊòØÂèØ‰ª•ÁöÑ,‰ΩÜÊòØÂú®ËΩØ‰ª∂‰ªøÁúüÁöÑÊó∂ÂÄôÊó†Ê≥ïËøõÂÖ•‰∏≠Êñ≠!)
+ 	if(TRIM&0x01)EXTI->FTSR|=1<<BITx;//line BITx‰∏ä‰∫ã‰ª∂‰∏ãÈôçÊ≤øËß¶Âèë
+	if(TRIM&0x02)EXTI->RTSR|=1<<BITx;//line BITx‰∏ä‰∫ã‰ª∂‰∏äÂçáÈôçÊ≤øËß¶Âèë
 	if(BITx<5)
 		zhongduanConfig(BITx+6,youxianji);
 	else if(BITx<10) 
@@ -124,44 +124,44 @@ EXTI0_IRQHandler
 void SPIInit()
 {	 
 	SCPE(PERIOA); 
-	SCPE(PERSPI1);    //SPI1 ±÷” πƒ‹ 
+	SCPE(PERSPI1);    //SPI1Êó∂Èíü‰ΩøËÉΩ
 		   
-	//’‚¿Ô÷ª’Î∂‘SPIø⁄≥ı ºªØ
+	//ËøôÈáåÂè™ÈíàÂØπSPIÂè£ÂàùÂßãÂåñ
 	IOConfig(IOAB,low,PIN5|PIN6|PIN7,0XB);
 	PAout(5)=1;
 	PAout(6)=1;
 	PAout(7)=1;
-	SPI1->CR1|=0<<10;//»´À´π§ƒ£ Ω	
-	SPI1->CR1|=1<<9; //»Ìº˛nssπ‹¿Ì
+	SPI1->CR1|=0<<10;//ÂÖ®ÂèåÂ∑•Ê®°Âºè
+	SPI1->CR1|=1<<9; //ËΩØ‰ª∂nssÁÆ°ÁêÜ
 	SPI1->CR1|=1<<8;  
 
-	SPI1->CR1|=1<<2; //SPI÷˜ª˙
-	SPI1->CR1|=0<<11;//8bit ˝æ›∏Ò Ω	
-	//∂‘24L01“™…Ë÷√ CPHA=0;CPOL=0;
-	SPI1->CR1|=0<<1; //CPOL=0 ±ø’œ–ƒ£ Ωœ¬SCKŒ™1 
-	//SPI1->CR1|=1<<1; //ø’œ–ƒ£ Ωœ¬SCKŒ™1 CPOL=1			   
-	SPI1->CR1|=0<<0; //µ⁄“ª∏ˆ ±÷”µƒœ¬Ωµ—ÿ,CPHA=1 CPOL=1	   
+	SPI1->CR1|=1<<2; //SPI‰∏ªÊú∫
+	SPI1->CR1|=0<<11;//8bitÊï∞ÊçÆÊ†ºÂºè
+	//ÂØπ24L01Ë¶ÅËÆæÁΩÆ CPHA=0;CPOL=0;
+	SPI1->CR1|=0<<1; //CPOL=0Êó∂Á©∫Èó≤Ê®°Âºè‰∏ãSCK‰∏∫1
+	//SPI1->CR1|=1<<1; //Á©∫Èó≤Ê®°Âºè‰∏ãSCK‰∏∫1 CPOL=1
+	SPI1->CR1|=0<<0; //Á¨¨‰∏Ä‰∏™Êó∂ÈíüÁöÑ‰∏ãÈôçÊ≤ø,CPHA=1 CPOL=1
 	SPI1->CR1|=7<<3; //Fsck=Fcpu/256
 	SPI1->CR1|=0<<7; //MSBfirst   
-	SPI1->CR1|=1<<6; //SPI…Ë±∏ πƒ‹
-	SPIRW(0xff);//∆Ù∂Ø¥´ ‰		 
+	SPI1->CR1|=1<<6; //SPIËÆæÂ§á‰ΩøËÉΩ
+	SPIRW(0xff);//ÂêØÂä®‰º†Ëæì
 }
 u8 SPIRW(u8 TxData)
 {		
 	u8 retry=0;				 
-	while((SPI1->SR&1<<1)==0)//µ»¥˝∑¢ÀÕ«¯ø’	
+	while((SPI1->SR&1<<1)==0)//Á≠âÂæÖÂèëÈÄÅÂå∫Á©∫
 	{
 		retry++;
 		if(retry>200)return 0;
 	}			  
-	SPI1->DR=TxData;	 	  //∑¢ÀÕ“ª∏ˆbyte 
+	SPI1->DR=TxData;	 	  //ÂèëÈÄÅ‰∏Ä‰∏™byte
 	retry=0;
-	while((SPI1->SR&1<<0)==0) //µ»¥˝Ω” ’ÕÍ“ª∏ˆbyte  
+	while((SPI1->SR&1<<0)==0) //Á≠âÂæÖÊé•Êî∂ÂÆå‰∏Ä‰∏™byte
 	{
 		retry++;
 		if(retry>200)return 0;
 	}	  						    
-	return SPI1->DR;          //∑µªÿ ’µΩµƒ ˝æ›				    
+	return SPI1->DR;          //ËøîÂõûÊî∂Âà∞ÁöÑÊï∞ÊçÆ
 }
 void mprintf(char *shuru,...)
 {

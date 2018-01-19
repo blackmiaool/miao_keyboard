@@ -7,23 +7,23 @@
 #include "bsp.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 
-//±Ÿ³ÌĞòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬ÎŸ­×÷ÕßĞí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍŸ
+//ç™ç¨‹åºåªä¾›å­¦ä¹ ä½¿ç”¨ï¼Œèç…­ä½œè€…è®¸å¯ï¼Œä¸å¾—ç”¨äºå…¶å®ƒä»»ä½•ç”¨èœ”
 
-//Mini STM32¿ª·¢°å
+//Mini STM32å¼€å‘æ¿
 
-//W25Q64 Çı¶¯º¯Êı	   
+//W25Q64 é©±åŠ¨å‡½æ•°
 
-//ÕıµãÔ­×Ó@ALIENTEK
+//æ­£ç‚¹åŸå­@ALIENTEK
 
-//ŒŒÊõÂÛÌ³:www.openedv.com
+//å¯£æœ¯è®ºå›:www.openedv.com
 
-//ĞŞÄÈÕÆÚ:2014/3/9 
+//ä¿®ç½æ—¥æœŸ:2014/3/9
 
-//°æ±Ÿ£ºV1.0
+//ç‰ˆç™ï¼šV1.0
 
-//°æÈšËùÓĞ£¬µÁ°æ±ØŸ¿¡£
+//ç‰ˆè‘°æ‰€æœ‰ï¼Œç›—ç‰ˆå¿…ç††ã€‚
 
-//Copyright(C) ÕıµãÔ­×Ó 2009-2019
+//Copyright(C) æ­£ç‚¹åŸå­ 2009-2019
 
 //All rights reserved
 
@@ -31,7 +31,7 @@
 
 
 
-//W25XÏµÁĞ/QÏµÁĞĞŸÆ¬ÁĞ±í	   
+//W25Xç³»åˆ—/Qç³»åˆ—è¢©ç‰‡åˆ—è¡¨
 
 //W25Q80 ID  0XEF13
 
@@ -51,7 +51,7 @@
 
 
 
-extern u16 SPI_FLASH_TYPE;		//¶šÒåÎÒÃÇÊ¹ÓÃµÄflashĞŸÆ¬ĞÍºÅ		   
+extern u16 SPI_FLASH_TYPE;		//ç¨“ä¹‰æˆ‘ä»¬ä½¿ç”¨çš„flashè¢©ç‰‡å‹å·
 //A4
 
 				 
@@ -60,7 +60,7 @@ extern u16 SPI_FLASH_TYPE;		//¶šÒåÎÒÃÇÊ¹ÓÃµÄflashĞŸÆ¬ĞÍºÅ
 
  
 
-//ÖÁî±í
+//è­ƒä»¤è¡¨
 
 #define W25X_WriteEnable		0x06 
 
@@ -98,31 +98,31 @@ extern u16 SPI_FLASH_TYPE;		//¶šÒåÎÒÃÇÊ¹ÓÃµÄflashĞŸÆ¬ĞÍºÅ
 
 void SPI_Flash_Init(void);
 
-u16  SPI_Flash_ReadID(void);  	    //¶ÁÈ¡FLASH ID
+u16  SPI_Flash_ReadID(void);  	    //è¯»å–FLASH ID
 
-u8	 SPI_Flash_ReadSR(void);        //¶ÁÈ¡×Ì¬ŒÄæÆ÷ 
+u8	 SPI_Flash_ReadSR(void);        //è¯»å–è®•æ€å±‡åº¢å™¨
 
-void SPI_FLASH_Write_SR(u8 sr);  	//Ğ×Ì¬ŒÄæÆ÷
+void SPI_FLASH_Write_SR(u8 sr);  	//è¢”è®•æ€å±‡åº¢å™¨
 
-void SPI_FLASH_Write_Enable(void);  //ĞÊ¹ÄÜ 
+void SPI_FLASH_Write_Enable(void);  //è¢”ä½¿èƒ½
 
-void SPI_FLASH_Write_Disable(void);	//Ğ±£»€
+void SPI_FLASH_Write_Disable(void);	//è¢”ä¿ç²ˆ
 
 void SPI_Flash_Write_NoCheck(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);
 
-void SPI_Flash_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead);   //¶ÁÈ¡flash
+void SPI_Flash_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead);   //è¯»å–flash
 
-void SPI_Flash_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);//ĞÈëflash
+void SPI_Flash_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);//è¢”å…¥flash
 
-void SPI_Flash_Erase_Chip(void);    	  //ÕûÆ¬²Á³ı
+void SPI_Flash_Erase_Chip(void);    	  //æ•´ç‰‡æ“¦é™¤
 
-void SPI_Flash_Erase_Sector(u32 Dst_Addr);//ÉÈÇø²Á³ı
+void SPI_Flash_Erase_Sector(u32 Dst_Addr);//æ‰‡åŒºæ“¦é™¤
 
-void SPI_Flash_Wait_Busy(void);           //µÈı¿ÕÏĞ
+void SPI_Flash_Wait_Busy(void);           //ç­‰å»„ç©ºé—²
 
-void SPI_Flash_PowerDown(void);           //œøÈëµôµçÄ£Êœ
+void SPI_Flash_PowerDown(void);           //æ»§å…¥æ‰ç”µæ¨¡è•¼
 
-void SPI_Flash_WAKEUP(void);			  //»œĞÑ
+void SPI_Flash_WAKEUP(void);			  //ç²¶é†’
 
 #endif
 

@@ -33,11 +33,11 @@
 /* Private functions ---------------------------------------------------------*/
 			  
 
-//ÅäÖÃUSBÊ±ÖÓ,USBclk=48Mhz
+//é…ç½®USBæ—¶é’Ÿ,USBclk=48Mhz
 void Set_USBClock(void)
 {
  	RCC->CFGR&=~(1<<22); //USBclk=PLLclk/1.5=48Mhz	    
-	RCC->APB1ENR|=1<<23; //USBÊ±ÖÓÊ¹ÄÜ					 
+	RCC->APB1ENR|=1<<23; //USBæ—¶é’Ÿä½¿èƒ½
 }
  
 /*******************************************************************************
@@ -79,14 +79,14 @@ void Leave_LowPowerMode(void)
   }
 }
 
-//USBÖÐ¶ÏÅäÖÃ
+//USBä¸­æ–­é…ç½®
 void USB_Interrupts_Config(void)
 {
   
-	EXTI->IMR|=1<<18;//  ¿ªÆôÏß18ÉÏµÄÖÐ¶Ï
- 	EXTI->RTSR|=1<<18;//line 18ÉÏÊÂ¼þÉÏÉý½µÑØ´¥·¢	 
-	MY_NVIC_Init(1,1,USB_LP_CAN_RX0_IRQChannel,2);//×é2£¬ÓÅÏÈ¼¶´ÎÖ® 
-	MY_NVIC_Init(0,1,USBWakeUp_IRQChannel,2);     //×é2£¬ÓÅÏÈ¼¶×î¸ß	 	 
+	EXTI->IMR|=1<<18;//  å¼€å¯çº¿18ä¸Šçš„ä¸­æ–­
+ 	EXTI->RTSR|=1<<18;//line 18ä¸Šäº‹ä»¶ä¸Šå‡é™æ²¿è§¦å‘
+	MY_NVIC_Init(1,1,USB_LP_CAN_RX0_IRQChannel,2);//ç»„2ï¼Œä¼˜å…ˆçº§æ¬¡ä¹‹
+	MY_NVIC_Init(0,1,USBWakeUp_IRQChannel,2);     //ç»„2ï¼Œä¼˜å…ˆçº§æœ€é«˜
 }
 		    
 /*******************************************************************************
@@ -147,7 +147,7 @@ void Joystick_Send(u8 buf0, u8* buf1)
   /* prepare buffer to send */
  // Buffer[2] = buf1;
 
-  if(buf1[0]==0)	//¼üÅÌ
+  if(buf1[0]==0)	//é”®ç›˜
   {
 	  buf1[0]=buf1[1];
 	  /*copy mouse position info in ENDP1 Tx Packet Memory Area*/
@@ -155,7 +155,7 @@ void Joystick_Send(u8 buf0, u8* buf1)
 	  /* enable endpoint for transmission */
 	  SetEPTxValid(ENDP1);
   }
-  else				//Êó±ê
+  else				//é¼ æ ‡
   {
 	  
 	  UserToPMABufferCopy(buf1, GetEPTxAddr(ENDP2), 5);

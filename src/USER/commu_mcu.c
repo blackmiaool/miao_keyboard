@@ -10,7 +10,7 @@
 
 static void  usart_putchar(char ch)
 {      
-	while((USART1->SR&0X40)==0);//Ñ­»··¢ËÍ,Ö±µ½·¢ËÍÍê±Ï 
+	while((USART1->SR&0X40)==0);//å¾ªçŽ¯å‘é€,ç›´åˆ°å‘é€å®Œæ¯•
 	USART1->DR = (u8) ch;      
 }
 void commu_send(u8 *buf,u32 len,u8 type){
@@ -122,7 +122,7 @@ static void commu_recv_handle(u8 data){
 
 void USART1_IRQHandler(void)
 {
-	if(USART1->SR&(1<<5))//½ÓÊÕµ½Êý¾Ý
+	if(USART1->SR&(1<<5))//æŽ¥æ”¶åˆ°æ•°æ®
 	{	 
 		u8 res=USART1->DR; 
 		commu_recv_handle(res);
