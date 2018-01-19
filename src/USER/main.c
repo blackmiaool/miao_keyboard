@@ -13,6 +13,8 @@
 #include "commu_mcu.h"
 #include "w25q16.h"
 #include "led.h"
+#include "app.h"
+
 extern u8 EP1BUSY;			// kb busy flag
 extern u8 EP2BUSY;			// mouse busy flag
 extern u8 INIT_OK;
