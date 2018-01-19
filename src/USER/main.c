@@ -28,7 +28,7 @@ extern u8 USB_STATUS_REG;
 
 
 u8 delegate=0;
-void app_init(void);
+
 void routine(){
 	
 }

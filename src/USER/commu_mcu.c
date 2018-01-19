@@ -31,7 +31,7 @@ void commu_send(u8 *buf,u32 len,u8 type){
 //		buf[3+i]=key_buf.key[i];
 //	}
 //	
-//	keyborad_process(buf);
+//	keyboard_process(buf);
 //}
 __asm void INT_DIS(void) 
 {
@@ -61,7 +61,7 @@ void commu_recv(u8 *buf,u32 len,u8 type){
 			}
 			keyboard_flag=true;
 				
-//			keyborad_process(buf_send);
+//			keyboard_process(buf_send);
 			break;
 		}
 		case COMMU_TYPE(FLASH_READ_CMD):

@@ -29,7 +29,7 @@ void mouse_process(u8* buf){
 	UserToPMABufferCopy(buf_wrap, GetEPTxAddr(ENDP2), 5);
 	SetEPTxValid(ENDP2);
 } 
-void keyborad_process(u8* buf)
+void keyboard_process(u8* buf)
 {
 	while(EP1BUSY!=0){;}
 	EP1BUSY = 1;   

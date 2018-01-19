@@ -13,7 +13,9 @@
         "stm32f10x_type.h": "c",
         "cortexm3_macro.h": "c",
         "ff.h": "c",
-        "stm32f10x_conf.h": "c"
+        "stm32f10x_conf.h": "c",
+        "usb_process.h": "c",
+        "hw_config.h": "c"
     },
     "c-cpp-flylint.cppcheck.enable": false,
     "c-cpp-flylint.flexelint.enable": false    

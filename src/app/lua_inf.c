@@ -2,6 +2,7 @@
 #include "string.h"
 #include "lua_inf.h"
 #include "keyboard.h"
+#include "usb_process.h"
 #include "lua.h"
 #include "lapi.h"
 #include "lauxlib.h"
@@ -103,7 +104,7 @@ static int lua_output(lua_State* L){
     for(u8 i=0;i<8;i++){
         buf[i]=lua_tointeger(L,i+1);
     }
-    app_press(buf);
+    keyboard_process(buf);
     return 0;
 }
 static void str_trim(char*pStr)  

@@ -7,9 +7,9 @@ u8 *read_buf;
 u8 buf_out[10];
 
 static u16 key_cap_cnt = 0;
-void reset_system(struct st_key_cap* a);
 
-void reset_system(struct st_key_cap* a) {
+
+void reset_system() {
 	printf("resetting\r\n");
 	SCB->AIRCR = 0x05FA0000 | (u32) 0x04;
 }
@@ -38,7 +38,7 @@ void app_init() {
 
 	lua_init();
 }
-extern void keyborad_process(u8* buf);
+extern void keyboard_process(u8* buf);
 
 void app_handle(u8 *buf, key_t* bufp) {
 //	DBG("CNT=%d\r\n",key_cap_cnt);
@@ -47,9 +47,9 @@ void app_handle(u8 *buf, key_t* bufp) {
 //		DBG("+%d",buf[i]);
 //	}
 	if (clean_mode) {
-		keyborad_process(buf);
+		keyboard_process(buf);
 	} else if (!key_capture(buf, bufp)) {
-		keyborad_process(buf);
+		keyboard_process(buf);
 	}
 
 }

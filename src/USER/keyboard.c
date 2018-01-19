@@ -71,7 +71,7 @@ const u8 key_map[3][ROW_LEN][COL_LEN]={{{41 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 
 //{225,225,29 ,27 ,6  ,25 ,5  ,17 ,16 ,54 ,55 ,56 ,0  ,229},
 //{224,227,226 ,44 ,44,44 ,44  ,44  ,44,44,228,230,80,79},};
 
-extern void keyborad_process(u8* buf);
+extern void keyboard_process(u8* buf);
 const char cols[]="C0C1C2C3C4C5C6C7C8C9C10C11C12C13";
 const char rows[]="B5B6B7B8B9";
 u8 get_key(u8 index,u8 row,u8 col){
