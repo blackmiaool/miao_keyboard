@@ -87,10 +87,10 @@ static u8 get_key(u8 index, u8 row, u8 col)
 		return key_map[index][row][col];
 	}
 }
-static void parse_fill_io_config(struct GPIO_struct *target, const char *config,u8 config_len)
+static void parse_fill_io_config(struct GPIO_struct *target, const char *config, u8 config_len)
 {
 	u8 io_index = 0;
-	u8 char_index=0;
+	u8 char_index = 0;
 	while (char_index < config_len - 1)
 	{
 		struct GPIO_struct *io = &target[io_index];
@@ -115,23 +115,23 @@ void keyboard_init(void)
 	SCPE(PERIOC);
 	SCPE(PERIOD);
 
-	parse_fill_io_config(keyboard_gpio_cols,COLS_IO_CONFIG,sizeof(COLS_IO_CONFIG));
-	parse_fill_io_config(keyboard_gpio_rows,ROWS_IO_CONFIG,sizeof(ROWS_IO_CONFIG));
+	parse_fill_io_config(keyboard_gpio_cols, COLS_IO_CONFIG, sizeof(COLS_IO_CONFIG));
+	parse_fill_io_config(keyboard_gpio_rows, ROWS_IO_CONFIG, sizeof(ROWS_IO_CONFIG));
 
 	u8 i = 0;
-	
+
 	for (i = 0; i < COL_LEN; i++)
 	{
 		IOConfig(keyboard_gpio_cols[i].port, keyboard_gpio_cols[i].num > 7, keyboard_gpio_cols[i].pin, 8);
 		IOout(keyboard_gpio_cols[i].port, keyboard_gpio_cols[i].num, 1);
 		GPIOC->ODR = 0XFFFF;
 	}
-	
+
 	for (i = 0; i < ROW_LEN; i++)
 	{
 		IOConfig(keyboard_gpio_rows[i].port, keyboard_gpio_rows[i].num > 7, keyboard_gpio_rows[i].pin, 3);
 		IOout(keyboard_gpio_rows[i].port, keyboard_gpio_rows[i].num, 1);
-	}	
+	}
 }
 GPIO_TypeDef *char2port(char ch)
 {
@@ -162,15 +162,14 @@ u32 str2pin(char *str)
 }
 
 void keyboard_send_wrap(key_t key_buf);
-//static u8 key_index[5][14];
+
 u16 key_val[5];
 u8 first_scan = 1;
 
-
 static u16 matrix_debouncing[ROW_LEN];
 #define DEBOUNCE 5
-u8 debouncing = DEBOUNCE;
-u8 hardware_scan(u16 *map)
+static u8 debouncing = DEBOUNCE;
+static u8 hardware_scan(u16 *map)
 {
 	for (u8 i = 0; i < ROW_LEN; i++)
 	{
@@ -213,53 +212,13 @@ u8 hardware_scan(u16 *map)
 	return 0;
 }
 static key_t keys_pre = {0, 0};
-void key_t_add(key_t *keys, u8 p0, u8 p1)
+static void key_t_add(key_t *keys, u8 p0, u8 p1)
 {
 	keys->key[keys->cnt].pos[0] = p0;
 	keys->key[keys->cnt].pos[1] = p1;
 	keys->cnt++;
 }
-key_filter_list_t keys_list_press = {0};
-key_filter_list_t keys_list_release = {0};
-#define TIMER_DIFF(a, b, max) ((a) >= (b) ? (a) - (b) : (max) - (b) + (a))
 
-void update_list(key_filter_list_t *list, u16 time)
-{
-	for (u8 i = 0; i < list->cnt; i++)
-	{
-		key_filter_t *filter = &list->filter[i];
-		if (TIMER_DIFF(TIM1->CNT, filter->time, 9999) / 10 >= time)
-		{ //timeout, remove
-			for (u8 j = i; j < list->cnt - 1; j++)
-			{
-				list->filter[j] = list->filter[j + 1];
-			}
-			list->cnt--;
-		}
-	}
-}
-u8 try_modify_key(key_filter_list_t *list, single_key_t *key)
-{
-	for (u8 i = 0; i < list->cnt; i++)
-	{
-		key_filter_t *filter = &list->filter[i];
-		if (filter->key.pos[0] == key->pos[0] && filter->key.pos[1] == key->pos[1])
-		{
-			return false;
-		}
-	}
-	if (list->cnt < KEY_BUF_LEN)
-	{
-		list->filter[list->cnt].key = *key;
-		list->filter[list->cnt].time = TIM1->CNT;
-		list->cnt++;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 u8 has_key(key_t *keys, single_key_t key)
 {
 	for (u8 j = 0; j < keys->cnt; j++)
@@ -271,14 +230,12 @@ u8 has_key(key_t *keys, single_key_t key)
 	}
 	return 0;
 }
-#define DEBOUNCE 5
 void keyboard_scan()
 {
 	if (!hardware_scan(key_val))
 	{
 		return;
 	}
-
 
 	u8 changes = false;
 
@@ -304,23 +261,15 @@ void keyboard_scan()
 		}
 	}
 scan_end:;
-	//	update_list(&keys_list_press,FILTER_TIME_AFTER_PRESS);
-	//	update_list(&keys_list_release,FILTER_TIME_AFTER_RELEASE);
 	for (u8 i = 0; i < keys_pressing.cnt; i++)
 	{ //check new pressed
 		single_key_t key = keys_pressing.key[i];
 
 		if (!has_key(&keys_pre, key))
 		{
-			if (1 || try_modify_key(&keys_list_press, &key))
-			{
-				changes = 1;
-				key_t_add(&keys_next, key.pos[0], key.pos[1]);
-			}
-			else
-			{
-				//pass
-			}
+
+			changes = 1;
+			key_t_add(&keys_next, key.pos[0], key.pos[1]);
 		}
 	}
 
@@ -330,14 +279,8 @@ scan_end:;
 
 		if (!has_key(&keys_pressing, key))
 		{
-			if (1 || try_modify_key(&keys_list_release, &key))
-			{
-				changes = 1;
-			}
-			else
-			{
-				key_t_add(&keys_next, key.pos[0], key.pos[1]);
-			}
+
+			changes = 1;
 		}
 		else
 		{
@@ -387,25 +330,10 @@ scan_end:;
 	{
 		keyboard_send_wrap(keys_send);
 	}
-	//    if(key_press){
-	//        keyboard_send_wrap(keys_pressing);
-	//    }
-	//    else if(pre_press){
-	//        pre_press=0;
-	//        keyboard_send_wrap(keys_pressing);
-	//    }
 }
 
-void app_handle(u8 *buf, key_t *);
+extern void app_handle(u8 *buf, key_t *);
 void keyboard_send_wrap2(u8 *buf);
-void keyboard_send(u8 *buf, key_t *bufp)
-{
-	app_handle(buf, bufp);
-}
-
-void find_pos(u8 **value, u8 index, u8 *pos)
-{
-}
 
 key_t commu_buf_pre;
 //typedef const u8 Key_map[ROW_LEN][COL_LEN];
@@ -418,30 +346,19 @@ void key_set(u8 *buf, u8 index, const key_t *key)
 		buf[2 + i] = get_key(index, key->key[i].pos[0], key->key[i].pos[1]);
 	}
 }
-u8 check_udisk_mode(key_t key_buf)
-{
+
+static u8 check_key(key_t key_buf,u8 target){
 	for (u8 i = 0; i < key_buf.cnt; i++)
 	{
 		u8 key_this = get_key(0, key_buf.key[i].pos[0], key_buf.key[i].pos[1]);
-		if (key_this == udisk_key)
+		if (key_this == target)
 		{
 			return 1;
 		}
 	}
 	return 0;
 }
-u8 check_clean_mode(key_t key_buf)
-{
-	for (u8 i = 0; i < key_buf.cnt; i++)
-	{
-		u8 key_this = get_key(0, key_buf.key[i].pos[0], key_buf.key[i].pos[1]);
-		if (key_this == clean_key)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
+
 void keyboard_send_wrap(key_t key_buf)
 {
 	u8 buf[8];
@@ -465,8 +382,8 @@ void keyboard_send_wrap(key_t key_buf)
 	if (first_scan)
 	{ //just check once when power on. If clean_mode, disable all app programs.
 		first_scan = 0;
-		clean_mode = check_clean_mode(key_buf);
-		udisk_mode = check_udisk_mode(key_buf);
+		clean_mode = check_key(key_buf,clean_key);
+		udisk_mode = check_key(key_buf,udisk_key);
 	}
 
 	if (clean_mode)
@@ -512,6 +429,6 @@ void keyboard_send_wrap(key_t key_buf)
 		}
 
 		key_set(buf, current_mode, &key_buf);
-		keyboard_send(buf, &key_buf);
+		app_handle(buf, &key_buf);
 	}
 }
