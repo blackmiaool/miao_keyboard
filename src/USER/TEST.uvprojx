@@ -400,27 +400,25 @@
               <FileType>1</FileType>
               <FilePath>..\app\lua_inf.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>USER</GroupName>
-          <Files>
             <File>
               <FileName>keyboard.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\keyboard.c</FilePath>
+              <FilePath>..\app\keyboard.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\led.c</FilePath>
+              <FilePath>..\app\led.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>..\app\main.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>USER</GroupName>
         </Group>
         <Group>
           <GroupName>SYSTEM</GroupName>

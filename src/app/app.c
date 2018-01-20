@@ -3,17 +3,6 @@
 #include "keyboard.h"
 #include "lua_inf.h"
 
-u8 *read_buf;
-u8 buf_out[10];
-
-static u16 key_cap_cnt = 0;
-
-
-void reset_system() {
-	printf("resetting\r\n");
-	SCB->AIRCR = 0x05FA0000 | (u32) 0x04;
-}
-
 extern u8 use_lua;
 static u8 key_capture(key_t* bufp) {
 	if (use_lua) {

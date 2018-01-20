@@ -44,7 +44,8 @@
                 "${workspaceRoot}/src/app",
                 "${workspaceRoot}/src/HARDWARE/USB",
                 "${workspaceRoot}/src/USB/CONFIG",
-                "${workspaceRoot}/src/USB/LIB"
+                "${workspaceRoot}/src/USB/LIB",
+                "${workspaceRoot}/src/SYSTEM/usart"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",

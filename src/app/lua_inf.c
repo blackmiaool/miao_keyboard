@@ -9,31 +9,39 @@
 #include "lstate.h"
 #include <lualib.h>
 #include <string.h>
-FIL file;
-lua_State *L;
+
+static lua_State *current_Lua;
 u8 use_lua = false;
+
+static int restart_keyboard(lua_State *L)
+{
+	printf("resetting\r\n");
+	SCB->AIRCR = 0x05FA0000 | (u32)0x04;
+	return 0;
+}
+
 u8 lua_handle(key_t *buf)
 {
 	int ret;
-	lua_getglobal(L, "key_input");
-	lua_pushnumber(L, buf->control);
-	lua_pushnumber(L, buf->cnt);
+	lua_getglobal(current_Lua, "key_input");
+	lua_pushnumber(current_Lua, buf->control);
+	lua_pushnumber(current_Lua, buf->cnt);
 	for (int i = 0; i < buf->cnt; i++)
 	{
-		lua_pushnumber(L, (buf->key[i].pos[0] << 4) + buf->key[i].pos[1]);
+		lua_pushnumber(current_Lua, (buf->key[i].pos[0] << 4) + buf->key[i].pos[1]);
 	}
-	int result = lua_pcall(L, buf->cnt + 2, 1, 0);
+	int result = lua_pcall(current_Lua, buf->cnt + 2, 1, 0);
 
 	if (result == 0)
 	{
-		ret = lua_toboolean(L, -1);
-		lua_pop(L, 1);
+		ret = lua_toboolean(current_Lua, -1);
+		lua_pop(current_Lua, 1);
 	}
 	else
 	{
 		ret = 0;
-		int t = lua_type(L, -1);
-		const char *err = lua_tostring(L, -1);
+		lua_type(current_Lua, -1);
+		const char *err = lua_tostring(current_Lua, -1);
 		printf("Error: %s\n", err);
 	}
 
@@ -62,12 +70,6 @@ const char *general_key_map[] = {"",
 								 "pause", "insert", "home", "pageup",
 								 "deleteforward", "end", "pagedown", "right",
 								 "left", "down", "up", "numLock"};
-static int restart_keyboard(lua_State *L)
-{
-	printf("resetting\r\n");
-	SCB->AIRCR = 0x05FA0000 | (u32)0x04;
-	return 0;
-}
 static int get_key_index(lua_State *L)
 {
 	const char *str = lua_tostring(L, 1);
@@ -155,7 +157,7 @@ extern u8 led_buf[14][5];
 extern u8 led_mode;
 static int led_set_bit(lua_State *L)
 {
-	u8 x = 13 - lua_tointeger(L, 1);
+	u8 x = 13 - (u8)lua_tointeger(L, 1);
 	u8 y = lua_tointeger(L, 2);
 	u8 v = lua_tointeger(L, 3);
 	led_buf[x][y] = !v;
@@ -174,7 +176,7 @@ static int led_clear(lua_State *L)
 }
 static int led_set_mode(lua_State *L)
 {
-	led_mode = lua_tointeger(L, 1);
+	led_mode = (u8)lua_tointeger(L, 1);
 	return 0;
 }
 static int led_fill(lua_State *L)
@@ -188,15 +190,15 @@ static int led_fill(lua_State *L)
 	}
 	return 0;
 }
-int handle_datasheet(char *buf, int size, u8 width)
+static u8 *handle_datasheet(char *buf, u16 size, u8 width)
 {
-	int cnt = size / (width + 1);
+	u16 cnt = size / (width + 1);
 	u8 *data_base = (u8 *)malloc(cnt);
 	for (int i = 0; i < cnt; i++)
 	{
-		*(data_base + i) = atoi((buf + i * (width + 1)));
+		*(data_base + i) = (u8)atoi((buf + i * (width + 1)));
 	}
-	return (int)data_base;
+	return data_base;
 }
 static int read_datasheet(lua_State *L)
 {
@@ -211,21 +213,21 @@ static int init_datasheet(lua_State *L)
 	FIL file;
 
 	const char *file_name = lua_tostring(L, 1);
-	u8 width = lua_tointeger(L, 2);
+	u8 width = (u8)lua_tointeger(L, 2);
 
 	if (!f_open(&file, file_name, FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
 	{
-		char *read_buf = (char *)malloc(file.fsize + 1);
+		char *read_buf = (char *)malloc((u16)(file.fsize + 1));
 		u32 cnt = 0;
 		f_read(&file, read_buf, file.fsize, &cnt);
 		f_close(&file);
 		str_trim(read_buf);
-		int buf_p = handle_datasheet(read_buf, cnt, width);
+		u8 *buf_p = handle_datasheet(read_buf, (u16)cnt, width);
 		if (!strcmp(file_name, "config/key_index.txt"))
 		{
 			key_index_lua_buf = (u8 *)buf_p;
 		}
-		lua_pushinteger(L, buf_p);
+		lua_pushinteger(L, (int)buf_p);
 		free(read_buf);
 		return 1;
 	}
@@ -233,9 +235,11 @@ static int init_datasheet(lua_State *L)
 }
 void lua_init()
 {
-	if (L)
-		lua_close(L);
-	L = (lua_State *)luaL_newstate();
+	if (current_Lua)
+		lua_close(current_Lua);
+	current_Lua = (lua_State *)luaL_newstate();
+	lua_State *L = current_Lua;
+
 	luaL_openlibs(L);
 	lua_register(L, "output", lua_output);
 	lua_register(L, "mouse_output", lua_mouse_output);
@@ -251,20 +255,21 @@ void lua_init()
 	lua_register(L, "init_datasheet", init_datasheet);
 
 	lua_pop(L, 1); // remove _PRELOAD table
-	char *entry_file = "main.lua";
+
 	printf("==========lua print==========\r\n");
 
 	u32 cnt = 0;
+	FIL file;
 
-	if (!f_open(&file, entry_file, FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
+	if (!f_open(&file, "main.lua", FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
 	{
 
-		char *read_buf = (char *)malloc(file.fsize);
+		char *read_buf = (char *)malloc((u16)file.fsize);
 		f_read(&file, read_buf, file.fsize, &cnt);
 		int result = luaL_dostring(L, read_buf);
 		if (result != 0)
 		{
-			int t = lua_type(L, -1);
+			lua_type(L, -1);
 			const char *err = lua_tostring(L, -1);
 			printf("Error: %s\n", err);
 		}
