@@ -18,5 +18,5 @@
         "hw_config.h": "c"
     },
     "c-cpp-flylint.cppcheck.enable": false,
-    "c-cpp-flylint.flexelint.enable": false    
+    "c-cpp-flylint.flexelint.enable": false, 
 }

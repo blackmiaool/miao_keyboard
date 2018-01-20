@@ -13,7 +13,7 @@
 
 
 typedef u8 uint8_t;
-extern u8 blue_choose;
+
 #define LCtrl       0x1
 #define LShift     0x2
 #define LAlt        0x4

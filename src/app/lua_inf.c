@@ -37,7 +37,7 @@ u8 lua_handle(key_t *buf)
 		printf("Error: %s\n", err);
 	}
 
-	return ret>0;
+	return ret > 0;
 }
 
 extern const u8 general_key_value[33];

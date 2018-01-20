@@ -19,8 +19,6 @@ extern u8 EP1BUSY;			// kb busy flag
 extern u8 EP2BUSY;			// mouse busy flag
 extern u8 INIT_OK;
 
-
-
 extern long long Mass_Memory_Size[MAX_LUN+1];
 extern u32 Mass_Block_Size[MAX_LUN+1];
 extern u32 Mass_Block_Count[MAX_LUN+1];
