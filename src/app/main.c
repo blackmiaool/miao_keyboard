@@ -22,7 +22,9 @@ extern u32 Mass_Block_Size[MAX_LUN + 1];
 extern u32 Mass_Block_Count[MAX_LUN + 1];
 extern u8 USB_STATUS_REG;
 
-
+void print_free_memory(){
+	printf("start memory= %.3f KB\r\n", (float)calc_free_memory(0, 100000) / 1000);
+}
 int calc_free_memory(u32 last, u32 base)
 {
 
@@ -97,12 +99,10 @@ int main(void)
 
 	// wait for udisk mounting
 	delay_ms(2000);
-	printf("start memory= %.3f KB", (float)calc_free_memory(0, 100000) / 1000);
-
+	print_free_memory();
 	led_init();
 	app_init();
-
-	printf("last memory= %.3f KB", (float)calc_free_memory(0, 100000) / 1000);
+	
 	while (1)
 	{
 		led_handle();

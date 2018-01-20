@@ -233,14 +233,33 @@ static int init_datasheet(lua_State *L)
 	}
 	return 0;
 }
+static u8 lua_invoke_main()
+{
+	lua_getglobal(current_Lua, "main");
+
+	int result = lua_pcall(current_Lua, 0, 0, 0);
+
+	if (result == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		lua_type(current_Lua, -1);
+		const char *err = lua_tostring(current_Lua, -1);
+		printf("Error: %s\n", err);
+		return 1;
+	}
+}
+extern void print_free_memory();
 void lua_init()
 {
 	if (current_Lua)
 		lua_close(current_Lua);
 	current_Lua = (lua_State *)luaL_newstate();
 	lua_State *L = current_Lua;
-
 	luaL_openlibs(L);
+	
 	lua_register(L, "output", lua_output);
 	lua_register(L, "mouse_output", lua_mouse_output);
 	lua_register(L, "delay", lua_delay_ms);
@@ -253,10 +272,8 @@ void lua_init()
 	lua_register(L, "led_fill", led_fill);
 	lua_register(L, "read_datasheet", read_datasheet);
 	lua_register(L, "init_datasheet", init_datasheet);
-
 	lua_pop(L, 1); // remove _PRELOAD table
 
-	printf("==========lua print==========\r\n");
 
 	u32 cnt = 0;
 	FIL file;
@@ -267,6 +284,7 @@ void lua_init()
 		char *read_buf = (char *)malloc((u16)file.fsize);
 		f_read(&file, read_buf, file.fsize, &cnt);
 		int result = luaL_dostring(L, read_buf);
+		free(read_buf);
 		if (result != 0)
 		{
 			lua_type(L, -1);
@@ -275,7 +293,10 @@ void lua_init()
 		}
 		printf("==========lua init result %d==========\r\n", result);
 		f_close(&file);
-		free(read_buf);
+		
+		print_free_memory();
+		lua_invoke_main();
+		print_free_memory();
 		use_lua = true;
 	}
 }
