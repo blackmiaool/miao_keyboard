@@ -47,9 +47,10 @@ u8 lua_handle(key_t *buf)
 
 	return ret > 0;
 }
-
-extern const u8 general_key_value[33];
-extern const char *general_key_map[33];
+#define GENERAL_KEY_CNT 35
+extern const u8 general_key_value[GENERAL_KEY_CNT];
+extern const char *general_key_map[GENERAL_KEY_CNT];
+//plus 128 to have shift
 const u8 general_key_value[] = {0,
 								40, 41, 42, 43,
 								44, 57, 58, 59,
@@ -59,7 +60,8 @@ const u8 general_key_value[] = {0,
 								68, 69, 70, 71,
 								72, 73, 74, 75,
 								76, 77, 78, 79,
-								80, 81, 82, 83};
+								80, 81, 82, 83,
+								47+128,48+128};
 const char *general_key_map[] = {"",
 								 "enter", "esc", "delete", "tab",
 								 "space", "capsLock", "f1", "f2",
@@ -69,7 +71,8 @@ const char *general_key_map[] = {"",
 								 "f11", "f12", "printscreen", "scrollLock",
 								 "pause", "insert", "home", "pageup",
 								 "deleteforward", "end", "pagedown", "right",
-								 "left", "down", "up", "numLock"};
+								 "left", "down", "up", "numLock",
+								 "leftbracket","rightbracket"};
 const u8 shift_table[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -88,7 +91,7 @@ static int get_shift(lua_State *L)
 static int get_key_index(lua_State *L)
 {
 	const char *str = lua_tostring(L, 1);	
-	u8 cnt = 32;
+	u8 cnt = GENERAL_KEY_CNT;
 	for (int i = 1; i < cnt; i++)
 	{
 		if (strcmp((const char *)general_key_map[i], str) == 0)
@@ -267,7 +270,7 @@ static u8 lua_invoke_main()
 	}
 }
 
-extern void print_free_memory();
+extern void print_free_memory(void);
 void lua_init()
 {
 	if (current_Lua)
