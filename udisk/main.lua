@@ -118,9 +118,12 @@ local previous_key_map_mode=1;
 local previous_capslock=false;
 
 local media_map={
+    [124]=0x70,
+    [125]=0x6f,
+    [126]=0x65,
     [127]=0xe2,
     [128]=0xe9,
-    [129]=0xea
+    [129]=0xea,
 }
 function media_output(value)
     mouse_output(3,value%256,math.floor(value/256),0,0);
