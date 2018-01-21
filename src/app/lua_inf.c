@@ -251,6 +251,7 @@ static u8 lua_invoke_main()
 		return 1;
 	}
 }
+
 extern void print_free_memory();
 void lua_init()
 {
