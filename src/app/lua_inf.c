@@ -70,9 +70,24 @@ const char *general_key_map[] = {"",
 								 "pause", "insert", "home", "pageup",
 								 "deleteforward", "end", "pagedown", "right",
 								 "left", "down", "up", "numLock"};
+const u8 shift_table[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0};
+static int get_shift(lua_State *L)
+{
+	int index = lua_tointeger(L, 1);
+	lua_pushnumber(L, shift_table[index]);
+	return 1;
+}
 static int get_key_index(lua_State *L)
 {
-	const char *str = lua_tostring(L, 1);
+	const char *str = lua_tostring(L, 1);	
 	u8 cnt = 32;
 	for (int i = 1; i < cnt; i++)
 	{
@@ -260,10 +275,11 @@ void lua_init()
 	current_Lua = (lua_State *)luaL_newstate();
 	lua_State *L = current_Lua;
 	luaL_openlibs(L);
-	
+
 	lua_register(L, "output", lua_output);
 	lua_register(L, "mouse_output", lua_mouse_output);
 	lua_register(L, "delay", lua_delay_ms);
+	lua_register(L, "get_shift", get_shift);
 	lua_register(L, "get_key_index", get_key_index);
 	lua_register(L, "read_file", read_file);
 	lua_register(L, "restart_keyboard", restart_keyboard);
@@ -274,7 +290,6 @@ void lua_init()
 	lua_register(L, "read_datasheet", read_datasheet);
 	lua_register(L, "init_datasheet", init_datasheet);
 	lua_pop(L, 1); // remove _PRELOAD table
-
 
 	u32 cnt = 0;
 	FIL file;
@@ -294,7 +309,7 @@ void lua_init()
 		}
 		printf("==========lua init result %d==========\r\n", result);
 		f_close(&file);
-		
+
 		print_free_memory();
 		lua_invoke_main();
 		print_free_memory();
