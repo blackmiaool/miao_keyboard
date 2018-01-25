@@ -61,7 +61,7 @@ const u8 general_key_value[] = {0,
 								72, 73, 74, 75,
 								76, 77, 78, 79,
 								80, 81, 82, 83,
-								47+128,48+128};
+								47 + 128, 48 + 128};
 const char *general_key_map[] = {"",
 								 "enter", "esc", "delete", "tab",
 								 "space", "capsLock", "f1", "f2",
@@ -72,7 +72,7 @@ const char *general_key_map[] = {"",
 								 "pause", "insert", "home", "pageup",
 								 "deleteforward", "end", "pagedown", "right",
 								 "left", "down", "up", "numLock",
-								 "leftbracket","rightbracket"};
+								 "leftbracket", "rightbracket"};
 const u8 shift_table[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -90,7 +90,7 @@ static int get_shift(lua_State *L)
 }
 static int get_key_index(lua_State *L)
 {
-	const char *str = lua_tostring(L, 1);	
+	const char *str = lua_tostring(L, 1);
 	u8 cnt = GENERAL_KEY_CNT;
 	for (int i = 1; i < cnt; i++)
 	{
@@ -165,7 +165,7 @@ static int read_file(lua_State *L)
 		{
 			str_trim(read_buf);
 		}
-		lua_pushstring(L, read_buf);
+		lua_pushlstring(L, read_buf, cnt);
 		free(read_buf);
 		return 1;
 	}
@@ -269,7 +269,15 @@ static u8 lua_invoke_main()
 		return 1;
 	}
 }
-
+int _open(const char *pathname, int flags){
+	printf("filename2: %s\n", pathname);
+}
+// FILE *fopen(const char *__restrict __filename,
+// 			  const char *__restrict __modes)
+// {
+	
+// 	printf("filename: %s\n", __filename);
+// }
 extern void print_free_memory(void);
 void lua_init()
 {
@@ -300,9 +308,13 @@ void lua_init()
 	if (!f_open(&file, "main.lua", FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
 	{
 
-		char *read_buf = (char *)malloc((u16)file.fsize);
+		char *read_buf = (char *)malloc((u16)file.fsize + 1);
 		f_read(&file, read_buf, file.fsize, &cnt);
+		read_buf[cnt] = 0;
+		print_free_memory();
+		// luaL_dofile(L, "main.lua");
 		int result = luaL_dostring(L, read_buf);
+		print_free_memory();
 		free(read_buf);
 		if (result != 0)
 		{

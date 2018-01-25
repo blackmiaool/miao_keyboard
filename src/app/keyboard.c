@@ -384,6 +384,7 @@ void keyboard_send_wrap(key_t key_buf)
 		first_scan = 0;
 		clean_mode = check_key(key_buf,clean_key);
 		udisk_mode = check_key(key_buf,udisk_key);
+		printf("udisk%d",udisk_mode);
 	}
 
 	if (clean_mode)

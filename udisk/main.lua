@@ -17,7 +17,7 @@ local columns=16;
 
 -- functions that can be invoked in ahk file
 local ahk_avaliable_function={
-    restart= function() clear_key();restart_keyboard(); end,
+    restart= function() clear_key();delay(100);restart_keyboard(); end,
 }
 
 -- mode2 and mode3's value in key_index.txt file
@@ -250,7 +250,7 @@ function ahk_parse(text_input)
     for modifiers,key,expression in string.gmatch(text_input,"([%^%+!#<>]*)([%a%d]+)::(%g+)") do
         local modifiers=modifiers2value(modifiers);
         local key_index;
-        if string.match(key,"^%d+$") then
+        if string.match(key,"^%d%d$") or string.match(key,"^%d%d%d$") then
             key_index=tonumber(key);
         else
             key_index=ascii2usb(string.byte(key));
@@ -360,7 +360,7 @@ function mutate_modifiers(modifiers,mutation)
     end
 end
 function output_ahk(expression)
-    
+    clear_key();
     local result= match_sub_pattern(expression,"[^{}]+","{%a+}",key_press_pattern);
     -- parse expression into sections
     for i,sub_express in ipairs(result) do

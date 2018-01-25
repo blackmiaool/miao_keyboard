@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>LUA_COMPAT_5_2</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;D:\Keil\ARM\INC\ST\STM32F10x;..\HARDWARE\USB;..\USER;..\STM32lib;..\..\..\STM32_USB_CH341\DiscreteFile\SYSTEM\sys;..\HARDWARE\FLASH;..\HARDWARE\lib;..\FATFS;..\app;..\LUA</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\EXTI;..\HARDWARE\WDG;..\HARDWARE\TIMER;..\HARDWARE\OLED;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DMA;..\HARDWARE\24CXX;..\HARDWARE\FLASH;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\USB\CONFIG;..\USB\LIB;..\HARDWARE\USB;..\USER;..\STM32lib;..\HARDWARE\FLASH;..\HARDWARE\lib;..\FATFS;..\app;..\LUA</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
