@@ -9,17 +9,19 @@
 
 typedef u16 uint16_t;
 
-struct GPIO_struct keyboard_gpio_rows[ROW_LEN];
-struct GPIO_struct keyboard_gpio_cols[COL_LEN];
+static struct GPIO_struct keyboard_gpio_rows[ROW_LEN];
+static struct GPIO_struct keyboard_gpio_cols[COL_LEN];
 
 GPIO_TypeDef *char2port(char ch);
 u32 str2pin(char *str);
-u8 clean_mode = 0; //disable app programs
-u8 udisk_mode = 0; //mount as usb disk
-u8 clean_key = 41; //press esc to enter clean mode
-u8 udisk_key = 30; //press esc to enter clean mode
-u8 fn1 = 135;
-u8 fn2 = 136;
+u8 clean_mode = 0;        //disable app programs
+u8 udisk_mode = 0;        //mount as usb disk
+static u8 clean_key = 41; //press esc to enter clean mode
+static u8 udisk_key = 30; //press esc to enter clean mode
+static u8 fn1 = 135;
+static u8 fn2 = 136;
+
+void keyboard_send_wrap(key_t key_buf);
 
 const u8 key_map[3][ROW_LEN][COL_LEN] = {{
                                              {41, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 45, 46, 42},
@@ -28,7 +30,6 @@ const u8 key_map[3][ROW_LEN][COL_LEN] = {{
                                              {225, 225, 29, 27, 6, 25, 5, 17, 16, 54, 55, 56, 0, 229},
                                              {224, 227, 82, 226, 44, 44, 44, 44, 228, 80, 79, 80, 135, 136},
                                          },
-
                                          {
                                              {41, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 42}, //active when pressing fn1
                                              {43, 20, 26, 8, 21, 23, 28, 24, 12, 18, 19, 47, 48, 49},
@@ -36,7 +37,6 @@ const u8 key_map[3][ROW_LEN][COL_LEN] = {{
                                              {225, 225, 29, 27, 6, 25, 5, 17, 16, 54, 55, 56, 0, 229},
                                              {224, 227, 82, 226, 44, 44, 44, 44, 228, 80, 79, 80, 0, 0},
                                          },
-
                                          {
                                              {41, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 45, 46, 42}, //active when pressed fn2
                                              {43, 20, 26, 8, 21, 23, 28, 24, 82, 18, 19, 47, 48, 49},
@@ -138,22 +138,22 @@ GPIO_TypeDef *char2port(char ch)
     switch (ch)
     {
     case 'A':
-        return (GPIO_TypeDef *)GPIOA;
+        return GPIOA;
     case 'B':
-        return (GPIO_TypeDef *)GPIOB;
+        return GPIOB;
     case 'C':
-        return (GPIO_TypeDef *)GPIOC;
+        return GPIOC;
     case 'D':
-        return (GPIO_TypeDef *)GPIOD;
+        return GPIOD;
     case 'E':
-        return (GPIO_TypeDef *)GPIOE;
+        return GPIOE;
     case 'F':
-        return (GPIO_TypeDef *)GPIOF;
+        return GPIOF;
     case 'G':
-        return (GPIO_TypeDef *)GPIOG;
+        return GPIOG;
     default:
         printf("wrong port!!!\n");
-        return (GPIO_TypeDef *)GPIOA;
+        return GPIOA;
     }
 }
 u32 str2pin(char *str)
@@ -161,10 +161,9 @@ u32 str2pin(char *str)
     return 1 << atoi(str);
 }
 
-void keyboard_send_wrap(key_t key_buf);
 
-u16 key_val[5];
-u8 first_scan = 1;
+static u16 key_val[5];
+static u8 first_scan = 1;
 
 static u16 matrix_debouncing[ROW_LEN];
 #define DEBOUNCE 5
@@ -185,7 +184,7 @@ static u8 hardware_scan(u16 *map)
         mask--;
         cols = mask - cols;
 
-        if (matrix_debouncing[i] != cols) 
+        if (matrix_debouncing[i] != cols)
         {
             matrix_debouncing[i] = cols;
             debouncing = DEBOUNCE;
@@ -219,7 +218,7 @@ static void key_t_add(key_t *keys, u8 p0, u8 p1)
     keys->cnt++;
 }
 
-u8 has_key(key_t *keys, single_key_t key)
+static u8 has_key(key_t *keys, single_key_t key)
 {
     for (u8 j = 0; j < keys->cnt; j++)
     {
@@ -230,14 +229,14 @@ u8 has_key(key_t *keys, single_key_t key)
     }
     return 0;
 }
-#define LCtrl       0x1
-#define LShift     0x2
-#define LAlt        0x4
-#define LWin      0x8
-#define RCtrl      0x10
-#define RShift       0x20
-#define RAlt        0x40
-#define RWin    0x80
+#define LCtrl 0x1
+#define LShift 0x2
+#define LAlt 0x4
+#define LWin 0x8
+#define RCtrl 0x10
+#define RShift 0x20
+#define RAlt 0x40
+#define RWin 0x80
 void keyboard_scan()
 {
     if (!hardware_scan(key_val))
@@ -257,10 +256,8 @@ void keyboard_scan()
         {
             if (key_val[j] & (1 << i))
             {
-                u8 value = get_key(0, j, i);
                 key_t_add(&keys_pressing, j, i);
 
-                //                printf("key press %d  %d %d\n",j,i, key_index[j][i]);
                 if (keys_pressing.cnt == KEY_BUF_LEN)
                 {
                     goto scan_end;
@@ -303,7 +300,7 @@ scan_end:;
         single_key_t key = keys_next.key[i];
         u8 value = get_key(0, key.pos[0], key.pos[1]);
         switch (value)
-        {        
+        {
         case 224:
             modify_key |= LCtrl;
             break;
@@ -315,7 +312,7 @@ scan_end:;
             break;
         case 227:
             modify_key |= LWin;
-            break;        
+            break;
         case 228:
             modify_key |= RCtrl;
             break;
@@ -343,10 +340,9 @@ scan_end:;
 extern void app_handle(u8 *buf, key_t *);
 void keyboard_send_wrap2(u8 *buf);
 
-key_t commu_buf_pre;
-//typedef const u8 Key_map[ROW_LEN][COL_LEN];
-//typedef Key_map *key_map_t;
-u8 current_mode = 0; 
+static key_t buf_pre;
+
+u8 current_mode = 0;
 static void key_set(u8 *buf, u8 index, const key_t *key)
 {
     for (u8 i = 0; i < key->cnt; i++)
@@ -355,7 +351,8 @@ static void key_set(u8 *buf, u8 index, const key_t *key)
     }
 }
 
-static u8 check_key(key_t key_buf,u8 target){
+static u8 check_key(key_t key_buf, u8 target)
+{
     for (u8 i = 0; i < key_buf.cnt; i++)
     {
         u8 key_this = get_key(0, key_buf.key[i].pos[0], key_buf.key[i].pos[1]);
@@ -377,10 +374,10 @@ void keyboard_send_wrap(key_t key_buf)
         buf[i] = 0;
     }
 
-    u8 changed = 0;                          //if key state change
-    if (commu_buf_pre.cnt != key_buf.cnt) //if key cnt changes
+    u8 changed = 0;                       //if key state change
+    if (buf_pre.cnt != key_buf.cnt) //if key cnt changes
         changed = 1;
-    if (commu_buf_pre.control != key_buf.control) //if control key changes
+    if (buf_pre.control != key_buf.control) //if control key changes
         changed = 1;
     if (current_mode != 2)
     {
@@ -390,9 +387,9 @@ void keyboard_send_wrap(key_t key_buf)
     if (first_scan)
     { //just check once when power on. If clean_mode, disable all app programs.
         first_scan = 0;
-        clean_mode = check_key(key_buf,clean_key);
-        udisk_mode = check_key(key_buf,udisk_key);
-        printf("udisk%d",udisk_mode);
+        clean_mode = check_key(key_buf, clean_key);
+        udisk_mode = check_key(key_buf, udisk_key);
+        printf("udisk%d", udisk_mode);
     }
 
     if (clean_mode)
@@ -410,15 +407,15 @@ void keyboard_send_wrap(key_t key_buf)
 
     for (u8 i = 0; i < key_buf.cnt; i++)
     { //if key changes
-        if (commu_buf_pre.key[i].pos[0] != key_buf.key[i].pos[0] || commu_buf_pre.key[i].pos[1] != key_buf.key[i].pos[1])
+        if (buf_pre.key[i].pos[0] != key_buf.key[i].pos[0] || buf_pre.key[i].pos[1] != key_buf.key[i].pos[1])
         {
             changed = 1;
-            commu_buf_pre.key[i].pos[0] = key_buf.key[i].pos[0];
-            commu_buf_pre.key[i].pos[1] = key_buf.key[i].pos[1];
+            buf_pre.key[i].pos[0] = key_buf.key[i].pos[0];
+            buf_pre.key[i].pos[1] = key_buf.key[i].pos[1];
         }
     }
-    commu_buf_pre.cnt = key_buf.cnt;
-    commu_buf_pre.control = key_buf.control;
+    buf_pre.cnt = key_buf.cnt;
+    buf_pre.control = key_buf.control;
     if (changed)
     {
         if (clean_mode)

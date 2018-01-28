@@ -8,9 +8,6 @@ void keyboard_scan(void);
 #define  COL_LEN 14
 #define  ROW_LEN 5
 #define  KEY_BUF_LEN 14
-#define  FILTER_TIME_AFTER_PRESS 100
-#define  FILTER_TIME_AFTER_RELEASE 100
-
 
 struct key_filter_struct{
     u16 time;
