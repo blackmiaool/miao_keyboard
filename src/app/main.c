@@ -22,9 +22,7 @@ extern u32 Mass_Block_Size[MAX_LUN + 1];
 extern u32 Mass_Block_Count[MAX_LUN + 1];
 extern u8 USB_STATUS_REG;
 
-void print_free_memory(){
-	printf("start memory= %.3f KB\r\n", (float)calc_free_memory(0, 100000) / 1000);
-}
+
 int calc_free_memory(u32 last, u32 base)
 {
 
@@ -49,7 +47,9 @@ int calc_free_memory(u32 last, u32 base)
 	}
 	return 0;
 }
-
+void print_free_memory(){
+	printf("start memory= %.3f KB\r\n", (float)calc_free_memory(0, 100000) / 1000);
+}
 static void timer_init()
 {
 	SCPE(PERTIMER1);

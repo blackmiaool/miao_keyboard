@@ -214,7 +214,7 @@ LUALIB_API void (luaL_openlib) (lua_State *L, const char *libname,
 //#if !defined(lua_writestring)
 //#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
 //#endif
-
+extern void lua_writestring(const char *buf,int size);
 /* print a newline and flush the output */
 #if !defined(lua_writeline)
 #define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))

@@ -19,6 +19,11 @@ static int restart_keyboard(lua_State *L)
 	SCB->AIRCR = 0x05FA0000 | (u32)0x04;
 	return 0;
 }
+static void handle_lua_err(const char *title){
+	lua_type(current_Lua, -1);
+	const char *err = lua_tostring(current_Lua, -1);
+	printf("Lua Error(%s):\n%s\n",title, err);
+}
 
 u8 lua_handle(key_t *buf)
 {
@@ -40,9 +45,7 @@ u8 lua_handle(key_t *buf)
 	else
 	{
 		ret = 0;
-		lua_type(current_Lua, -1);
-		const char *err = lua_tostring(current_Lua, -1);
-		printf("Error: %s\n", err);
+		handle_lua_err("key_input");
 	}
 
 	return ret > 0;
@@ -251,6 +254,7 @@ static int init_datasheet(lua_State *L)
 	}
 	return 0;
 }
+
 static u8 lua_invoke_main()
 {
 	lua_getglobal(current_Lua, "main");
@@ -263,75 +267,11 @@ static u8 lua_invoke_main()
 	}
 	else
 	{
-		lua_type(current_Lua, -1);
-		const char *err = lua_tostring(current_Lua, -1);
-		printf("Error: %s\n", err);
+		handle_lua_err("main");
 		return 1;
 	}
 }
-typedef int FILEHANDLE;
 
-static FIL filez;
-FILE *fopen(const char *__filename,
-			const char *__modes)
-{
-	printf("fopen %s\n", __filename);
-	if (!f_open(&filez, __filename, FA_OPEN_EXISTING | FA_READ))
-	{
-		return (FILE *)&filez;
-	}
-	return NULL;
-}
-FRESULT fres;
-int fread_cnt = 0;
-size_t
-fread(void *__restrict __ptr, size_t __size, size_t __n,
-	  FILE *__restrict __stream)
-{
-	fread_cnt++;
-	printf("fread %d %d %d\n", __size, __n, fread_cnt);
-	UINT read_cnt;
-	FRESULT res = f_read((FIL *)__stream, __ptr, __size * __n, &read_cnt);
-	fres = res;
-	printf("fres %d %d\n", res, read_cnt);
-	if (res == FR_OK && read_cnt)
-	{
-		return read_cnt;
-	}
-	else
-	{
-		fres = EOF;
-		return 0;
-	}
-}
-int fgetc(FILE *stream)
-{
-	printf("fgetc\n");
-	char ch = 0;
-	FRESULT res;
-	UINT cou_sd;
-	res = f_read((FIL *)stream, &ch, 1, &cou_sd);
-	if (res != FR_OK || cou_sd == 0)
-	{
-		return EOF;
-	}
-	return ch;
-}
-int ferror(FILE *f)
-{
-	printf("ferror\n");
-	return 0;
-}
-int feof(FILE *stream)
-{
-	printf("feof\n");
-	return fres;
-	//return 0;
-}
-int fseek(FILE *stream, long int offset, int origin)
-{
-	printf("fseek\n");
-}
 static int traceback(lua_State *L)
 {
 	lua_getglobal(L, "debug");
@@ -372,9 +312,7 @@ void lua_init()
 	print_free_memory();
 	if (result != 0)
 	{
-		lua_type(L, -1);
-		const char *err = lua_tostring(L, -1);
-		printf("Error(%d): %s\n", result, err);
+		handle_lua_err("init");
 	}
 	printf("==========lua init result %d==========\r\n", result);
 

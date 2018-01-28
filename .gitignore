@@ -267,3 +267,5 @@ MDK/STM32F407VGT6_STM32G407VGT6.dep
 *.dep
 ava.creator.user.10a68a2
 APP/d.cpp
+*.Bak
+*.scvd
