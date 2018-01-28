@@ -269,15 +269,80 @@ static u8 lua_invoke_main()
 		return 1;
 	}
 }
-int _open(const char *pathname, int flags){
-	printf("filename2: %s\n", pathname);
+typedef int FILEHANDLE;
+
+static FIL filez;
+FILE *fopen(const char *__filename,
+			const char *__modes)
+{
+	printf("fopen %s\n", __filename);
+	if (!f_open(&filez, __filename, FA_OPEN_EXISTING | FA_READ))
+	{
+		return (FILE *)&filez;
+	}
+	return NULL;
 }
-// FILE *fopen(const char *__restrict __filename,
-// 			  const char *__restrict __modes)
-// {
-	
-// 	printf("filename: %s\n", __filename);
-// }
+FRESULT fres;
+int fread_cnt = 0;
+size_t
+fread(void *__restrict __ptr, size_t __size, size_t __n,
+	  FILE *__restrict __stream)
+{
+	fread_cnt++;
+	printf("fread %d %d %d\n", __size, __n, fread_cnt);
+	UINT read_cnt;
+	FRESULT res = f_read((FIL *)__stream, __ptr, __size * __n, &read_cnt);
+	fres = res;
+	printf("fres %d %d\n", res, read_cnt);
+	if (res == FR_OK && read_cnt)
+	{
+		return read_cnt;
+	}
+	else
+	{
+		fres = EOF;
+		return 0;
+	}
+}
+int fgetc(FILE *stream)
+{
+	printf("fgetc\n");
+	char ch = 0;
+	FRESULT res;
+	UINT cou_sd;
+	res = f_read((FIL *)stream, &ch, 1, &cou_sd);
+	if (res != FR_OK || cou_sd == 0)
+	{
+		return EOF;
+	}
+	return ch;
+}
+int ferror(FILE *f)
+{
+	printf("ferror\n");
+	return 0;
+}
+int feof(FILE *stream)
+{
+	printf("feof\n");
+	return fres;
+	//return 0;
+}
+int fseek(FILE *stream, long int offset, int origin)
+{
+	printf("fseek\n");
+}
+static int traceback(lua_State *L)
+{
+	lua_getglobal(L, "debug");
+	lua_getfield(L, -1, "traceback");
+	lua_pushvalue(L, 1);
+	lua_pushinteger(L, 2);
+	lua_call(L, 2, 1);
+	fprintf(stderr, "%s\n", lua_tostring(L, -1));
+	return 1;
+}
+
 extern void print_free_memory(void);
 void lua_init()
 {
@@ -286,7 +351,7 @@ void lua_init()
 	current_Lua = (lua_State *)luaL_newstate();
 	lua_State *L = current_Lua;
 	luaL_openlibs(L);
-
+	lua_pushcfunction(L, traceback);
 	lua_register(L, "output", lua_output);
 	lua_register(L, "mouse_output", lua_mouse_output);
 	lua_register(L, "delay", lua_delay_ms);
@@ -302,32 +367,19 @@ void lua_init()
 	lua_register(L, "init_datasheet", init_datasheet);
 	lua_pop(L, 1); // remove _PRELOAD table
 
-	u32 cnt = 0;
-	FIL file;
-
-	if (!f_open(&file, "main.lua", FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
+	print_free_memory();
+	int result = luaL_dofile(L, "main.lua");
+	print_free_memory();
+	if (result != 0)
 	{
-
-		char *read_buf = (char *)malloc((u16)file.fsize + 1);
-		f_read(&file, read_buf, file.fsize, &cnt);
-		read_buf[cnt] = 0;
-		print_free_memory();
-		// luaL_dofile(L, "main.lua");
-		int result = luaL_dostring(L, read_buf);
-		print_free_memory();
-		free(read_buf);
-		if (result != 0)
-		{
-			lua_type(L, -1);
-			const char *err = lua_tostring(L, -1);
-			printf("Error: %s\n", err);
-		}
-		printf("==========lua init result %d==========\r\n", result);
-		f_close(&file);
-
-		print_free_memory();
-		lua_invoke_main();
-		print_free_memory();
-		use_lua = true;
+		lua_type(L, -1);
+		const char *err = lua_tostring(L, -1);
+		printf("Error(%d): %s\n", result, err);
 	}
+	printf("==========lua init result %d==========\r\n", result);
+
+	print_free_memory();
+	lua_invoke_main();
+	print_free_memory();
+	use_lua = true;
 }
