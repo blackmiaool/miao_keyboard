@@ -295,6 +295,7 @@ void lua_init()
     lua_State *L = current_Lua;
     luaL_openlibs(L);
     lua_pushcfunction(L, traceback);
+    print_free_memory("before register c functions1");
     lua_register(L, "output", lua_output);
     lua_register(L, "mouse_output", lua_mouse_output);
     lua_register(L, "delay", lua_delay_ms);
@@ -317,8 +318,6 @@ void lua_init()
     {
         handle_lua_err("init");
     }
-    printf("==========lua init result %d==========\r\n", result);
-    
     lua_invoke_main();
     print_free_memory("after main");
     use_lua = true;

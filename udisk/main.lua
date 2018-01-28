@@ -166,104 +166,7 @@ output_ahk= function (expression)
     pressing_modifier_value=0;
 end
 
-media_output= function (value)
-    mouse_output(3,value%256,math.floor(value/256),0,0);
-end
-local pressed_media=false;
-local pressed_capslock=false;
-key_input_underlying=function (modifiers,cnt,key_arr)
-    local final_normal_keys={};
 
-    if key_map_mode==2 then
-        key_map_mode=1;
-    end
-    -- decide current key_map_mode
-    for i=1,cnt do
-        local value=get_key_from_position(key_arr[i],1);
-        if value==mode2_key  then
-            key_arr[i]=nil;
-            set_key_map_mode(2,true);     
-        elseif value==mode3_key  then
-            key_arr[i]=nil;
-            if key_map_mode~=3 then
-                set_key_map_mode(3,true);
-            else
-                set_key_map_mode(1,true);
-            end
-        elseif value == capslockCode then
-            pressed_capslock=true;
-            if pressed_capslock and previous_capslock then
-                key_arr[i]=nil;
-            end
-        end        
-    end
-
-    -- handle mode2 race condition
-    if key_map_mode ~=2 and previous_key_map_mode == 2 then
-        clear_key();
-        return;
-    end
-    
-    -- get final key values 
-    local valid_key_cnt=0;
-
-    for i=1,cnt do        
-        if key_arr[i] ~= nil then
-            local value=get_key_from_position(key_arr[i]);
-
-            
-
-            if media_map[value] then
-                media_output(media_map[value]);
-                pressed_media=true;
-                return ;
-            end
-            final_normal_keys[valid_key_cnt+1]=value;            
-            valid_key_cnt=valid_key_cnt+1;        
-        end                
-    end
-    
-   
-
-    for i=valid_key_cnt,cnt do
-        final_normal_keys[i+1]=0;
-    end
-    
-    if pressed_media then
-        media_output(0);
-        pressed_media=false;
-    end
-    -- wait for releasing all normal keys
-    if cnt==0 then
-        wait_release=false;
-    end
-
-    if previous_cnt < cnt and ahk_data[final_normal_keys[1]] then 
-        for target_modifiers,expression in pairs(ahk_data[final_normal_keys[1]]) do
-            if modifier_compare(modifiers,target_modifiers) then
-                output_ahk(expression);
-                wait_release=true;
-                return;
-            end
-            
-        end
-    end
-
-    if not wait_release then
-        output(modifiers,0,table.unpack(final_normal_keys))
-    end
-end
--- return true to capture the input, prevent default handling
--- cnt: pressing normal keys' count
-function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)    
-    local key_arr={k1,k2,k3,k4,k5,k6};    
-    pressed_capslock=false;
-    key_input_underlying(modifiers,cnt,key_arr);
-    previous_cnt=cnt;
-    previous_key_map_mode=key_map_mode;
-    previous_capslock=pressed_capslock;
-    return true;
-end
 
 local modifier2val={
     ["^"]=1+16,
@@ -401,6 +304,104 @@ mutate_modifiers= function (modifiers,mutation)
     end
 end
 
+media_output= function (value)
+    mouse_output(3,value%256,math.floor(value/256),0,0);
+end
+local pressed_media=false;
+local pressed_capslock=false;
+key_input_underlying=function (modifiers,cnt,key_arr)
+    local final_normal_keys={};
+
+    if key_map_mode==2 then
+        key_map_mode=1;
+    end
+    -- decide current key_map_mode
+    for i=1,cnt do
+        local value=get_key_from_position(key_arr[i],1);
+        if value==mode2_key  then
+            key_arr[i]=nil;
+            set_key_map_mode(2,true);     
+        elseif value==mode3_key  then
+            key_arr[i]=nil;
+            if key_map_mode~=3 then
+                set_key_map_mode(3,true);
+            else
+                set_key_map_mode(1,true);
+            end
+        elseif value == capslockCode then
+            pressed_capslock=true;
+            if pressed_capslock and previous_capslock then
+                key_arr[i]=nil;
+            end
+        end        
+    end
+
+    -- handle mode2 race condition
+    if key_map_mode ~=2 and previous_key_map_mode == 2 then
+        clear_key();
+        return;
+    end
+    
+    -- get final key values 
+    local valid_key_cnt=0;
+
+    for i=1,cnt do        
+        if key_arr[i] ~= nil then
+            local value=get_key_from_position(key_arr[i]);
+
+            
+
+            if media_map[value] then
+                media_output(media_map[value]);
+                pressed_media=true;
+                return ;
+            end
+            final_normal_keys[valid_key_cnt+1]=value;            
+            valid_key_cnt=valid_key_cnt+1;        
+        end                
+    end
+    
+   
+
+    for i=valid_key_cnt,cnt do
+        final_normal_keys[i+1]=0;
+    end
+    
+    if pressed_media then
+        media_output(0);
+        pressed_media=false;
+    end
+    -- wait for releasing all normal keys
+    if cnt==0 then
+        wait_release=false;
+    end
+
+    if previous_cnt < cnt and ahk_data[final_normal_keys[1]] then 
+        for target_modifiers,expression in pairs(ahk_data[final_normal_keys[1]]) do
+            if modifier_compare(modifiers,target_modifiers) then
+                output_ahk(expression);
+                wait_release=true;
+                return;
+            end
+            
+        end
+    end
+
+    if not wait_release then
+        output(modifiers,0,table.unpack(final_normal_keys))
+    end
+end
+-- return true to capture the input, prevent default handling
+-- cnt: pressing normal keys' count
+function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)    
+    local key_arr={k1,k2,k3,k4,k5,k6};    
+    pressed_capslock=false;
+    key_input_underlying(modifiers,cnt,key_arr);
+    previous_cnt=cnt;
+    previous_key_map_mode=key_map_mode;
+    previous_capslock=pressed_capslock;
+    return true;
+end
 function main()
     collectgarbage();
     
