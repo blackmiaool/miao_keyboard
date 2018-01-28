@@ -43,12 +43,12 @@ u8 MSD_Init(void)
 {
   u32 i = 0;
 
-	RCC->APB2ENR|=1<<2;       //PORTAÊ±ÖÓÊ¹ÄÜ 
-	GPIOA->CRL&=0XFFF000FF; 
-	GPIOA->CRL|=0X00033300;//PA2.3.4 ÍÆÍì 	    
-	GPIOA->ODR|=0X7<<2;    //PA2.3.4ÉÏÀ­ 
-	SPI2_Init();
- 	SPI2_SetSpeed(SPI_SPEED_256);//ÉèÖÃµ½µÍËÙÄ£Ê½
+    RCC->APB2ENR|=1<<2;       //PORTAÊ±ï¿½ï¿½Ê¹ï¿½ï¿½ 
+    GPIOA->CRL&=0XFFF000FF; 
+    GPIOA->CRL|=0X00033300;//PA2.3.4 ï¿½ï¿½ï¿½ï¿½         
+    GPIOA->ODR|=0X7<<2;    //PA2.3.4ï¿½ï¿½ï¿½ï¿½ 
+    SPI2_Init();
+     SPI2_SetSpeed(SPI_SPEED_256);//ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 
   /* MSD chip select high */
   SD_CS=1;
@@ -63,71 +63,71 @@ u8 MSD_Init(void)
   /* MSD initialized and set to SPI mode properly */
   return (MSD_GoIdleState());
 }
-				    
+                    
 u8 MSD_WriteBuffer1(u8* pBuffer, u32 WriteAddr, u32 NumByteToWrite)
 {
-	u32 i = 0, NbrOfBlock = 0, Offset = 0;
-	u32 arg;
-	u16 cnt;
-	u8 rvalue = MSD_RESPONSE_FAILURE;		    
-	NbrOfBlock = NumByteToWrite / BLOCK_SIZE;		 
-	SD_CS=0;				 
-	while (NbrOfBlock --)
-	{		
-		arg=WriteAddr+Offset;
-	    SPI2_ReadWriteByte(24 | 0x40);//·Ö±ðÐ´ÈëÃüÁî
-	    SPI2_ReadWriteByte(arg >> 24);
-	    SPI2_ReadWriteByte(arg >> 16);
-	    SPI2_ReadWriteByte(arg >> 8);
-	    SPI2_ReadWriteByte(arg);
-	    SPI2_ReadWriteByte(0XFF);
+    u32 i = 0, NbrOfBlock = 0, Offset = 0;
+    u32 arg;
+    u16 cnt;
+    u8 rvalue = MSD_RESPONSE_FAILURE;            
+    NbrOfBlock = NumByteToWrite / BLOCK_SIZE;         
+    SD_CS=0;                 
+    while (NbrOfBlock --)
+    {        
+        arg=WriteAddr+Offset;
+        SPI2_ReadWriteByte(24 | 0x40);//ï¿½Ö±ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        SPI2_ReadWriteByte(arg >> 24);
+        SPI2_ReadWriteByte(arg >> 16);
+        SPI2_ReadWriteByte(arg >> 8);
+        SPI2_ReadWriteByte(arg);
+        SPI2_ReadWriteByte(0XFF);
 
-		cnt=0XFFF;
-		while(cnt&&(SPI2_ReadWriteByte(0xff)!=0))cnt--;						  						 
-	    if(cnt==0)return 1;  //Ó¦´ð²»ÕýÈ·£¬Ö±½Ó·µ»Ø	
-		
-			  				   
-	    SPI2_ReadWriteByte(0XFF);	 
-		SPI2_ReadWriteByte(0XFE);	
-				    
-		for (i=0;i<BLOCK_SIZE;i++)
-		{										 
-			SPI2_ReadWriteByte(*pBuffer);											 
-			pBuffer++;
-		}							   
-		Offset += 512;	
-														   
-		SPI2_ReadWriteByte(0XFF);
-		SPI2_ReadWriteByte(0XFF);
+        cnt=0XFFF;
+        while(cnt&&(SPI2_ReadWriteByte(0xff)!=0))cnt--;                                                   
+        if(cnt==0)return 1;  //Ó¦ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½    
+        
+                                 
+        SPI2_ReadWriteByte(0XFF);     
+        SPI2_ReadWriteByte(0XFE);    
+                    
+        for (i=0;i<BLOCK_SIZE;i++)
+        {                                         
+            SPI2_ReadWriteByte(*pBuffer);                                             
+            pBuffer++;
+        }                               
+        Offset += 512;    
+                                                           
+        SPI2_ReadWriteByte(0XFF);
+        SPI2_ReadWriteByte(0XFF);
  
-		cnt=0XFFF;
-		do
-		{
-			rvalue=SPI2_ReadWriteByte(0XFF);
-			rvalue&=0x1f;
-			if(rvalue==0x05)break;	
-		}while(cnt--);	
- 	 	while(SPI2_ReadWriteByte(0XFF)==0);//µÈ´ýÐ´Èë½áÊø
+        cnt=0XFFF;
+        do
+        {
+            rvalue=SPI2_ReadWriteByte(0XFF);
+            rvalue&=0x1f;
+            if(rvalue==0x05)break;    
+        }while(cnt--);    
+          while(SPI2_ReadWriteByte(0XFF)==0);//ï¿½È´ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	    if(cnt==0)//´íÎóÁË
-		{
-			rvalue=2;
-			printf("2\n");
-			//return	 2;  //Ó¦´ð²»ÕýÈ·£¬Ö±½Ó·µ»Ø 
-		}else rvalue=0;//Ã»´í  	
-							   
-//		if (MSD_GetDataResponse() == MSD_DATA_OK)
-//		{									  
-//			rvalue = MSD_RESPONSE_NO_ERROR;
-//		}
-//		else
-//		{									   
-//			rvalue = MSD_RESPONSE_FAILURE;
-//		}
-	}					 		  
-	SD_CS=1;										  
-	SPI2_ReadWriteByte(DUMMY);	    
-	return rvalue;
+        if(cnt==0)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        {
+            rvalue=2;
+            printf("2\n");
+            //return     2;  //Ó¦ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½ 
+        }else rvalue=0;//Ã»ï¿½ï¿½      
+                               
+//        if (MSD_GetDataResponse() == MSD_DATA_OK)
+//        {                                      
+//            rvalue = MSD_RESPONSE_NO_ERROR;
+//        }
+//        else
+//        {                                       
+//            rvalue = MSD_RESPONSE_FAILURE;
+//        }
+    }                               
+    SD_CS=1;                                          
+    SPI2_ReadWriteByte(DUMMY);        
+    return rvalue;
 }
  
 u8 MSD_ReadBuffer2(u8* pBuffer, u32 ReadAddr, u32 NumByteToRead)
@@ -457,7 +457,7 @@ u8 MSD_GoIdleState(void)
   SD_CS=1;
   /* Send dummy byte 0xFF */
   MSD_WriteByte(DUMMY);
- 	SPI2_SetSpeed(SPI_SPEED_4);//ÉèÖÃµ½µÍËÙÄ£Ê½
+     SPI2_SetSpeed(SPI_SPEED_4);//ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
   return MSD_RESPONSE_NO_ERROR;
 }
 
@@ -470,20 +470,20 @@ u8 MSD_GoIdleState(void)
 *******************************************************************************/
 void MSD_WriteByte(u8 Data)
 {
-	u8 retry=0;				 
-	while((SPI1->SR&1<<1)==0)//µÈ´ý·¢ËÍÇø¿Õ	
-	{
-		retry++;
-		if(retry>200)return;
-	}			  
-	SPI1->DR=Data;	 	  //·¢ËÍÒ»¸öbyte 
-	retry=0;
-	while((SPI1->SR&1<<0)==0) //µÈ´ý½ÓÊÕÍêÒ»¸öbyte  
-	{
-		retry++;
-		if(retry>200)return ;
-	}	  						    
-	retry= SPI1->DR;          //·µ»ØÊÕµ½µÄÊý¾Ý	 
+    u8 retry=0;                 
+    while((SPI1->SR&1<<1)==0)//ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    
+    {
+        retry++;
+        if(retry>200)return;
+    }              
+    SPI1->DR=Data;           //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte 
+    retry=0;
+    while((SPI1->SR&1<<0)==0) //ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte  
+    {
+        retry++;
+        if(retry>200)return ;
+    }                                  
+    retry= SPI1->DR;          //ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½     
 }
 
 /*******************************************************************************
@@ -494,21 +494,21 @@ void MSD_WriteByte(u8 Data)
 * Return         : The received byte.
 *******************************************************************************/
 u8 MSD_ReadByte(void)
-{				  
-	u8 retry=0;				 
-	while((SPI1->SR&1<<1)==0)//µÈ´ý·¢ËÍÇø¿Õ	
-	{
-		retry++;
-		if(retry>200)return 0;
-	}			  
-	SPI1->DR=0XFF;	 	  //·¢ËÍÒ»¸öbyte 
-	retry=0;
-	while((SPI1->SR&1<<0)==0) //µÈ´ý½ÓÊÕÍêÒ»¸öbyte  
-	{
-		retry++;
-		if(retry>200)return 0;
-	}	  						    
-	return SPI1->DR;          //·µ»ØÊÕµ½µÄÊý¾Ý		 
+{                  
+    u8 retry=0;                 
+    while((SPI1->SR&1<<1)==0)//ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    
+    {
+        retry++;
+        if(retry>200)return 0;
+    }              
+    SPI1->DR=0XFF;           //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte 
+    retry=0;
+    while((SPI1->SR&1<<0)==0) //ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte  
+    {
+        retry++;
+        if(retry>200)return 0;
+    }                                  
+    return SPI1->DR;          //ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½         
 }
  
 

@@ -21,11 +21,11 @@
 #include "lualib.h"
 
 void lua_writestring(const char *buf,int size){
-	for(int i=0;i<size;i++){
-		putchar(buf[i]);
-	}
+    for(int i=0;i<size;i++){
+        putchar(buf[i]);
+    }
 }
-	
+    
 static int luaB_print (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   int i;
@@ -48,7 +48,7 @@ static int luaB_print (lua_State *L) {
 }
 
 
-#define SPACECHARS	" \f\n\r\t\v"
+#define SPACECHARS    " \f\n\r\t\v"
 
 static const char *b_str2int (const char *s, int base, lua_Integer *pn) {
   lua_Unsigned n = 0;
@@ -311,7 +311,7 @@ static int luaB_loadfile (lua_State *L) {
 ** string to avoid it being collected while parsed. 'load' has four
 ** optional arguments (chunk, source name, mode, and environment).
 */
-#define RESERVEDSLOT	5
+#define RESERVEDSLOT    5
 
 
 /*

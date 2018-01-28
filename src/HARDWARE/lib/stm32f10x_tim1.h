@@ -93,7 +93,7 @@ typedef struct
                           (MODE == TIM1_OCMode_Inactive) || \
                           (MODE == TIM1_OCMode_Toggle)|| \
                           (MODE == TIM1_OCMode_PWM1) || \
-                          (MODE == TIM1_OCMode_PWM2) ||	\
+                          (MODE == TIM1_OCMode_PWM2) ||    \
                           (MODE == TIM1_ForcedAction_Active) || \
                           (MODE == TIM1_ForcedAction_InActive))
 /* TIM1 One Pulse Mode ------------------------------------------------------*/
@@ -387,7 +387,7 @@ typedef struct
 #define TIM1_TS_ITR1                       ((u16)0x0010)
 #define TIM1_TS_ITR2                       ((u16)0x0020)
 #define TIM1_TS_ITR3                       ((u16)0x0030)
-#define TIM1_TS_TI1F_ED	                   ((u16)0x0040)
+#define TIM1_TS_TI1F_ED                       ((u16)0x0040)
 #define TIM1_TS_TI1FP1                     ((u16)0x0050)
 #define TIM1_TS_TI2FP2                     ((u16)0x0060)
 #define TIM1_TS_ETRF                       ((u16)0x0070)

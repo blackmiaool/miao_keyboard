@@ -22,7 +22,7 @@
 /* Exported constants --------------------------------------------------------*/
 #define MAL_OK   0
 #define MAL_FAIL 1
-#define MAX_LUN  0		//2¸ö¿ÉÒÆ¶¯´ÅÅÌ SD¿¨+FLASH
+#define MAX_LUN  0        //2ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ SDï¿½ï¿½+FLASH
 
 extern long long Mass_Memory_Size[MAX_LUN+1];
 extern u32 Mass_Block_Size[MAX_LUN+1];

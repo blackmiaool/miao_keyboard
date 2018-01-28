@@ -30,8 +30,8 @@
 typedef struct
 {
   u32 DMA_PeripheralBaseAddr;
-  u32 DMA_MemoryBaseAddr;	
-  u32 DMA_DIR;	
+  u32 DMA_MemoryBaseAddr;    
+  u32 DMA_DIR;    
   u32 DMA_BufferSize;   
   u32 DMA_PeripheralInc; 
   u32 DMA_MemoryInc;

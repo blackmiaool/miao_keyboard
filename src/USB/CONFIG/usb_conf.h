@@ -43,7 +43,7 @@
 /* EP1  */
 /* tx buffer base address */
 #define ENDP1_TXADDR        (0x78)
-#define ENDP1_RXADDR		(ENDP1_TXADDR+0x10)
+#define ENDP1_RXADDR        (ENDP1_TXADDR+0x10)
 /* EP2  */
 /* tx buffer base address */
 #define ENDP2_TXADDR        (ENDP1_RXADDR+0x10)

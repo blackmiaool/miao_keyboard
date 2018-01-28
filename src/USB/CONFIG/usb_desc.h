@@ -33,12 +33,12 @@
 
 #define JOYSTICK_SIZ_DEVICE_DESC                18
 /*********************************************************/
-#define KP_OFF_HID_DESC							18
-#define Mouse_OFF_HID_DESC						50
+#define KP_OFF_HID_DESC                            18
+#define Mouse_OFF_HID_DESC                        50
 
 #define JOYSTICK_SIZ_CONFIG_DESC                (66+23)//+58)
-#define KP_ReportDescriptor_Size				64
-#define Mouse_ReportDescriptor_Size				132
+#define KP_ReportDescriptor_Size                64
+#define Mouse_ReportDescriptor_Size                132
 /*********************************************************/
 #define JOYSTICK_SIZ_STRING_LANGID              4
 #define JOYSTICK_SIZ_STRING_VENDOR              38

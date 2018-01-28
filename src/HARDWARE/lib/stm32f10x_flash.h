@@ -172,7 +172,7 @@ typedef enum
                                   ((FLAG) == FLASH_FLAG_PGERR) || ((FLAG) == FLASH_FLAG_WRPRTERR) || \
                                   ((FLAG) == FLASH_FLAG_OPTERR))
 #endif
-								 
+                                 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

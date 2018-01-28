@@ -13,13 +13,13 @@ void keyboard_scan(void);
 
 
 struct key_filter_struct{
-	u16 time;
-	single_key_t key;
+    u16 time;
+    single_key_t key;
 };
 typedef struct key_filter_struct key_filter_t;
 typedef struct{
-	u8 cnt;
-	key_filter_t filter[KEY_BUF_LEN];
+    u8 cnt;
+    key_filter_t filter[KEY_BUF_LEN];
 } key_filter_list_t;
 
 extern const unsigned char key_map[3][ROW_LEN][COL_LEN];

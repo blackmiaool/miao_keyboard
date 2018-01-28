@@ -53,20 +53,20 @@
 #define SCSI_SEND_DIAGNOSTIC                        0x1D
 #define SCSI_READ_FORMAT_CAPACITIES                 0x23
 
-#define NO_SENSE		                    0
-#define RECOVERED_ERROR		                    1
-#define NOT_READY		                    2
-#define MEDIUM_ERROR		                    3
-#define HARDWARE_ERROR		                    4
-#define ILLEGAL_REQUEST		                    5
-#define UNIT_ATTENTION		                    6
-#define DATA_PROTECT		                    7
-#define BLANK_CHECK		                    8
-#define VENDOR_SPECIFIC		                    9
-#define COPY_ABORTED		                    10
-#define ABORTED_COMMAND		                    11
-#define VOLUME_OVERFLOW		                    13
-#define MISCOMPARE		                    14
+#define NO_SENSE                            0
+#define RECOVERED_ERROR                            1
+#define NOT_READY                            2
+#define MEDIUM_ERROR                            3
+#define HARDWARE_ERROR                            4
+#define ILLEGAL_REQUEST                            5
+#define UNIT_ATTENTION                            6
+#define DATA_PROTECT                            7
+#define BLANK_CHECK                            8
+#define VENDOR_SPECIFIC                            9
+#define COPY_ABORTED                            10
+#define ABORTED_COMMAND                            11
+#define VOLUME_OVERFLOW                            13
+#define MISCOMPARE                            14
 
 
 #define INVALID_COMMAND                             0x20
@@ -74,8 +74,8 @@
 #define PARAMETER_LIST_LENGTH_ERROR                 0x1A
 #define INVALID_FIELD_IN_PARAMETER_LIST             0x26
 #define ADDRESS_OUT_OF_RANGE                        0x21
-#define MEDIUM_NOT_PRESENT 			    0x3A
-#define MEDIUM_HAVE_CHANGED			    0x28
+#define MEDIUM_NOT_PRESENT                 0x3A
+#define MEDIUM_HAVE_CHANGED                0x28
 
 #define READ_FORMAT_CAPACITY_DATA_LEN               0x0C
 #define READ_CAPACITY10_DATA_LEN                    0x08

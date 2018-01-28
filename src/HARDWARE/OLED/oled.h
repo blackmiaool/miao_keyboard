@@ -1,58 +1,58 @@
 #ifndef __OLED_H
-#define __OLED_H			  	 
+#define __OLED_H                   
 #include "sys.h"
-#include "stdlib.h"	    
-//////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌÐòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßÐí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//Mini STM32¿ª·¢°å
-//SSD1306 OLED Çý¶¯ICÇý¶¯´úÂë
-//Çý¶¯·½Ê½:8080²¢¿Ú/4Ïß´®¿Ú
-//ÕýµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ÐÞ¸ÄÈÕÆÚ:2010/6/3
-//°æ±¾£ºV1.0
-//°æÈ¨ËùÓÐ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ÕýµãÔ­×Ó 2009-2019
+#include "stdlib.h"        
+//////////////////////////////////////////////////////////////////////////////////     
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ñ§Ï°Ê¹ï¿½Ã£ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½Í¾
+//Mini STM32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//SSD1306 OLED ï¿½ï¿½ï¿½ï¿½ICï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½:8080ï¿½ï¿½ï¿½ï¿½/4ï¿½ß´ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½@ALIENTEK
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+//ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½:2010/6/3
+//ï¿½æ±¾ï¿½ï¿½V1.0
+//ï¿½ï¿½È¨ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
+//Copyright(C) ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ 2009-2019
 //All rights reserved
-////////////////////////////////////////////////////////////////////////////////// 	  
+//////////////////////////////////////////////////////////////////////////////////       
 
 
-//OLEDÄ£Ê½ÉèÖÃ
-//0:4Ïß´®ÐÐÄ£Ê½
-//1:²¢ÐÐ8080Ä£Ê½
+//OLEDÄ£Ê½ï¿½ï¿½ï¿½ï¿½
+//0:4ï¿½ß´ï¿½ï¿½ï¿½Ä£Ê½
+//1:ï¿½ï¿½ï¿½ï¿½8080Ä£Ê½
 #define OLED_MODE 1
-		    						  
-//-----------------OLED¶Ë¿Ú¶¨Òå----------------  					   
+                                      
+//-----------------OLEDï¿½Ë¿Ú¶ï¿½ï¿½ï¿½----------------                         
 #define OLED_CS PCout(9)
-//#define OLED_RST  PBout(14)//ÔÚMINISTM32ÉÏÖ±½Ó½Óµ½ÁËSTM32µÄ¸´Î»½Å£¡	
+//#define OLED_RST  PBout(14)//ï¿½ï¿½MINISTM32ï¿½ï¿½Ö±ï¿½Ó½Óµï¿½ï¿½ï¿½STM32ï¿½Ä¸ï¿½Î»ï¿½Å£ï¿½    
 #define OLED_RS PCout(8)
-#define OLED_WR PCout(7)		  
+#define OLED_WR PCout(7)          
 #define OLED_RD PCout(6)
 
-//PB0~7,×÷ÎªÊý¾ÝÏß
-#define DATAOUT(x) GPIOB->ODR=(GPIOB->ODR&0xff00)|(x&0x00FF); //Êä³ö
+//PB0~7,ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define DATAOUT(x) GPIOB->ODR=(GPIOB->ODR&0xff00)|(x&0x00FF); //ï¿½ï¿½ï¿½
   
-//Ê¹ÓÃ4Ïß´®ÐÐ½Ó¿ÚÊ±Ê¹ÓÃ 
+//Ê¹ï¿½ï¿½4ï¿½ß´ï¿½ï¿½Ð½Ó¿ï¿½Ê±Ê¹ï¿½ï¿½ 
 #define OLED_SCLK PBout(0)
 #define OLED_SDIN PBout(1)
-		     
-#define OLED_CMD  0	//Ð´ÃüÁî
-#define OLED_DATA 1	//Ð´Êý¾Ý
-//OLED¿ØÖÆÓÃº¯Êý
-void OLED_WR_Byte(u8 dat,u8 cmd);	    
+             
+#define OLED_CMD  0    //Ð´ï¿½ï¿½ï¿½ï¿½
+#define OLED_DATA 1    //Ð´ï¿½ï¿½ï¿½ï¿½
+//OLEDï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½
+void OLED_WR_Byte(u8 dat,u8 cmd);        
 void OLED_Display_On(void);
 void OLED_Display_Off(void);
-void OLED_Refresh_Gram(void);		   
-							   		    
+void OLED_Refresh_Gram(void);           
+                                           
 void OLED_Init(void);
 void OLED_Clear(void);
 void OLED_DrawPoint(u8 x,u8 y,u8 t);
 void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 dot);
 void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode);
 void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size);
-void OLED_ShowString(u8 x,u8 y,const u8 *p);	 
+void OLED_ShowString(u8 x,u8 y,const u8 *p);     
 #endif  
-	 
+     
 
 
 

@@ -7,11 +7,11 @@
 //#include "LCD.h"
 
 ////////////////////////////
-///ºËÐÄºê////////////////
+///ï¿½ï¿½ï¿½Äºï¿½////////////////
 struct GPIO_struct{
     GPIO_TypeDef* port;
     u32 pin;
-	  u8 num;
+      u8 num;
 };
 #define uint16           u16
 #define uint8             u8
@@ -19,7 +19,7 @@ struct GPIO_struct{
 #define uint u16
 typedef long long u64;
 //////////////////////////
-//////////////Å¼Ð°¶ñµÄº¯ÊýÃÇ////////////////
+//////////////Å¼Ð°ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½////////////////
 u8 SCPE(u16 PE);
 u32 max(u32 *shulie ,u32 len);
 void IOConfig(GPIO_TypeDef*  ,u8 ,u32 ,u8 );
@@ -30,115 +30,115 @@ void usart2putchar(char c);
 //void delay_s(u32 aa);
 void SPIInit(void);
 u8 SPIRW(u8 TxData);
-void mprintf(char *shuru,...);	
+void mprintf(char *shuru,...);    
 u32 StringToInt(u8 * mm,u8 jinzhi);
 u32 min(short *miao,u32 len);
 void nop(void);
 long atoi(char*);
 extern void *malloc(unsigned int);
 extern void free(void*);
-#define pc(aa)			putchar(aa) //´®¿ÚÊä³öº¯Êý,printfÓÃ
-/////////////ÍâÉèµØÖ·¶¨Òå£¬µÚ¶þÎ»ÊÇ1£¬ÔòRCC->APB2ENR2£¬ÒÔ´ËÀàÍÆ//////////////////
+#define pc(aa)            putchar(aa) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,printfï¿½ï¿½
+/////////////ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½å£¬ï¿½Ú¶ï¿½Î»ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½RCC->APB2ENR2ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½//////////////////
 #define abs(signed_data) (((signed_data)>0)?(signed_data):(-(signed_data)))
-#define shangla			1
-#define xiala 			2
-#define fall 			1
-#define raise			2	
-#define high			1
-#define low				0
-#define PERTIMER2			 0X0100
-#define PERTIMER3			 0x0101
-#define PERTIMER4			 0x0102
-#define PERTIMER5			 0x0103
-#define PERTIMER6			 0x0104
-#define PERTIMER7			 0x0105
-#define PERTIMER12			 0x0106
-#define PERTIMER13			 0x0107
-#define PERTIMER14			 0x0108
+#define shangla            1
+#define xiala             2
+#define fall             1
+#define raise            2    
+#define high            1
+#define low                0
+#define PERTIMER2             0X0100
+#define PERTIMER3             0x0101
+#define PERTIMER4             0x0102
+#define PERTIMER5             0x0103
+#define PERTIMER6             0x0104
+#define PERTIMER7             0x0105
+#define PERTIMER12             0x0106
+#define PERTIMER13             0x0107
+#define PERTIMER14             0x0108
 
-#define PERWDG				 0x010B
-#define PERSPI2				 0x010E
-#define PERSPI3				 0x010F
-#define PERUSART2			 0x0111
-#define PERUSART3			 0x0112
-#define PERUSART4			 0x0113
-#define PERUSART5			 0x0114
-#define PERI2C1				 0x0115
-#define PERI2C2				 0x0116
-#define PERUSB				 0x0117
-#define PERCAN				 0x0119
-#define PERBKP				 0X011B
-#define PERPWR				 0x011C
-#define PERDA				 0X011D
-
-
-
-#define PERAFIO				 0X0200
-#define PERIOA				 0x0202
-#define PERIOB				 0x0203
-#define PERIOC 	  		 0x0204
-#define PERIOD				 0x0205
-#define PERIOE				 0x0206
-#define PERIOF				 0x0207
-#define PERIOG				 0x0208
-#define PERAD1				 0X0209
-#define	PERAD2				 0X020A
-#define	PERTIMER1			 0X020B
-#define	PERSPI1				 0X020C
-#define	PERTIMER8			 0X020D
-#define	PERUSART1			 0X020E
-#define	PERAD3				 0X020F
-#define PERTIMER9			 0X0213
-#define PERTIMER10			 0X0214
-#define PERTIMER11			 0X0215
+#define PERWDG                 0x010B
+#define PERSPI2                 0x010E
+#define PERSPI3                 0x010F
+#define PERUSART2             0x0111
+#define PERUSART3             0x0112
+#define PERUSART4             0x0113
+#define PERUSART5             0x0114
+#define PERI2C1                 0x0115
+#define PERI2C2                 0x0116
+#define PERUSB                 0x0117
+#define PERCAN                 0x0119
+#define PERBKP                 0X011B
+#define PERPWR                 0x011C
+#define PERDA                 0X011D
 
 
 
-#define IOAB			 GPIOA
-#define IOBB			 GPIOB
-#define IOCB			 GPIOC
-#define IODB			 GPIOD
-#define IOEB			 GPIOE
-#define IOFB			 GPIOF
-#define IOGB			 GPIOG
-#define PIN0			0x1
-#define PIN1			0x10
-#define PIN2			0x100
-#define PIN3			0x1000
-#define PIN4			0x10000
-#define PIN5			0x100000
-#define PIN6			0x1000000
-#define PIN7			0x10000000
-#define PIN8			0x1
-#define PIN9			0x10
-#define PIN10			0x100
-#define PIN11			0x1000
-#define PIN12			0x10000
-#define PIN13			0x100000
-#define PIN14			0x1000000
-#define PIN15			0x10000000
-#define zhongduan0		EXTI0_IRQChannel
-#define zhongduan1		EXTI1_IRQChannel
-#define zhongduan2		EXTI2_IRQChannel
-#define zhongduan3		EXTI3_IRQChannel
-#define zhongduan4		EXTI4_IRQChannel
-#define zhongduan5_9	EXTI9_5_IRQChannel 
-#define zhongduan10_15	EXTI15_10_IRQChannel
+#define PERAFIO                 0X0200
+#define PERIOA                 0x0202
+#define PERIOB                 0x0203
+#define PERIOC                0x0204
+#define PERIOD                 0x0205
+#define PERIOE                 0x0206
+#define PERIOF                 0x0207
+#define PERIOG                 0x0208
+#define PERAD1                 0X0209
+#define    PERAD2                 0X020A
+#define    PERTIMER1             0X020B
+#define    PERSPI1                 0X020C
+#define    PERTIMER8             0X020D
+#define    PERUSART1             0X020E
+#define    PERAD3                 0X020F
+#define PERTIMER9             0X0213
+#define PERTIMER10             0X0214
+#define PERTIMER11             0X0215
+
+
+
+#define IOAB             GPIOA
+#define IOBB             GPIOB
+#define IOCB             GPIOC
+#define IODB             GPIOD
+#define IOEB             GPIOE
+#define IOFB             GPIOF
+#define IOGB             GPIOG
+#define PIN0            0x1
+#define PIN1            0x10
+#define PIN2            0x100
+#define PIN3            0x1000
+#define PIN4            0x10000
+#define PIN5            0x100000
+#define PIN6            0x1000000
+#define PIN7            0x10000000
+#define PIN8            0x1
+#define PIN9            0x10
+#define PIN10            0x100
+#define PIN11            0x1000
+#define PIN12            0x10000
+#define PIN13            0x100000
+#define PIN14            0x1000000
+#define PIN15            0x10000000
+#define zhongduan0        EXTI0_IRQChannel
+#define zhongduan1        EXTI1_IRQChannel
+#define zhongduan2        EXTI2_IRQChannel
+#define zhongduan3        EXTI3_IRQChannel
+#define zhongduan4        EXTI4_IRQChannel
+#define zhongduan5_9    EXTI9_5_IRQChannel 
+#define zhongduan10_15    EXTI15_10_IRQChannel
 #define zhongduanhanshu0  EXTI0_IRQHandler
 #define zhongduanhanshu1  EXTI1_IRQHandler
 #define zhongduanhanshu2  EXTI2_IRQHandler
 #define zhongduanhanshu3  EXTI3_IRQHandler
 #define zhongduanhanshu4  EXTI4_IRQHandler
 #define zhongduanhanshu5_9  EXTI9_5_IRQHandler
-#define zhongduanhanshu10_15 	EXTI15_10_IRQHandler
+#define zhongduanhanshu10_15     EXTI15_10_IRQHandler
 
 #define IOout(GPIO_BASE,n,v) ((v)?(GPIO_BASE->ODR|=(1<<(n))):(GPIO_BASE->ODR&=(0xffff-(1<<(n)))))
 #define IOin(GPIO_BASE,n) ((GPIO_BASE->IDR&(1<<(n)))>0)
-	#ifndef true
-		#define true 1
-	#endif
-		#ifndef false
-		#define false 0
-	#endif
+    #ifndef true
+        #define true 1
+    #endif
+        #ifndef false
+        #define false 0
+    #endif
 #endif
 

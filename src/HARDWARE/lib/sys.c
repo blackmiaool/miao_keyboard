@@ -1,242 +1,242 @@
-#include <stm32f10x_lib.h>		 
+#include <stm32f10x_lib.h>         
 #include "sys.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌÐòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßÐí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//Mini STM32¿ª·¢°å
-//ÏµÍ³Ê±ÖÓ³õÊ¼»¯		   
-//ÕýµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ÐÞ¸ÄÈÕÆÚ:2010/5/27
-//°æ±¾£ºV1.4
-//°æÈ¨ËùÓÐ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ÕýµãÔ­×Ó 2009-2019
+//////////////////////////////////////////////////////////////////////////////////     
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ñ§Ï°Ê¹ï¿½Ã£ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½Í¾
+//Mini STM32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ÏµÍ³Ê±ï¿½Ó³ï¿½Ê¼ï¿½ï¿½           
+//ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½@ALIENTEK
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+//ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½:2010/5/27
+//ï¿½æ±¾ï¿½ï¿½V1.4
+//ï¿½ï¿½È¨ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
+//Copyright(C) ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ 2009-2019
 //All rights reserved
 //********************************************************************************
-//V1.4ÐÞ¸ÄËµÃ÷
-//°ÑNVIC KOÁË,Ã»ÓÐÊ¹ÓÃÈÎºÎ¿âÎÄ¼þ!
-//¼ÓÈëÁËJTAG_Setº¯Êý
-////////////////////////////////////////////////////////////////////////////////// 	  
+//V1.4ï¿½Þ¸ï¿½Ëµï¿½ï¿½
+//ï¿½ï¿½NVIC KOï¿½ï¿½,Ã»ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ÎºÎ¿ï¿½ï¿½Ä¼ï¿½!
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JTAG_Setï¿½ï¿½ï¿½ï¿½
+//////////////////////////////////////////////////////////////////////////////////       
 
-//ÉèÖÃÏòÁ¿±íÆ«ÒÆµØÖ·
-//NVIC_VectTab:»ùÖ·
-//Offset:Æ«ÒÆÁ¿
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½Æµï¿½Ö·
+//NVIC_VectTab:ï¿½ï¿½Ö·
+//Offset:Æ«ï¿½ï¿½ï¿½ï¿½
 //CHECK OK
 //091207
-void MY_NVIC_SetVectorTable(u32 NVIC_VectTab, u32 Offset)	 
+void MY_NVIC_SetVectorTable(u32 NVIC_VectTab, u32 Offset)     
 { 
-  	//¼ì²é²ÎÊýºÏ·¨ÐÔ
-	assert_param(IS_NVIC_VECTTAB(NVIC_VectTab));
-	assert_param(IS_NVIC_OFFSET(Offset));  	 
-	SCB->VTOR = NVIC_VectTab|(Offset & (u32)0x1FFFFF80);//ÉèÖÃNVICµÄÏòÁ¿±íÆ«ÒÆ¼Ä´æÆ÷
-	//ÓÃÓÚ±êÊ¶ÏòÁ¿±íÊÇÔÚCODEÇø»¹ÊÇÔÚRAMÇø
+      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½
+    assert_param(IS_NVIC_VECTTAB(NVIC_VectTab));
+    assert_param(IS_NVIC_OFFSET(Offset));       
+    SCB->VTOR = NVIC_VectTab|(Offset & (u32)0x1FFFFF80);//ï¿½ï¿½ï¿½ï¿½NVICï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½Æ¼Ä´ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½Ú±ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CODEï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RAMï¿½ï¿½
 }
-//ÉèÖÃNVIC·Ö×é
-//NVIC_Group:NVIC·Ö×é 0~4 ×Ü¹²5×é 
+//ï¿½ï¿½ï¿½ï¿½NVICï¿½ï¿½ï¿½ï¿½
+//NVIC_Group:NVICï¿½ï¿½ï¿½ï¿½ 0~4 ï¿½Ü¹ï¿½5ï¿½ï¿½ 
 //CHECK OK
 //091209
-void MY_NVIC_PriorityGroupConfig(u8 NVIC_Group)	 
+void MY_NVIC_PriorityGroupConfig(u8 NVIC_Group)     
 { 
-	u32 temp,temp1;	  
-	temp1=(~NVIC_Group)&0x07;//È¡ºóÈýÎ»
-	temp1<<=8;
-	temp=SCB->AIRCR;  //¶ÁÈ¡ÏÈÇ°µÄÉèÖÃ
-	temp&=0X0000F8FF; //Çå¿ÕÏÈÇ°·Ö×é
-	temp|=0X05FA0000; //Ð´ÈëÔ¿³×
-	temp|=temp1;	   
-	SCB->AIRCR=temp;  //ÉèÖÃ·Ö×é	    	  				   
+    u32 temp,temp1;      
+    temp1=(~NVIC_Group)&0x07;//È¡ï¿½ï¿½ï¿½ï¿½Î»
+    temp1<<=8;
+    temp=SCB->AIRCR;  //ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    temp&=0X0000F8FF; //ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
+    temp|=0X05FA0000; //Ð´ï¿½ï¿½Ô¿ï¿½ï¿½
+    temp|=temp1;       
+    SCB->AIRCR=temp;  //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½                                 
 }
-//ÉèÖÃNVIC 
-//NVIC_PreemptionPriority:ÇÀÕ¼ÓÅÏÈ¼¶
-//NVIC_SubPriority       :ÏìÓ¦ÓÅÏÈ¼¶
-//NVIC_Channel           :ÖÐ¶Ï±àºÅ
-//NVIC_Group             :ÖÐ¶Ï·Ö×é 0~4
-//×¢ÒâÓÅÏÈ¼¶²»ÄÜ³¬¹ýÉè¶¨µÄ×éµÄ·¶Î§!·ñÔò»áÓÐÒâÏë²»µ½µÄ´íÎó
-//×é»®·Ö:
-//×é0:0Î»ÇÀÕ¼ÓÅÏÈ¼¶,4Î»ÏìÓ¦ÓÅÏÈ¼¶
-//×é1:1Î»ÇÀÕ¼ÓÅÏÈ¼¶,3Î»ÏìÓ¦ÓÅÏÈ¼¶
-//×é2:2Î»ÇÀÕ¼ÓÅÏÈ¼¶,2Î»ÏìÓ¦ÓÅÏÈ¼¶
-//×é3:3Î»ÇÀÕ¼ÓÅÏÈ¼¶,1Î»ÏìÓ¦ÓÅÏÈ¼¶
-//×é4:4Î»ÇÀÕ¼ÓÅÏÈ¼¶,0Î»ÏìÓ¦ÓÅÏÈ¼¶
-//NVIC_SubPriorityºÍNVIC_PreemptionPriorityµÄÔ­ÔòÊÇ,ÊýÖµÔ½Ð¡,Ô½ÓÅÏÈ
+//ï¿½ï¿½ï¿½ï¿½NVIC 
+//NVIC_PreemptionPriority:ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½
+//NVIC_SubPriority       :ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//NVIC_Channel           :ï¿½Ð¶Ï±ï¿½ï¿½
+//NVIC_Group             :ï¿½Ð¶Ï·ï¿½ï¿½ï¿½ 0~4
+//×¢ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Ü³ï¿½ï¿½ï¿½ï¿½è¶¨ï¿½ï¿½ï¿½ï¿½Ä·ï¿½Î§!ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë²»ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½
+//ï¿½é»®ï¿½ï¿½:
+//ï¿½ï¿½0:0Î»ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½,4Î»ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//ï¿½ï¿½1:1Î»ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½,3Î»ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//ï¿½ï¿½2:2Î»ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½,2Î»ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//ï¿½ï¿½3:3Î»ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½,1Î»ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//ï¿½ï¿½4:4Î»ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½È¼ï¿½,0Î»ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½
+//NVIC_SubPriorityï¿½ï¿½NVIC_PreemptionPriorityï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ÖµÔ½Ð¡,Ô½ï¿½ï¿½ï¿½ï¿½
 //CHECK OK
 //100329
-void MY_NVIC_Init(u8 NVIC_PreemptionPriority,u8 NVIC_SubPriority,u8 NVIC_Channel,u8 NVIC_Group)	 
+void MY_NVIC_Init(u8 NVIC_PreemptionPriority,u8 NVIC_SubPriority,u8 NVIC_Channel,u8 NVIC_Group)     
 { 
-	u32 temp;	
-	u8 IPRADDR=NVIC_Channel/4;  //Ã¿×éÖ»ÄÜ´æ4¸ö,µÃµ½×éµØÖ· 
-	u8 IPROFFSET=NVIC_Channel%4;//ÔÚ×éÄÚµÄÆ«ÒÆ
-	IPROFFSET=IPROFFSET*8+4;    //µÃµ½Æ«ÒÆµÄÈ·ÇÐÎ»ÖÃ
-	MY_NVIC_PriorityGroupConfig(NVIC_Group);//ÉèÖÃ·Ö×é
-	temp=NVIC_PreemptionPriority<<(4-NVIC_Group);	  
-	temp|=NVIC_SubPriority&(0x0f>>NVIC_Group);
-	temp&=0xf;//È¡µÍËÄÎ»
+    u32 temp;    
+    u8 IPRADDR=NVIC_Channel/4;  //Ã¿ï¿½ï¿½Ö»ï¿½Ü´ï¿½4ï¿½ï¿½,ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö· 
+    u8 IPROFFSET=NVIC_Channel%4;//ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Æ«ï¿½ï¿½
+    IPROFFSET=IPROFFSET*8+4;    //ï¿½Ãµï¿½Æ«ï¿½Æµï¿½È·ï¿½ï¿½Î»ï¿½ï¿½
+    MY_NVIC_PriorityGroupConfig(NVIC_Group);//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½
+    temp=NVIC_PreemptionPriority<<(4-NVIC_Group);      
+    temp|=NVIC_SubPriority&(0x0f>>NVIC_Group);
+    temp&=0xf;//È¡ï¿½ï¿½ï¿½ï¿½Î»
 
-	if(NVIC_Channel<32)NVIC->ISER[0]|=1<<NVIC_Channel;//Ê¹ÄÜÖÐ¶ÏÎ»(ÒªÇå³ýµÄ»°,Ïà·´²Ù×÷¾ÍOK)
-	else NVIC->ISER[1]|=1<<(NVIC_Channel-32);    
-	NVIC->IPR[IPRADDR]|=temp<<IPROFFSET;//ÉèÖÃÏìÓ¦ÓÅÏÈ¼¶ºÍÇÀ¶ÏÓÅÏÈ¼¶   	    	  				   
+    if(NVIC_Channel<32)NVIC->ISER[0]|=1<<NVIC_Channel;//Ê¹ï¿½ï¿½ï¿½Ð¶ï¿½Î»(Òªï¿½ï¿½ï¿½ï¿½Ä»ï¿½,ï¿½à·´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½OK)
+    else NVIC->ISER[1]|=1<<(NVIC_Channel-32);    
+    NVIC->IPR[IPRADDR]|=temp<<IPROFFSET;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½                                    
 }
 
-//Íâ²¿ÖÐ¶ÏÅäÖÃº¯Êý
-//Ö»Õë¶ÔGPIOA~G;²»°üÀ¨PVD,RTCºÍUSB»½ÐÑÕâÈý¸ö
-//²ÎÊý:GPIOx:0~6,´ú±íGPIOA~G;BITx:ÐèÒªÊ¹ÄÜµÄÎ»;TRIM:´¥·¢Ä£Ê½,1,ÏÂÉýÑØ;2,ÉÏ½µÑØ;3£¬ÈÎÒâµçÆ½´¥·¢
-//¸Ãº¯ÊýÒ»´ÎÖ»ÄÜÅäÖÃ1¸öIO¿Ú,¶à¸öIO¿Ú,Ðè¶à´Îµ÷ÓÃ
-//¸Ãº¯Êý»á×Ô¶¯¿ªÆô¶ÔÓ¦ÖÐ¶Ï,ÒÔ¼°ÆÁ±ÎÏß   
-//´ý²âÊÔ...
+//ï¿½â²¿ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½
+//Ö»ï¿½ï¿½ï¿½GPIOA~G;ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½PVD,RTCï¿½ï¿½USBï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½:GPIOx:0~6,ï¿½ï¿½ï¿½ï¿½GPIOA~G;BITx:ï¿½ï¿½ÒªÊ¹ï¿½Üµï¿½Î»;TRIM:ï¿½ï¿½ï¿½ï¿½Ä£Ê½,1,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½;2,ï¿½Ï½ï¿½ï¿½ï¿½;3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½
+//ï¿½Ãºï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½IOï¿½ï¿½,ï¿½ï¿½ï¿½IOï¿½ï¿½,ï¿½ï¿½ï¿½Îµï¿½ï¿½ï¿½
+//ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ð¶ï¿½,ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
 void Ex_NVIC_Config(u8 GPIOx,u8 BITx,u8 TRIM) 
 {
-	u8 EXTADDR;
-	u8 EXTOFFSET;
-	EXTADDR=BITx/4;//µÃµ½ÖÐ¶Ï¼Ä´æÆ÷×éµÄ±àºÅ
-	EXTOFFSET=(BITx%4)*4;
+    u8 EXTADDR;
+    u8 EXTOFFSET;
+    EXTADDR=BITx/4;//ï¿½Ãµï¿½ï¿½Ð¶Ï¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½
+    EXTOFFSET=(BITx%4)*4;
 
-	RCC->APB2ENR|=0x01;//Ê¹ÄÜio¸´ÓÃÊ±ÖÓ
+    RCC->APB2ENR|=0x01;//Ê¹ï¿½ï¿½ioï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 
-	AFIO->EXTICR[EXTADDR]&=~(0x000F<<EXTOFFSET);//Çå³ýÔ­À´ÉèÖÃ£¡£¡£¡
-	AFIO->EXTICR[EXTADDR]|=GPIOx<<EXTOFFSET;//EXTI.BITxÓ³Éäµ½GPIOx.BITx
-	
-	//×Ô¶¯ÉèÖÃ
-	EXTI->IMR|=1<<BITx;//  ¿ªÆôline BITxÉÏµÄÖÐ¶Ï
-	//EXTI->EMR|=1<<BITx;//²»ÆÁ±Îline BITxÉÏµÄÊÂ¼þ (Èç¹û²»ÆÁ±ÎÕâ¾ä,ÔÚÓ²¼þÉÏÊÇ¿ÉÒÔµÄ,µ«ÊÇÔÚÈí¼þ·ÂÕæµÄÊ±ºòÎÞ·¨½øÈëÖÐ¶Ï!)
- 	if(TRIM&0x01)EXTI->FTSR|=1<<BITx;//line BITxÉÏÊÂ¼þÏÂ½µÑØ´¥·¢
-	if(TRIM&0x02)EXTI->RTSR|=1<<BITx;//line BITxÉÏÊÂ¼þÉÏÉý½µÑØ´¥·¢
+    AFIO->EXTICR[EXTADDR]&=~(0x000F<<EXTOFFSET);//ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½
+    AFIO->EXTICR[EXTADDR]|=GPIOx<<EXTOFFSET;//EXTI.BITxÓ³ï¿½äµ½GPIOx.BITx
+    
+    //ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
+    EXTI->IMR|=1<<BITx;//  ï¿½ï¿½ï¿½ï¿½line BITxï¿½Ïµï¿½ï¿½Ð¶ï¿½
+    //EXTI->EMR|=1<<BITx;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½line BITxï¿½Ïµï¿½ï¿½Â¼ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ôµï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½!)
+     if(TRIM&0x01)EXTI->FTSR|=1<<BITx;//line BITxï¿½ï¿½ï¿½Â¼ï¿½ï¿½Â½ï¿½ï¿½Ø´ï¿½ï¿½ï¿½
+    if(TRIM&0x02)EXTI->RTSR|=1<<BITx;//line BITxï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½ï¿½ï¿½
 } 
 
 
-//²»ÄÜÔÚÕâÀïÖ´ÐÐËùÓÐÍâÉè¸´Î»!·ñÔòÖÁÉÙÒýÆð´®¿Ú²»¹¤×÷.		    
-//°ÑËùÓÐÊ±ÖÓ¼Ä´æÆ÷¸´Î»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¸´Î»!ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ð´®¿Ú²ï¿½ï¿½ï¿½ï¿½ï¿½.            
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ó¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Î»
 //CHECK OK
 //091209
 void MYRCC_DeInit(void)
-{										  					   
-	RCC->APB1RSTR = 0x00000000;//¸´Î»½áÊø			 
-	RCC->APB2RSTR = 0x00000000; 
-	  
-  	RCC->AHBENR = 0x00000014;  //Ë¯ÃßÄ£Ê½ÉÁ´æºÍSRAMÊ±ÖÓÊ¹ÄÜ.ÆäËû¹Ø±Õ.	  
-  	RCC->APB2ENR = 0x00000000; //ÍâÉèÊ±ÖÓ¹Ø±Õ.			   
-  	RCC->APB1ENR = 0x00000000;   
-	RCC->CR |= 0x00000001;     //Ê¹ÄÜÄÚ²¿¸ßËÙÊ±ÖÓHSION	 															 
-	RCC->CFGR &= 0xF8FF0000;   //¸´Î»SW[1:0],HPRE[3:0],PPRE1[2:0],PPRE2[2:0],ADCPRE[1:0],MCO[2:0]					 
-	RCC->CR &= 0xFEF6FFFF;     //¸´Î»HSEON,CSSON,PLLON
-	RCC->CR &= 0xFFFBFFFF;     //¸´Î»HSEBYP	   	  
-	RCC->CFGR &= 0xFF80FFFF;   //¸´Î»PLLSRC, PLLXTPRE, PLLMUL[3:0] and USBPRE 
-	RCC->CIR = 0x00000000;     //¹Ø±ÕËùÓÐÖÐ¶Ï
-	//ÅäÖÃÏòÁ¿±í				  
+{                                                                 
+    RCC->APB1RSTR = 0x00000000;//ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½             
+    RCC->APB2RSTR = 0x00000000; 
+      
+      RCC->AHBENR = 0x00000014;  //Ë¯ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½SRAMÊ±ï¿½ï¿½Ê¹ï¿½ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½.      
+      RCC->APB2ENR = 0x00000000; //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ó¹Ø±ï¿½.               
+      RCC->APB1ENR = 0x00000000;   
+    RCC->CR |= 0x00000001;     //Ê¹ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½HSION                                                                  
+    RCC->CFGR &= 0xF8FF0000;   //ï¿½ï¿½Î»SW[1:0],HPRE[3:0],PPRE1[2:0],PPRE2[2:0],ADCPRE[1:0],MCO[2:0]                     
+    RCC->CR &= 0xFEF6FFFF;     //ï¿½ï¿½Î»HSEON,CSSON,PLLON
+    RCC->CR &= 0xFFFBFFFF;     //ï¿½ï¿½Î»HSEBYP             
+    RCC->CFGR &= 0xFF80FFFF;   //ï¿½ï¿½Î»PLLSRC, PLLXTPRE, PLLMUL[3:0] and USBPRE 
+    RCC->CIR = 0x00000000;     //ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½                  
 #ifdef  VECT_TAB_RAM
-	MY_NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
+    MY_NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
 #else   
-	MY_NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+    MY_NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
 }
-//THUMBÖ¸Áî²»Ö§³Ö»ã±àÄÚÁª
-//²ÉÓÃÈçÏÂ·½·¨ÊµÏÖÖ´ÐÐ»ã±àÖ¸ÁîWFI
+//THUMBÖ¸ï¿½î²»Ö§ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Êµï¿½ï¿½Ö´ï¿½Ð»ï¿½ï¿½Ö¸ï¿½ï¿½WFI
 //CHECK OK
 //091209
 __asm void WFI_SET(void)
 {
-	WFI;    
+    WFI;    
 }
-//½øÈë´ý»úÄ£Ê½	 
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½     
 //check ok 
 //091202
 void Sys_Standby(void)
 {
-	SCB->SCR|=1<<2;//Ê¹ÄÜSLEEPDEEPÎ» (SYS->CTRL)	   
-  	RCC->APB1ENR|=1<<28;     //Ê¹ÄÜµçÔ´Ê±ÖÓ	    
- 	PWR->CSR|=1<<8;          //ÉèÖÃWKUPÓÃÓÚ»½ÐÑ
-	PWR->CR|=1<<2;           //Çå³ýWake-up ±êÖ¾
-	PWR->CR|=1<<1;           //PDDSÖÃÎ»		  
-	WFI_SET();				 //Ö´ÐÐWFIÖ¸Áî		 
-}	  
-//ºó±¸¼Ä´æÆ÷Ð´Èë²Ù×÷
-//reg:¼Ä´æÆ÷±àºÅ
-//reg:ÒªÐ´ÈëµÄÊýÖµ 
+    SCB->SCR|=1<<2;//Ê¹ï¿½ï¿½SLEEPDEEPÎ» (SYS->CTRL)       
+      RCC->APB1ENR|=1<<28;     //Ê¹ï¿½Üµï¿½Ô´Ê±ï¿½ï¿½        
+     PWR->CSR|=1<<8;          //ï¿½ï¿½ï¿½ï¿½WKUPï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½
+    PWR->CR|=1<<2;           //ï¿½ï¿½ï¿½Wake-up ï¿½ï¿½Ö¾
+    PWR->CR|=1<<1;           //PDDSï¿½ï¿½Î»          
+    WFI_SET();                 //Ö´ï¿½ï¿½WFIÖ¸ï¿½ï¿½         
+}      
+//ï¿½ó±¸¼Ä´ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½
+//reg:ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//reg:ÒªÐ´ï¿½ï¿½ï¿½ï¿½ï¿½Öµ 
 ////check ok
 ////091202
 //void BKP_Write(u8 reg,u16 dat)
 //{
-//  RCC->APB1ENR|=1<<28;     //Ê¹ÄÜµçÔ´Ê±ÖÓ	    
-//	RCC->APB1ENR|=1<<27;     //Ê¹ÄÜ±¸·ÝÊ±ÖÓ	    
-//	PWR->CR|=1<<8;           //È¡Ïû±¸·ÝÇøÐ´±£»¤ 
-//	switch(reg)
-//	{
-//		case 1:
-//			BKP->DR1=dat;
-//			break;
-//		case 2:
-//			BKP->DR2=dat;
-//			break;
-//		case 3:
-//			BKP->DR3=dat;
-//			break; 
-//		case 4:
-//			BKP->DR4=dat;
-//			break;
-//		case 5:
-//			BKP->DR5=dat;
-//			break;
-//		case 6:
-//			BKP->DR6=dat;
-//			break;
-//		case 7:
-//			BKP->DR7=dat;
-//			break;
-//		case 8:
-//			BKP->DR8=dat;
-//			break;
-//		case 9:
-//			BKP->DR9=dat;
-//			break;
-//		case 10:
-//			BKP->DR10=dat;
-//			break;
-//	} 
-//}	    
-//ÏµÍ³Èí¸´Î»
+//  RCC->APB1ENR|=1<<28;     //Ê¹ï¿½Üµï¿½Ô´Ê±ï¿½ï¿½        
+//    RCC->APB1ENR|=1<<27;     //Ê¹ï¿½Ü±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½        
+//    PWR->CR|=1<<8;           //È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ 
+//    switch(reg)
+//    {
+//        case 1:
+//            BKP->DR1=dat;
+//            break;
+//        case 2:
+//            BKP->DR2=dat;
+//            break;
+//        case 3:
+//            BKP->DR3=dat;
+//            break; 
+//        case 4:
+//            BKP->DR4=dat;
+//            break;
+//        case 5:
+//            BKP->DR5=dat;
+//            break;
+//        case 6:
+//            BKP->DR6=dat;
+//            break;
+//        case 7:
+//            BKP->DR7=dat;
+//            break;
+//        case 8:
+//            BKP->DR8=dat;
+//            break;
+//        case 9:
+//            BKP->DR9=dat;
+//            break;
+//        case 10:
+//            BKP->DR10=dat;
+//            break;
+//    } 
+//}        
+//ÏµÍ³ï¿½ï¿½Î»
 //CHECK OK
 //091209
 void Sys_Soft_Reset(void)
 {   
-	SCB->AIRCR =0X05FA0000|(u32)0x04;	  
+    SCB->AIRCR =0X05FA0000|(u32)0x04;      
 } 
 
-//JTAGÄ£Ê½ÉèÖÃ,ÓÃÓÚÉèÖÃJTAGµÄÄ£Ê½
-//mode:jtag,swdÄ£Ê½ÉèÖÃ;00,È«Ê¹ÄÜ;01,Ê¹ÄÜSWD;10,È«¹Ø±Õ;
-//CHECK OK	
-//100818		  
+//JTAGÄ£Ê½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JTAGï¿½ï¿½Ä£Ê½
+//mode:jtag,swdÄ£Ê½ï¿½ï¿½ï¿½ï¿½;00,È«Ê¹ï¿½ï¿½;01,Ê¹ï¿½ï¿½SWD;10,È«ï¿½Ø±ï¿½;
+//CHECK OK    
+//100818          
 void JTAG_Set(u8 mode)
 {
-	u32 temp;
-	temp=mode;
-	temp<<=25;
-	RCC->APB2ENR|=1<<0;     //¿ªÆô¸¨ÖúÊ±ÖÓ	   
-	AFIO->MAPR&=0XF8FFFFFF; //Çå³ýMAPRµÄ[26:24]
-	AFIO->MAPR|=temp;       //ÉèÖÃjtagÄ£Ê½
+    u32 temp;
+    temp=mode;
+    temp<<=25;
+    RCC->APB2ENR|=1<<0;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½       
+    AFIO->MAPR&=0XF8FFFFFF; //ï¿½ï¿½ï¿½MAPRï¿½ï¿½[26:24]
+    AFIO->MAPR|=temp;       //ï¿½ï¿½ï¿½ï¿½jtagÄ£Ê½
 } 
-//ÏµÍ³Ê±ÖÓ³õÊ¼»¯º¯Êý
-//pll:Ñ¡ÔñµÄ±¶ÆµÊý£¬´Ó2¿ªÊ¼£¬×î´óÖµÎª16	
+//ÏµÍ³Ê±ï¿½Ó³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//pll:Ñ¡ï¿½ï¿½Ä±ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÎª16    
 //CHECK OK
 //091209
 void Stm32_Clock_Init(u8 PLL)
 {
-	unsigned char temp=0;   
-	MYRCC_DeInit();		  //¸´Î»²¢ÅäÖÃÏòÁ¿±í
-	RCC->CR|=0x00010000;  //Íâ²¿¸ßËÙÊ±ÖÓÊ¹ÄÜHSEON
-	while(!(RCC->CR>>17));//µÈ´ýÍâ²¿Ê±ÖÓ¾ÍÐ÷
-	RCC->CFGR=0X00000400; //APB1=DIV2;APB2=DIV1;AHB=DIV1;
-	PLL-=2;//µÖÏû2¸öµ¥Î»
-	RCC->CFGR|=PLL<<18;   //ÉèÖÃPLLÖµ 2~16
-	RCC->CFGR|=1<<16;	  //PLLSRC ON 
-	FLASH->ACR|=0x32;	  //FLASH 2¸öÑÓÊ±ÖÜÆÚ
+    unsigned char temp=0;   
+    MYRCC_DeInit();          //ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    RCC->CR|=0x00010000;  //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½HSEON
+    while(!(RCC->CR>>17));//ï¿½È´ï¿½ï¿½â²¿Ê±ï¿½Ó¾ï¿½ï¿½ï¿½
+    RCC->CFGR=0X00000400; //APB1=DIV2;APB2=DIV1;AHB=DIV1;
+    PLL-=2;//ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½Î»
+    RCC->CFGR|=PLL<<18;   //ï¿½ï¿½ï¿½ï¿½PLLÖµ 2~16
+    RCC->CFGR|=1<<16;      //PLLSRC ON 
+    FLASH->ACR|=0x32;      //FLASH 2ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 
-	RCC->CR|=0x01000000;  //PLLON
-	while(!(RCC->CR>>25));//µÈ´ýPLLËø¶¨
-	RCC->CFGR|=0x00000002;//PLL×÷ÎªÏµÍ³Ê±ÖÓ	 
-	while(temp!=0x02)     //µÈ´ýPLL×÷ÎªÏµÍ³Ê±ÖÓÉèÖÃ³É¹¦
-	{   
-		temp=RCC->CFGR>>2;
-		temp&=0x03;
-	}    
-}		    
+    RCC->CR|=0x01000000;  //PLLON
+    while(!(RCC->CR>>25));//ï¿½È´ï¿½PLLï¿½ï¿½ï¿½ï¿½
+    RCC->CFGR|=0x00000002;//PLLï¿½ï¿½ÎªÏµÍ³Ê±ï¿½ï¿½     
+    while(temp!=0x02)     //ï¿½È´ï¿½PLLï¿½ï¿½ÎªÏµÍ³Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ã³É¹ï¿½
+    {   
+        temp=RCC->CFGR>>2;
+        temp&=0x03;
+    }    
+}            
 
 
 

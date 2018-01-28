@@ -34,7 +34,7 @@ Bulk_Only_CBW CBW;
 Bulk_Only_CSW CSW;
 u32 SCSI_LBA , SCSI_BlkLen;
 extern u32 Max_Lun;
-						   
+                           
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -51,32 +51,32 @@ extern u32 Max_Lun;
 *******************************************************************************/
 void Mass_Storage_In (void)
 {
-	USB_STATUS_REG|=0X10;//标记轮询
-	//printf("Bot_State_in:%d",Bot_State);
-	switch (Bot_State)
-	{
-		case BOT_CSW_Send:
-		case BOT_ERROR:
-			Bot_State = BOT_IDLE;
-			SetEPRxStatus(ENDP4, EP_RX_VALID);/* enable the Endpoint to recive the next cmd*/
-			break;
-		case BOT_DATA_IN:  //USB从设备读数据
-			switch (CBW.CB[0])
-			{
-				case SCSI_READ10:
-					USB_STATUS_REG|=0X02;//标记正在读数据
-					SCSI_Read10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
-					break;
-			}
-			break;
-		case BOT_DATA_IN_LAST:
-			Set_CSW (CSW_CMD_PASSED, SEND_CSW_ENABLE);
-			SetEPRxStatus(ENDP4, EP_RX_VALID);
-			break;
-		
-		default:
-			break;
-	}
+    USB_STATUS_REG|=0X10;//标记轮询
+    //printf("Bot_State_in:%d",Bot_State);
+    switch (Bot_State)
+    {
+        case BOT_CSW_Send:
+        case BOT_ERROR:
+            Bot_State = BOT_IDLE;
+            SetEPRxStatus(ENDP4, EP_RX_VALID);/* enable the Endpoint to recive the next cmd*/
+            break;
+        case BOT_DATA_IN:  //USB从设备读数据
+            switch (CBW.CB[0])
+            {
+                case SCSI_READ10:
+                    USB_STATUS_REG|=0X02;//标记正在读数据
+                    SCSI_Read10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
+                    break;
+            }
+            break;
+        case BOT_DATA_IN_LAST:
+            Set_CSW (CSW_CMD_PASSED, SEND_CSW_ENABLE);
+            SetEPRxStatus(ENDP4, EP_RX_VALID);
+            break;
+        
+        default:
+            break;
+    }
 }
 
 /*******************************************************************************
@@ -89,35 +89,35 @@ void Mass_Storage_In (void)
 *******************************************************************************/
 void Mass_Storage_Out (void)
 {
-	u8 CMD;
-	USB_STATUS_REG|=0X10;//标记轮询
-	
-	CMD = CBW.CB[0];
-	Data_Len = GetEPRxCount(ENDP4);
-	PMAToUserBufferCopy(Bulk_Data_Buff, ENDP4_RXADDR, Data_Len);
+    u8 CMD;
+    USB_STATUS_REG|=0X10;//标记轮询
+    
+    CMD = CBW.CB[0];
+    Data_Len = GetEPRxCount(ENDP4);
+    PMAToUserBufferCopy(Bulk_Data_Buff, ENDP4_RXADDR, Data_Len);
 //printf("Bot_State_out:%d;Data_Len=%d",Bot_State,Data_Len);
-	switch (Bot_State)
-	{
-		case BOT_IDLE:
-			CBW_Decode();
-			break;
-		case BOT_DATA_OUT://USB发送数据到设备
-			if (CMD == SCSI_WRITE10)
-			{
-				USB_STATUS_REG|=0X01;//标记正在写数据
-				SCSI_Write10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
-				break;
-			}
-			Bot_Abort(DIR_OUT);
-			Set_Scsi_Sense_Data(CBW.bLUN, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
-			Set_CSW (CSW_PHASE_ERROR, SEND_CSW_DISABLE);
-			break;
-		default:
-			Bot_Abort(BOTH_DIR);
-			Set_Scsi_Sense_Data(CBW.bLUN, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
-			Set_CSW (CSW_PHASE_ERROR, SEND_CSW_DISABLE);
-			break;
-	}
+    switch (Bot_State)
+    {
+        case BOT_IDLE:
+            CBW_Decode();
+            break;
+        case BOT_DATA_OUT://USB发送数据到设备
+            if (CMD == SCSI_WRITE10)
+            {
+                USB_STATUS_REG|=0X01;//标记正在写数据
+                SCSI_Write10_Cmd(CBW.bLUN , SCSI_LBA , SCSI_BlkLen);
+                break;
+            }
+            Bot_Abort(DIR_OUT);
+            Set_Scsi_Sense_Data(CBW.bLUN, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
+            Set_CSW (CSW_PHASE_ERROR, SEND_CSW_DISABLE);
+            break;
+        default:
+            Bot_Abort(BOTH_DIR);
+            Set_Scsi_Sense_Data(CBW.bLUN, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
+            Set_CSW (CSW_PHASE_ERROR, SEND_CSW_DISABLE);
+            break;
+    }
 }
 
 /*******************************************************************************

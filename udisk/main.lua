@@ -134,14 +134,14 @@ function key_input_underlying(modifiers,cnt,key_arr)
     local final_normal_keys={};
 
     if key_map_mode==2 then
-    	key_map_mode=1;
+        key_map_mode=1;
     end
     -- decide current key_map_mode
     for i=1,cnt do
         local value=get_key_from_position(key_arr[i],1);
         if value==mode2_key  then
             key_arr[i]=nil;
-            set_key_map_mode(2,true); 	
+            set_key_map_mode(2,true);     
         elseif value==mode3_key  then
             key_arr[i]=nil;
             if key_map_mode~=3 then
@@ -159,8 +159,8 @@ function key_input_underlying(modifiers,cnt,key_arr)
 
     -- handle mode2 race condition
     if key_map_mode ~=2 and previous_key_map_mode == 2 then
-    	clear_key();
-    	return;
+        clear_key();
+        return;
     end
     
     -- get final key values 
@@ -214,7 +214,7 @@ function key_input_underlying(modifiers,cnt,key_arr)
 end
 -- return true to capture the input, prevent default handling
 -- cnt: pressing normal keys' count
-function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)	
+function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)    
     local key_arr={k1,k2,k3,k4,k5,k6};    
     pressed_capslock=false;
     key_input_underlying(modifiers,cnt,key_arr);

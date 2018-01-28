@@ -63,7 +63,7 @@ void (*pEpInt_OUT[7])(void) =
 * Return         :
 *******************************************************************************/
 void USB_Istr(void)
-{		  
+{          
   wIstr = _GetISTR();
 
 #if (IMR_MSK & ISTR_RESET)
@@ -172,15 +172,15 @@ u8 EP1BUSY=0;
 u8 EP2BUSY=0;
 void EP1_IN_Callback(void)
 {
-	EP1BUSY=0;
+    EP1BUSY=0;
 }
 void EP2_IN_Callback(void)
 {
-	EP2BUSY=0;
+    EP2BUSY=0;
 }
 void EP1_OUT_Callback(void)
 {
-	SetEPRxValid(ENDP1);
+    SetEPRxValid(ENDP1);
 }
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

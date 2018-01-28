@@ -182,12 +182,12 @@ typedef struct
                                (FLAG == I2C_FLAG_TRA) || (FLAG == I2C_FLAG_BUSY) || \
                                (FLAG == I2C_FLAG_MSL) || (FLAG == I2C_FLAG_SMBALERT) || \
                                (FLAG == I2C_FLAG_TIMEOUT) || (FLAG == I2C_FLAG_PECERR) || \
-							   (FLAG == I2C_FLAG_OVR) || (FLAG == I2C_FLAG_AF) || \
-							   (FLAG == I2C_FLAG_ARLO) || (FLAG == I2C_FLAG_BERR) || \
-							   (FLAG == I2C_FLAG_TXE) || (FLAG == I2C_FLAG_RXNE) || \
-							   (FLAG == I2C_FLAG_STOPF) || (FLAG == I2C_FLAG_ADD10) || \
-							   (FLAG == I2C_FLAG_BTF) || (FLAG == I2C_FLAG_ADDR) || \
-							   (FLAG == I2C_FLAG_SB))
+                               (FLAG == I2C_FLAG_OVR) || (FLAG == I2C_FLAG_AF) || \
+                               (FLAG == I2C_FLAG_ARLO) || (FLAG == I2C_FLAG_BERR) || \
+                               (FLAG == I2C_FLAG_TXE) || (FLAG == I2C_FLAG_RXNE) || \
+                               (FLAG == I2C_FLAG_STOPF) || (FLAG == I2C_FLAG_ADD10) || \
+                               (FLAG == I2C_FLAG_BTF) || (FLAG == I2C_FLAG_ADDR) || \
+                               (FLAG == I2C_FLAG_SB))
 
 /* I2C Events */
 /* EV1 */

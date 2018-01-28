@@ -53,7 +53,7 @@ RESULT PowerOn(void)
   USB_Cable_Config(ENABLE);//使能1.5K上拉
   /*** CNTR_PWDN = 0 ***/
   wRegVal = CNTR_FRES;
-  _SetCNTR(wRegVal);	 
+  _SetCNTR(wRegVal);     
   /*** CNTR_FRES = 0 ***/
   wInterrupt_Mask = 0;
   _SetCNTR(wInterrupt_Mask);
@@ -61,7 +61,7 @@ RESULT PowerOn(void)
   _SetISTR(0);
   /*** Set interrupt mask ***/
   wInterrupt_Mask = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM;
-  _SetCNTR(wInterrupt_Mask);	 
+  _SetCNTR(wInterrupt_Mask);     
   return USB_SUCCESS;
 }
 
@@ -77,7 +77,7 @@ RESULT PowerOff()
   /* disable all ints and force USB reset */
   _SetCNTR(CNTR_FRES);
   /* clear interrupt status register */
-  _SetISTR(0);				 
+  _SetISTR(0);                 
   /* Disable the Pull-Up*/
   USB_Cable_Config(DISABLE);//禁止1.5K上拉
   /* switch-off device */

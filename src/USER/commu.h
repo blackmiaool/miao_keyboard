@@ -6,8 +6,8 @@ void commu_init(void );
 void commu_write(char *buf,u32 len);
 u8 *commu_read(u32 *len);
 
-u8 SD_ReadDisk(u8*buf,u32 sector,u32 cnt);		//¶Á¿é
-u8 SD_WriteDisk(u8*buf,u32 sector,u32 cnt);		//Ð´¿é
+u8 SD_ReadDisk(u8*buf,u32 sector,u32 cnt);        //ï¿½ï¿½ï¿½ï¿½
+u8 SD_WriteDisk(u8*buf,u32 sector,u32 cnt);        //Ð´ï¿½ï¿½
 
 #endif//_COMMU_H_
 

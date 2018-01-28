@@ -50,7 +50,7 @@ typedef struct
 #define IS_SPI_DIRECTION_MODE(MODE) ((MODE == SPI_Direction_2Lines_FullDuplex) || \
                                      (MODE == SPI_Direction_2Lines_RxOnly) || \
                                      (MODE == SPI_Direction_1Line_Rx) || \
-						             (MODE == SPI_Direction_1Line_Tx))
+                                     (MODE == SPI_Direction_1Line_Tx))
 
 /* SPI master/slave mode */
 #define SPI_Mode_Master                    ((u16)0x0104)

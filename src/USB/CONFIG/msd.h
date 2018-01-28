@@ -37,7 +37,7 @@
 #define MSD_CS_PIN                    GPIO_Pin_3
 
 #define MSD_POWER_PORT                GPIOC
-#define MSD_POWER_PIN				  GPIO_Pin_8
+#define MSD_POWER_PIN                  GPIO_Pin_8
 
 /* Block Size */
 #define BLOCK_SIZE    512

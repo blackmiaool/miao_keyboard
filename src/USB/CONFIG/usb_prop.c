@@ -32,7 +32,7 @@ u32 ProtocolValue;
 /* -------------------------------------------------------------------------- */
 /*  Structures initializations */
 /* -------------------------------------------------------------------------- */
-u32 Max_Lun =MAX_LUN; //¶¨ÒåUSBÉè±¸µÄÊýÁ¿,1´ú±í2¸ö.0´ú±íÒ»¸ö   
+u32 Max_Lun =MAX_LUN; //ï¿½ï¿½ï¿½ï¿½USBï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½.0ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½   
 extern u8 Bot_State;
 DEVICE Device_Table =
 {
@@ -80,29 +80,29 @@ ONE_DESCRIPTOR Config_Descriptor =
     JOYSTICK_SIZ_CONFIG_DESC
 };
 /*******************************************************************/
-ONE_DESCRIPTOR KP_Report_Descriptor =							   	//
-{																	//
-        (u8 *)KeyboardReportDescriptor,									//
-        KP_ReportDescriptor_Size										//
-        };																//
+ONE_DESCRIPTOR KP_Report_Descriptor =                                   //
+{                                                                    //
+        (u8 *)KeyboardReportDescriptor,                                    //
+        KP_ReportDescriptor_Size                                        //
+        };                                                                //
 //
-ONE_DESCRIPTOR KP_Hid_Descriptor =									//
-{																	//
-        (u8*)Joystick_ConfigDescriptor + KP_OFF_HID_DESC,				//
-        JOYSTICK_SIZ_HID_DESC											//
-        };																//
+ONE_DESCRIPTOR KP_Hid_Descriptor =                                    //
+{                                                                    //
+        (u8*)Joystick_ConfigDescriptor + KP_OFF_HID_DESC,                //
+        JOYSTICK_SIZ_HID_DESC                                            //
+        };                                                                //
 //
-ONE_DESCRIPTOR Mouse_Report_Descriptor =							//
-{																	//
-        (u8 *)MouseReportDescriptor,									//
-        Mouse_ReportDescriptor_Size										//
-        };																//
+ONE_DESCRIPTOR Mouse_Report_Descriptor =                            //
+{                                                                    //
+        (u8 *)MouseReportDescriptor,                                    //
+        Mouse_ReportDescriptor_Size                                        //
+        };                                                                //
 //
-ONE_DESCRIPTOR Mouse_Hid_Descriptor =								//
-{																	//
-        (u8*)Joystick_ConfigDescriptor + Mouse_OFF_HID_DESC,			//
-        JOYSTICK_SIZ_HID_DESC											//
-        };																//
+ONE_DESCRIPTOR Mouse_Hid_Descriptor =                                //
+{                                                                    //
+        (u8*)Joystick_ConfigDescriptor + Mouse_OFF_HID_DESC,            //
+        JOYSTICK_SIZ_HID_DESC                                            //
+        };                                                                //
 /*******************************************************************/
 
 ONE_DESCRIPTOR String_Descriptor[5] =
@@ -173,21 +173,21 @@ void Joystick_Reset(void)
     SetEPRxValid(ENDP0);
 
     /* Initialize Endpoint In 1 */
-    SetEPType(ENDP1, EP_INTERRUPT); //³õÊ¼»¯ÎªÖÐ¶Ï¶ËµãÀàÐÍ
-    SetEPTxAddr(ENDP1, ENDP1_TXADDR); //ÉèÖÃ·¢ËÍÊý¾ÝµÄµØÖ·
-    SetEPTxCount(ENDP1, 8); //ÉèÖÃ·¢ËÍµÄ³¤¶È
-    SetEPTxStatus(ENDP1, EP_TX_NAK); //ÉèÖÃ¶Ëµã´¦ÓÚÃ¦×´Ì¬
+    SetEPType(ENDP1, EP_INTERRUPT); //ï¿½ï¿½Ê¼ï¿½ï¿½Îªï¿½Ð¶Ï¶Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    SetEPTxAddr(ENDP1, ENDP1_TXADDR); //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄµï¿½Ö·
+    SetEPTxCount(ENDP1, 8); //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ÍµÄ³ï¿½ï¿½ï¿½
+    SetEPTxStatus(ENDP1, EP_TX_NAK); //ï¿½ï¿½ï¿½Ã¶Ëµã´¦ï¿½ï¿½Ã¦×´Ì¬
 
     /* Initialize Endpoint Out 1 */
-    SetEPRxAddr(ENDP1, ENDP1_RXADDR); //ÉèÖÃ½ÓÊÕÊý¾ÝµÄµØÖ·
-    SetEPRxCount(ENDP1, 2);  //ÉèÖÃ½ÓÊÕ³¤¶È
-    SetEPRxStatus(ENDP1, EP_RX_VALID); //ÉèÖÃ¶ËµãÓÐÐ§£¬¿ÉÒÔ½ÓÊÕÊý¾Ý
+    SetEPRxAddr(ENDP1, ENDP1_RXADDR); //ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄµï¿½Ö·
+    SetEPRxCount(ENDP1, 2);  //ï¿½ï¿½ï¿½Ã½ï¿½ï¿½Õ³ï¿½ï¿½ï¿½
+    SetEPRxStatus(ENDP1, EP_RX_VALID); //ï¿½ï¿½ï¿½Ã¶Ëµï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     /* Initialize Endpoint In 2 */
-    SetEPType(ENDP2, EP_INTERRUPT); //³õÊ¼»¯ÎªÖÐ¶Ï¶ËµãÀàÐÍ
-    SetEPTxAddr(ENDP2, ENDP2_TXADDR); //ÉèÖÃ·¢ËÍÊý¾ÝµÄµØÖ·
-    SetEPTxCount(ENDP2, 5); //ÉèÖÃ·¢ËÍµÄ³¤¶È
-    SetEPTxStatus(ENDP2, EP_TX_NAK); //ÉèÖÃ¶Ëµã´¦ÓÚÃ¦×´Ì¬
+    SetEPType(ENDP2, EP_INTERRUPT); //ï¿½ï¿½Ê¼ï¿½ï¿½Îªï¿½Ð¶Ï¶Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    SetEPTxAddr(ENDP2, ENDP2_TXADDR); //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄµï¿½Ö·
+    SetEPTxCount(ENDP2, 5); //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ÍµÄ³ï¿½ï¿½ï¿½
+    SetEPTxStatus(ENDP2, EP_TX_NAK); //ï¿½ï¿½ï¿½Ã¶Ëµã´¦ï¿½ï¿½Ã¦×´Ì¬
 
     SetEPType(ENDP3, EP_BULK);
     SetEPTxAddr(ENDP3, ENDP3_TXADDR);
@@ -221,10 +221,10 @@ void Joystick_Reset(void)
 *******************************************************************************/
 void Joystick_SetConfiguration(void)
 {
-	  if (pInformation->Current_Configuration != 0)
+      if (pInformation->Current_Configuration != 0)
   {
     /* Device configured */
-    bDeviceState = CONFIGURED;	  
+    bDeviceState = CONFIGURED;      
     ClearDTOG_TX(ENDP3);
     ClearDTOG_RX(ENDP4);
     Bot_State = BOT_IDLE; /* set the Bot state machine to the IDLE state */
@@ -239,7 +239,7 @@ void Joystick_SetConfiguration(void)
 *******************************************************************************/
 void Joystick_SetDeviceAddress (void)
 {
-	 bDeviceState = ADDRESSED;
+     bDeviceState = ADDRESSED;
 }
 /*******************************************************************************
 * Function Name  : Joystick_Status_In.
@@ -344,7 +344,7 @@ RESULT Joystick_NoData_Setup(u8 RequestNo)
     {
         return Joystick_SetProtocol();
     }
-	else  if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
+    else  if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
       && (RequestNo == MASS_STORAGE_RESET) && (pInformation->USBwValue == 0)
       && (pInformation->USBwIndex == 0) && (pInformation->USBwLength == 0x00))
   {

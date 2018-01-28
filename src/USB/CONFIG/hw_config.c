@@ -31,13 +31,13 @@
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-			  
+              
 
 //配置USB时钟,USBclk=48Mhz
 void Set_USBClock(void)
 {
- 	RCC->CFGR&=~(1<<22); //USBclk=PLLclk/1.5=48Mhz	    
-	RCC->APB1ENR|=1<<23; //USB时钟使能
+     RCC->CFGR&=~(1<<22); //USBclk=PLLclk/1.5=48Mhz        
+    RCC->APB1ENR|=1<<23; //USB时钟使能
 }
  
 /*******************************************************************************
@@ -50,10 +50,10 @@ void Set_USBClock(void)
 void Enter_LowPowerMode(void)
 {
   /* Set the device state to suspend */
-  bDeviceState = SUSPENDED;	  
+  bDeviceState = SUSPENDED;      
   /* Request to enter STOP mode with regulator in low power mode */
   //PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI);
-}			  
+}              
 
 /*******************************************************************************
 * Function Name  : Leave_LowPowerMode.
@@ -65,8 +65,8 @@ void Enter_LowPowerMode(void)
 void Leave_LowPowerMode(void)
 {
   DEVICE_INFO *pInfo = &Device_Info;
-								   
-													   
+                                   
+                                                       
   /* Set the device state to the correct state */
   if (pInfo->Current_Configuration != 0)
   {
@@ -83,12 +83,12 @@ void Leave_LowPowerMode(void)
 void USB_Interrupts_Config(void)
 {
   
-	EXTI->IMR|=1<<18;//  开启线18上的中断
- 	EXTI->RTSR|=1<<18;//line 18上事件上升降沿触发
-	MY_NVIC_Init(1,1,USB_LP_CAN_RX0_IRQChannel,2);//组2，优先级次之
-	MY_NVIC_Init(0,1,USBWakeUp_IRQChannel,2);     //组2，优先级最高
+    EXTI->IMR|=1<<18;//  开启线18上的中断
+     EXTI->RTSR|=1<<18;//line 18上事件上升降沿触发
+    MY_NVIC_Init(1,1,USB_LP_CAN_RX0_IRQChannel,2);//组2，优先级次之
+    MY_NVIC_Init(0,1,USBWakeUp_IRQChannel,2);     //组2，优先级最高
 }
-		    
+            
 /*******************************************************************************
 * Function Name : Joystick_Send.
 * Description   : prepares buffer to be sent containing Joystick event infos.
@@ -101,21 +101,21 @@ void USB_Interrupts_Config(void)
 //{
 //  if (NewState != DISABLE)
 //  {
-//	LED1=1;
+//    LED1=1;
 //  }
 //  else
 //  {
-//	LED1=0;
+//    LED1=0;
 //  }
 //u16 MAL_Init(u8 lun)
 //{
 //  u16 status = MAL_OK;  
 //  switch (lun)
 //  {
-//    case 0:			    
-//      break;			   
-//    case 1:					  
-//      break;		  
+//    case 0:                
+//      break;               
+//    case 1:                      
+//      break;          
 //    default:
 //      return MAL_FAIL;
 //  }
@@ -123,11 +123,11 @@ void USB_Interrupts_Config(void)
 //}
 void MAL_Config(void)
 {
-	MAL_Init(0);	  
+    MAL_Init(0);      
 }
 
 void USB_Disconnect_Config(void)
-{											 
+{                                             
 //  GPIO_InitTypeDef GPIO_InitStructure;
 //
 //  /* Enable USB_DISCONNECT GPIO clock */
@@ -147,22 +147,22 @@ void Joystick_Send(u8 buf0, u8* buf1)
   /* prepare buffer to send */
  // Buffer[2] = buf1;
 
-  if(buf1[0]==0)	//键盘
+  if(buf1[0]==0)    //键盘
   {
-	  buf1[0]=buf1[1];
-	  /*copy mouse position info in ENDP1 Tx Packet Memory Area*/
-	  UserToPMABufferCopy(buf1, GetEPTxAddr(ENDP1), 8);
-	  /* enable endpoint for transmission */
-	  SetEPTxValid(ENDP1);
+      buf1[0]=buf1[1];
+      /*copy mouse position info in ENDP1 Tx Packet Memory Area*/
+      UserToPMABufferCopy(buf1, GetEPTxAddr(ENDP1), 8);
+      /* enable endpoint for transmission */
+      SetEPTxValid(ENDP1);
   }
-  else				//鼠标
+  else                //鼠标
   {
-	  
-	  UserToPMABufferCopy(buf1, GetEPTxAddr(ENDP2), 5);
-	  SetEPTxValid(ENDP2);
+      
+      UserToPMABufferCopy(buf1, GetEPTxAddr(ENDP2), 5);
+      SetEPTxValid(ENDP2);
   }
-														 
-}																 
+                                                         
+}                                                                 
 
 /*******************************************************************************
 * Function Name  : Get_SerialNum.

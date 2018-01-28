@@ -10,12 +10,12 @@
 // #define RAlt        0x40
 // #define RWin    0x80
 typedef struct{
-	u8 pos[2];
+    u8 pos[2];
 } single_key_t;
 typedef struct {
-	u8 control;
-	u8 cnt;
-	single_key_t key[6];   
+    u8 control;
+    u8 cnt;
+    single_key_t key[6];   
 } key_t;
 
 #endif//_APP_KEYBOARD_BASE_H_

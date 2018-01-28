@@ -1,59 +1,59 @@
 #ifndef _MMC_SD_H_
-#define _MMC_SD_H_		 	 
+#define _MMC_SD_H_              
 #include <stm32f10x_lib.h> 
-//////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌÐòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßÐí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//Mini STM32¿ª·¢°å
-//SD¿¨ Çý¶¯´úÂë		   
-//ÕýµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ÐÞ¸ÄÈÕÆÚ:2010/11/28 
-//°æ±¾£ºV1.1
-//°æÈ¨ËùÓÐ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ÕýµãÔ­×Ó 2009-2019
+//////////////////////////////////////////////////////////////////////////////////     
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ñ§Ï°Ê¹ï¿½Ã£ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½Í¾
+//Mini STM32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//SDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½           
+//ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½@ALIENTEK
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+//ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½:2010/11/28 
+//ï¿½æ±¾ï¿½ï¿½V1.1
+//ï¿½ï¿½È¨ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
+//Copyright(C) ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ 2009-2019
 //All rights reserved
 //********************************************************************************
-//V1.1ÐÞ¸ÄËµÃ÷
-//2010/5/13									   
-//Ôö¼ÓÁËÒ»Ð©ÑÓÊ±,Êµ²â¿ÉÒÔÖ§³ÖTF¿¨(1G/2G),½ðÊ¿¶Ù2G,4G 16G SD¿¨
+//V1.1ï¿½Þ¸ï¿½Ëµï¿½ï¿½
+//2010/5/13                                       
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½Ê±,Êµï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½TFï¿½ï¿½(1G/2G),ï¿½ï¿½Ê¿ï¿½ï¿½2G,4G 16G SDï¿½ï¿½
 //2010/6/24
-//¼ÓÈëÁËu8 SD_GetResponse(u8 Response)º¯Êý
-//ÐÞ¸ÄÁËu8 SD_WaitDataReady(void)º¯Êý
-//Ôö¼ÓÁËUSB¶Á¿¨Æ÷Ö§³ÖµÄu8 MSD_ReadBuffer(u8* pBuffer, u32 ReadAddr, u32 NumByteToRead);
-//ºÍu8 MSD_WriteBuffer(u8* pBuffer, u32 WriteAddr, u32 NumByteToWrite);Á½¸öº¯Êý
-////////////////////////////////////////////////////////////////////////////////// 	  
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½u8 SD_GetResponse(u8 Response)ï¿½ï¿½ï¿½ï¿½
+//ï¿½Þ¸ï¿½ï¿½ï¿½u8 SD_WaitDataReady(void)ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½USBï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½Öµï¿½u8 MSD_ReadBuffer(u8* pBuffer, u32 ReadAddr, u32 NumByteToRead);
+//ï¿½ï¿½u8 MSD_WriteBuffer(u8* pBuffer, u32 WriteAddr, u32 NumByteToWrite);ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//////////////////////////////////////////////////////////////////////////////////       
 
 
-//SD´«ÊäÊý¾Ý½áÊøºóÊÇ·ñÊÍ·Å×ÜÏßºê¶¨Òå  
+//SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ßºê¶¨ï¿½ï¿½  
 #define NO_RELEASE      0
-#define RELEASE         1		 
-// SD¿¨ÀàÐÍ¶¨Òå  
+#define RELEASE         1         
+// SDï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½  
 #define SD_TYPE_MMC     0
 #define SD_TYPE_V1      1
 #define SD_TYPE_V2      2
-#define SD_TYPE_V2HC    4	   
-// SD¿¨Ö¸Áî±í  	   
-#define CMD0    0       //¿¨¸´Î»
+#define SD_TYPE_V2HC    4       
+// SDï¿½ï¿½Ö¸ï¿½ï¿½ï¿½         
+#define CMD0    0       //ï¿½ï¿½ï¿½ï¿½Î»
 #define CMD1    1
-#define CMD9    9       //ÃüÁî9 £¬¶ÁCSDÊý¾Ý
-#define CMD10   10      //ÃüÁî10£¬¶ÁCIDÊý¾Ý
-#define CMD12   12      //ÃüÁî12£¬Í£Ö¹Êý¾Ý´«Êä
-#define CMD16   16      //ÃüÁî16£¬ÉèÖÃSectorSize Ó¦·µ»Ø0x00
-#define CMD17   17      //ÃüÁî17£¬¶Ásector
-#define CMD18   18      //ÃüÁî18£¬¶ÁMulti sector
-#define ACMD23  23      //ÃüÁî23£¬ÉèÖÃ¶àsectorÐ´ÈëÇ°Ô¤ÏÈ²Á³ýN¸öblock
-#define CMD24   24      //ÃüÁî24£¬Ð´sector
-#define CMD25   25      //ÃüÁî25£¬Ð´Multi sector
-#define ACMD41  41      //ÃüÁî41£¬Ó¦·µ»Ø0x00
-#define CMD55   55      //ÃüÁî55£¬Ó¦·µ»Ø0x01
-#define CMD58   58      //ÃüÁî58£¬¶ÁOCRÐÅÏ¢
-#define CMD59   59      //ÃüÁî59£¬Ê¹ÄÜ/½ûÖ¹CRC£¬Ó¦·µ»Ø0x00
-//Êý¾ÝÐ´Èë»ØÓ¦×ÖÒâÒå
+#define CMD9    9       //ï¿½ï¿½ï¿½ï¿½9 ï¿½ï¿½ï¿½ï¿½CSDï¿½ï¿½ï¿½ï¿½
+#define CMD10   10      //ï¿½ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½CIDï¿½ï¿½ï¿½ï¿½
+#define CMD12   12      //ï¿½ï¿½ï¿½ï¿½12ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½
+#define CMD16   16      //ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SectorSize Ó¦ï¿½ï¿½ï¿½ï¿½0x00
+#define CMD17   17      //ï¿½ï¿½ï¿½ï¿½17ï¿½ï¿½ï¿½ï¿½sector
+#define CMD18   18      //ï¿½ï¿½ï¿½ï¿½18ï¿½ï¿½ï¿½ï¿½Multi sector
+#define ACMD23  23      //ï¿½ï¿½ï¿½ï¿½23ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½sectorÐ´ï¿½ï¿½Ç°Ô¤ï¿½È²ï¿½ï¿½ï¿½Nï¿½ï¿½block
+#define CMD24   24      //ï¿½ï¿½ï¿½ï¿½24ï¿½ï¿½Ð´sector
+#define CMD25   25      //ï¿½ï¿½ï¿½ï¿½25ï¿½ï¿½Ð´Multi sector
+#define ACMD41  41      //ï¿½ï¿½ï¿½ï¿½41ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½0x00
+#define CMD55   55      //ï¿½ï¿½ï¿½ï¿½55ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½0x01
+#define CMD58   58      //ï¿½ï¿½ï¿½ï¿½58ï¿½ï¿½ï¿½ï¿½OCRï¿½ï¿½Ï¢
+#define CMD59   59      //ï¿½ï¿½ï¿½ï¿½59ï¿½ï¿½Ê¹ï¿½ï¿½/ï¿½ï¿½Ö¹CRCï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½0x00
+//ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #define MSD_DATA_OK                0x05
 #define MSD_DATA_CRC_ERROR         0x0B
 #define MSD_DATA_WRITE_ERROR       0x0D
 #define MSD_DATA_OTHER_ERROR       0xFF
-//SD¿¨»ØÓ¦±ê¼Ç×Ö
+//SDï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½
 #define MSD_RESPONSE_NO_ERROR      0x00
 #define MSD_IN_IDLE_STATE          0x01
 #define MSD_ERASE_RESET            0x02
@@ -63,32 +63,32 @@
 #define MSD_ADDRESS_ERROR          0x20
 #define MSD_PARAMETER_ERROR        0x40
 #define MSD_RESPONSE_FAILURE       0xFF
- 							   						 	 
-//Õâ²¿·ÖÓ¦¸ù¾Ý¾ßÌåµÄÁ¬ÏßÀ´ÐÞ¸Ä!
-//Mini STM32Ê¹ÓÃµÄÊÇPA3×÷ÎªSD¿¨µÄCS½Å.
-#define	SD_CS  PAout(3) //SD¿¨Æ¬Ñ¡Òý½Å					    	  
+                                                              
+//ï¿½â²¿ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ý¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½!
+//Mini STM32Ê¹ï¿½Ãµï¿½ï¿½ï¿½PA3ï¿½ï¿½ÎªSDï¿½ï¿½ï¿½ï¿½CSï¿½ï¿½.
+#define    SD_CS  PAout(3) //SDï¿½ï¿½Æ¬Ñ¡ï¿½ï¿½ï¿½ï¿½                              
 
-extern u8  SD_Type;//SD¿¨µÄÀàÐÍ
-//º¯ÊýÉêÃ÷Çø 
-u8 SD_WaitReady(void);                          //µÈ´ýSD¿¨¾ÍÐ÷
-u8 SD_SendCommand(u8 cmd, u32 arg, u8 crc);     //SD¿¨·¢ËÍÒ»¸öÃüÁî
+extern u8  SD_Type;//SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+u8 SD_WaitReady(void);                          //ï¿½È´ï¿½SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+u8 SD_SendCommand(u8 cmd, u32 arg, u8 crc);     //SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 u8 SD_SendCommand_NoDeassert(u8 cmd, u32 arg, u8 crc);
-u8 SD_Init(void);                               //SD¿¨³õÊ¼»¯
-u8 SD_Idle_Sta(void);                           //ÉèÖÃSD¿¨µ½¹ÒÆðÄ£Ê½
+u8 SD_Init(void);                               //SDï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+u8 SD_Idle_Sta(void);                           //ï¿½ï¿½ï¿½ï¿½SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 
-u8 SD_ReceiveData(u8 *data, u16 len, u8 release);//SD¿¨¶ÁÊý¾Ý
-u8 SD_GetCID(u8 *cid_data);                     //¶ÁSD¿¨CID
-u8 SD_GetCSD(u8 *csd_data);                     //¶ÁSD¿¨CSD
-u32 SD_GetCapacity(void);                       //È¡SD¿¨ÈÝÁ¿
-//USB ¶Á¿¨Æ÷ SD¿¨²Ù×÷º¯Êý
+u8 SD_ReceiveData(u8 *data, u16 len, u8 release);//SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+u8 SD_GetCID(u8 *cid_data);                     //ï¿½ï¿½SDï¿½ï¿½CID
+u8 SD_GetCSD(u8 *csd_data);                     //ï¿½ï¿½SDï¿½ï¿½CSD
+u32 SD_GetCapacity(void);                       //È¡SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//USB ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 u8 MSD_WriteBuffer(u8* pBuffer, u32 WriteAddr, u32 NumByteToWrite);
 u8 MSD_ReadBuffer(u8* pBuffer, u32 ReadAddr, u32 NumByteToRead);
 
-u8 SD_ReadSingleBlock(u32 sector, u8 *buffer);  //¶ÁÒ»¸ösector
-u8 SD_WriteSingleBlock(u32 sector, const u8 *buffer); 		//Ð´Ò»¸ösector
-u8 SD_ReadMultiBlock(u32 sector, u8 *buffer, u8 count); 	//¶Á¶à¸ösector
-u8 SD_WriteMultiBlock(u32 sector, const u8 *data, u8 count);//Ð´¶à¸ösector
-u8 SD_Read_Bytes(unsigned long address,unsigned char *buf,unsigned int offset,unsigned int bytes);//¶ÁÈ¡Ò»byte
+u8 SD_ReadSingleBlock(u32 sector, u8 *buffer);  //ï¿½ï¿½Ò»ï¿½ï¿½sector
+u8 SD_WriteSingleBlock(u32 sector, const u8 *buffer);         //Ð´Ò»ï¿½ï¿½sector
+u8 SD_ReadMultiBlock(u32 sector, u8 *buffer, u8 count);     //ï¿½ï¿½ï¿½ï¿½ï¿½sector
+u8 SD_WriteMultiBlock(u32 sector, const u8 *data, u8 count);//Ð´ï¿½ï¿½ï¿½sector
+u8 SD_Read_Bytes(unsigned long address,unsigned char *buf,unsigned int offset,unsigned int bytes);//ï¿½ï¿½È¡Ò»byte
 #endif
 
 

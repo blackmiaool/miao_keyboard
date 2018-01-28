@@ -7,17 +7,17 @@
 /* storage control module to the FatFs module with a defined API.        */
 /*-----------------------------------------------------------------------*/
 
-#include "diskio.h"		/* FatFs lower layer API */
-//#include "usbdisk.h"	/* Example: USB drive control */
-//#include "atadrive.h"	/* Example: ATA drive control */
-#include "w25q16.h"		/* Example: MMC/SDC contorl */
+#include "diskio.h"        /* FatFs lower layer API */
+//#include "usbdisk.h"    /* Example: USB drive control */
+//#include "atadrive.h"    /* Example: ATA drive control */
+#include "w25q16.h"        /* Example: MMC/SDC contorl */
 
 //#include "commu.h"
 
 /* Definitions of physical drive number for each media */
-//#define ATA		0
-#define MMC		0
-//#define USB		2
+//#define ATA        0
+#define MMC        0
+//#define USB        2
 
 
 /*-----------------------------------------------------------------------*/
@@ -31,19 +31,19 @@
 #define MY_FLASH_CMD_WRITE 1
 void MMC_disk_read(u8* pBuffer,u32 sector_addr,u16 NumSectorToRead)
 {
-	SPI_Flash_Read(pBuffer,sector_addr<<9,NumSectorToRead<<9);
+    SPI_Flash_Read(pBuffer,sector_addr<<9,NumSectorToRead<<9);
 }
 void MMC_disk_write( u8* pBuffer,u32 sector_addr,u16 NumSectorToWrite)
 {
-	SPI_Flash_Write(pBuffer,sector_addr<<9,NumSectorToWrite<<9);
+    SPI_Flash_Write(pBuffer,sector_addr<<9,NumSectorToWrite<<9);
 }
 
 DSTATUS disk_initialize (
-	BYTE pdrv				/* Physical drive nmuber (0..) */
+    BYTE pdrv                /* Physical drive nmuber (0..) */
 )
 {
-//	DSTATUS stat;
-//	int result;
+//    DSTATUS stat;
+//    int result;
 
         return 0;
 
@@ -56,12 +56,12 @@ DSTATUS disk_initialize (
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status (
-	BYTE pdrv		/* Physical drive nmuber (0..) */
+    BYTE pdrv        /* Physical drive nmuber (0..) */
 )
 {
-//	DSTATUS stat;
-//	int result;
-	// translate the reslut code here
+//    DSTATUS stat;
+//    int result;
+    // translate the reslut code here
 
     return 0;
 
@@ -74,15 +74,15 @@ DSTATUS disk_status (
 /*-----------------------------------------------------------------------*/
 
 DRESULT disk_read (
-	BYTE pdrv,		/* Physical drive nmuber (0..) */
-	BYTE *buff,		/* Data buffer to store read data */
-	DWORD sector,	/* Sector address (LBA) */
-	UINT count		/* Number of sectors to read (1..128) */
+    BYTE pdrv,        /* Physical drive nmuber (0..) */
+    BYTE *buff,        /* Data buffer to store read data */
+    DWORD sector,    /* Sector address (LBA) */
+    UINT count        /* Number of sectors to read (1..128) */
 )
 {
-	MMC_disk_read(buff, sector, count);
-	// translate the reslut code here
-	return RES_OK;
+    MMC_disk_read(buff, sector, count);
+    // translate the reslut code here
+    return RES_OK;
 }
 
 
@@ -93,15 +93,15 @@ DRESULT disk_read (
 
 #if _USE_WRITE
 DRESULT disk_write (
-	BYTE pdrv,			/* Physical drive nmuber (0..) */
-	 BYTE *buff,	/* Data to be written */
-	DWORD sector,		/* Sector address (LBA) */
-	UINT count			/* Number of sectors to write (1..128) */
+    BYTE pdrv,            /* Physical drive nmuber (0..) */
+     BYTE *buff,    /* Data to be written */
+    DWORD sector,        /* Sector address (LBA) */
+    UINT count            /* Number of sectors to write (1..128) */
 )
 {
 MMC_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+        // translate the reslut code here
 
         return RES_OK;
 
@@ -115,17 +115,17 @@ MMC_disk_write(buff, sector, count);
 /*-----------------------------------------------------------------------*/
 DRESULT MMC_disk_ioctl(BYTE cmd,void *buff)
 {
-	return  RES_OK;
+    return  RES_OK;
 }
 #if _USE_IOCTL
 DRESULT disk_ioctl (
-	BYTE pdrv,		/* Physical drive nmuber (0..) */
-	BYTE cmd,		/* Control code */
-	void *buff		/* Buffer to send/receive control data */
+    BYTE pdrv,        /* Physical drive nmuber (0..) */
+    BYTE cmd,        /* Control code */
+    void *buff        /* Buffer to send/receive control data */
 )
 {
-	
-		// post-process here
+    
+        // post-process here
 
         return MMC_disk_ioctl(cmd, buff);
 
@@ -134,5 +134,5 @@ DRESULT disk_ioctl (
 #endif
 DWORD get_fattime()
 {
-	return 0;
+    return 0;
 }

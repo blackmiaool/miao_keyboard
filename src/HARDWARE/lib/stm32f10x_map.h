@@ -235,7 +235,7 @@ typedef struct
 typedef struct
 {
   vu32 IDCODE;
-  vu32 CR;	
+  vu32 CR;    
 }DBGMCU_TypeDef;
 
 /*------------------------ DMA Controller ------------------------------------*/

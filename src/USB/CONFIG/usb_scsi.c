@@ -19,7 +19,7 @@
 #include "mass_mal.h"
 #include "usb_bot.h"
 #include "usb_regs.h"
-#include "memory.h"	    
+#include "memory.h"        
 #include "platform_config.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -30,7 +30,7 @@
 extern u8 Bot_State;
 extern Bulk_Only_CBW CBW;
 extern Bulk_Only_CSW CSW;
-								  
+                                  
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -348,7 +348,7 @@ void SCSI_Format_Cmd(u8 lun)
     Set_CSW (CSW_CMD_FAILED, SEND_CSW_ENABLE);
     Bot_Abort(DIR_IN);
     return;
-  }		   
+  }           
 }
 /*******************************************************************************
 * Function Name  : SCSI_Invalid_Cmd
