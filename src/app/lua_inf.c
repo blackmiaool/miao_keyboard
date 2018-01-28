@@ -130,9 +130,11 @@ static int lua_output(lua_State *L)
 {
     u8 buf[8];
     for (u8 i = 0; i < 8; i++)
-    {
+    {        
         buf[i] = lua_tointeger(L, i + 1);
+        // printf("%d,",buf[i]);
     }
+    // printf("\n");
     keyboard_process(buf);
     return 0;
 }
@@ -274,6 +276,7 @@ static u8 lua_invoke_main()
 
 static int traceback(lua_State *L)
 {
+    printf("traceback!!\n");
     lua_getglobal(L, "debug");
     lua_getfield(L, -1, "traceback");
     lua_pushvalue(L, 1);
