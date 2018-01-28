@@ -19,10 +19,11 @@ static int restart_keyboard(lua_State *L)
     SCB->AIRCR = 0x05FA0000 | (u32)0x04;
     return 0;
 }
-static void handle_lua_err(const char *title){
+static void handle_lua_err(const char *title)
+{
     lua_type(current_Lua, -1);
     const char *err = lua_tostring(current_Lua, -1);
-    printf("Lua Error(%s):\n%s\n",title, err);
+    printf("Lua Error(%s):\n%s\n", title, err);
 }
 
 u8 lua_handle(key_t *buf)
@@ -130,7 +131,7 @@ static int lua_output(lua_State *L)
 {
     u8 buf[8];
     for (u8 i = 0; i < 8; i++)
-    {        
+    {
         buf[i] = lua_tointeger(L, i + 1);
         // printf("%d,",buf[i]);
     }
@@ -286,7 +287,7 @@ static int traceback(lua_State *L)
     return 1;
 }
 
-extern void print_free_memory(const char*);
+extern void print_free_memory(const char *);
 void lua_init()
 {
     if (current_Lua)
