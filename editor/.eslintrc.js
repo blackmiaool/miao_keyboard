@@ -51,6 +51,9 @@ module.exports = {
     "arrow-parens": 0,
     "quotes": 0,
     "comma-dangle": 0,
-    "max-len": 0
+    "max-len": 0,
+    "indent": 0,
+    "no-loop-func": 0,
+    "no-param-reassign": 0
   }
 }
