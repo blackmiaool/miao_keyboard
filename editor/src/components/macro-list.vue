@@ -1,11 +1,12 @@
 <template>
 <div class="table-wrap">
-  <table>
+  <table class="table table-striped">
     <thead>
       <tr >
         <th>Modifiers</th>
         <th>Key</th>
         <th>Expression</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -15,6 +16,16 @@
         </td>
         <td class="normal-key">{{li.key}}</td>
         <td class="expression"><Expression :expression="li.expression"/></td>
+        <td >
+          <span class="hover">
+          <button class="btn btn-info btn-sm">
+            <i class="fa fa-edit"></i>
+            Edit</button>
+          <button class="btn btn-danger btn-sm">
+            <i class="fa fa-trash"></i>
+            Delete</button>
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -29,17 +40,31 @@
 .table-wrap {
   text-align: center;
 }
-table {
+.table {
+  max-width: 1000px;
   margin: auto;
+  td {
+    &.normal-key {
+      vertical-align: middle;
+    }
+    vertical-align: middle;
+    padding: 3px;
+  }
+  .hover {
+    visibility: hidden;
+  }
   tr:hover {
-    background-color: #eee;
+    .hover {
+      visibility: visible;
+    }
   }
 }
 .modifier {
   margin: 2px;
-  border: 1px solid #2c3e50;
-  background-color: rgba(44, 62, 80, 0.1);
-  border-radius: 3px;
+  border: 2px solid #563d7c;
+  color: #563d7c;
+  font-weight: bold;
+  border-radius: 6px;
   padding: 3px 5px;
   display: inline-block;
 }

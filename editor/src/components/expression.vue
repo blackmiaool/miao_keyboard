@@ -43,17 +43,20 @@ section {
   margin: 1px 3px;
 
   > span {
-    padding: 3px 5px;
+    padding: 3px 7px;
     border-radius: 3px;
     cursor: default;
     vertical-align: middle;
+    line-height: 19px;
     &.print-section {
       border: 1px solid #555;
       color: #333;
     }
     &.press-toggle-section {
-      border: 1px solid #2c3e50;
-      background-color: rgba(44, 62, 80, 0.1);
+      border: 2px solid #563d7c;
+      color: #563d7c;
+      font-weight: bold;
+      border-radius: 6px;
     }
     &.press-key-section {
       display: inline-block;

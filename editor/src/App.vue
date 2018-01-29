@@ -7,6 +7,7 @@
 
 <script>
 require("./assets/css/font-awesome.min.css");
+require("./assets/css/bootstrap.min.css");
 
 export default {
   name: "App"
