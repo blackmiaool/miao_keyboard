@@ -1,4 +1,4 @@
-import Expression from "@/components/expression";
+import MacroLine from "@/components/macro-line";
 
 const config = `!<+a::blackmiaool
 ^!+a::qk333333
@@ -170,7 +170,7 @@ const list = config
     .filter(line => line);
 
 export default {
-    name: "HelloWorld",
+    name: "MacroList",
     data() {
         return {
             msg: "Welcome to Your Vue.js App",
@@ -178,6 +178,6 @@ export default {
         };
     },
     components: {
-        Expression
+        MacroLine
     }
 };
