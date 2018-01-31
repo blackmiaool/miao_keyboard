@@ -1,4 +1,5 @@
 import MacroLine from "@/components/macro-line";
+import Expression from "@/components/expression";
 
 const config = `!<+a::blackmiaool
 ^!+a::qk333333
@@ -168,7 +169,7 @@ const list = config
         return ret;
     })
     .filter(line => line);
-
+console.log('list', list);
 export default {
     name: "MacroList",
     data() {
@@ -178,6 +179,7 @@ export default {
         };
     },
     components: {
-        MacroLine
+        MacroLine,
+        Expression
     }
 };
