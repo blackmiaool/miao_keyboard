@@ -4,7 +4,6 @@ import MacroList from '@/components/macro-list.vue';
 
 Vue.use(Router);
 
-console.log('MacroList', MacroList);
 export default new Router({
   routes: [
     {

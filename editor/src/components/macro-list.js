@@ -41,11 +41,26 @@ const config = `!<+a::blackmiaool
 # !: alt
 # +: shift
 # #: win`;
-const modifierMap = {
+
+const shortModifierMap = {
     "^": "Ctrl",
     "!": "Alt",
     "+": "Shift",
     "#": "Win"
+};
+const modifierMap = {
+    Ctrl: 1 + 16,
+    Shift: 2 + 32,
+    Alt: 4 + 64,
+    Win: 8 + 128,
+    LCtrl: 1,
+    LShift: 2,
+    LAlt: 4,
+    LWin: 8,
+    RCtrl: 16,
+    RShift: 32,
+    RAlt: 64,
+    RWin: 128
 };
 const printableKeyMap = {
     leftbracket: '{',
@@ -104,10 +119,10 @@ function matchSubPattern(expression, patterns) {
                             } else if (arr[0] === '>') {
                                 modifier += 'R';
                             } else {
-                                modifier += modifierMap[arr[0]];
+                                modifier += shortModifierMap[arr[0]];
                             }
                             if (arr[1]) {
-                                modifier += modifierMap[arr[1]];
+                                modifier += shortModifierMap[arr[1]];
                             }
                             return modifier;
                         }).join('+');
@@ -143,7 +158,7 @@ function modifier2PlainText(modifier) {
     } else if (modifier[0] === ">") {
         ret += "R";
     }
-    ret += modifierMap[modifier[modifier.length - 1]];
+    ret += shortModifierMap[modifier[modifier.length - 1]];
     return ret;
 }
 const list = config
@@ -163,7 +178,8 @@ const list = config
             expression: matchSubPattern(match[3], [
                 { reg: /^[^{}]+/, mode: "print" },
                 { reg: /^{([A-Za-z]+)}/, mode: 'press-key' },
-                { reg: /^{([^-]+)-([\da-zA-Z]+)}/, mode: 'press-toggle' }])
+                { reg: /^{([^-]+)-([\da-zA-Z]+)}/, mode: 'press-toggle' }]),
+            editing: {},
         };
 
         return ret;
@@ -175,7 +191,8 @@ export default {
     data() {
         return {
             msg: "Welcome to Your Vue.js App",
-            list
+            list,
+            modifierMap,
         };
     },
     components: {

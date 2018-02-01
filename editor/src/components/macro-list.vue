@@ -1,6 +1,24 @@
 <template>
     <div class="comp-macro-list table-wrap">
         <el-table :data="list" stripe class="table">
+            <el-table-column type="expand">
+                <template slot-scope="scope" align="left">
+                    <el-form ref="form" label-width="120px">
+                        <el-form-item label="Modifiers">
+                            <el-select v-model="scope.row.editing.modifiers" multiple placeholder="Select">
+                                <el-option v-for="(value,modifier) in modifierMap" :key="value" :label="modifier" :value="value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="Key">
+                            <el-input v-model="scope.row.editing.key" style="width:220px;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Expression">
+                            <el-input v-model="scope.row.editing.key" style="width:220px;"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column label="Modifiers" align="left" width="180">
                 <template slot-scope="scope">
                     <span v-for="modifier in scope.row.modifiers" v-bind:key="modifier" class="modifier">
@@ -8,16 +26,16 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="key" label="Key" width="60" align="center">
+            <el-table-column prop="key" label="Key" width="80" align="center" sortable>
             </el-table-column>
             <el-table-column label="Expression">
                 <template slot-scope="scope">
                     <Expression :expression="scope.row.expression" />
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="Action" align="center" width="220">
+            <el-table-column label="Action" align="center" width="220">
                 <template slot-scope="scope">
-                    <span class="hover">
+                    <span class="miao-hover">
                         <el-button type="success" size="mini" @click="$emit('edit')">
                             <i class="fa fa-edit"></i> Edit</el-button>
 
@@ -45,6 +63,7 @@
 }
 .table {
     border-radius: 5px;
+    text-align: left;
 }
 .modifier {
     margin: 2px;
@@ -55,12 +74,12 @@
     padding: 3px 5px;
     display: inline-block;
 }
-.hover {
+.miao-hover {
     visibility: hidden;
     opacity: 0;
 }
 tr:hover {
-    .hover {
+    .miao-hover {
         visibility: visible;
         opacity: 1;
     }

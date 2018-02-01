@@ -1,20 +1,20 @@
 <template>
-<div class="root">
-<section v-for="(section,i) in expression" :key="i">
-    <span v-if="section.mode==='print'" :title="`print ${section.value}`" class="print-section" >
-        {{section.value}}
-    </span>
-    <span v-if="section.mode==='press-key'" :title="'Press '+upperCaseFirst(section.value)+ ' Key'" class="press-key-section el-button--primary" >
-       <i class="fa fa-gavel" aria-hidden="true"></i>
-       {{upperCaseFirst(section.value)}}
-    </span>
-    <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${section.value.text} ${section.value.action}`">
-      <i v-if="section.value.action==='down'" class="fa fa-hand-o-down" aria-hidden="true"></i>
-      <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-o-up"></i>
-        {{section.value.text}}
-    </span>
-</section>
-</div>
+    <div class="root">
+        <section v-for="(section,i) in expression" :key="i">
+            <span v-if="section.mode==='print'" :title="`print ${section.value}`" class="print-section">
+                {{section.value}}
+            </span>
+            <span v-if="section.mode==='press-key'" :title="'Press '+upperCaseFirst(section.value)+ ' Key'" class="press-key-section el-button--primary">
+                <i class="fa fa-gavel" aria-hidden="true"></i>
+                {{upperCaseFirst(section.value)}}
+            </span>
+            <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${section.value.text} ${section.value.action}`">
+                <i v-if="section.value.action==='down'" class="fa fa-hand-o-down" aria-hidden="true"></i>
+                <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-o-up"></i>
+                {{section.value.text}}
+            </span>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -36,7 +36,7 @@ export default {
 <style scoped lang="less">
 .root {
     text-align: left;
-    padding: 2px 20px;
+    padding: 2px 5px;
 }
 section {
     display: inline-block;
