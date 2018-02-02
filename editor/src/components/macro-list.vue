@@ -3,20 +3,7 @@
         <el-table :data="list" stripe class="table">
             <el-table-column type="expand">
                 <template slot-scope="scope" align="left">
-                    <el-form ref="form" label-width="120px">
-                        <el-form-item label="Modifiers">
-                            <el-select v-model="scope.row.editing.modifiers" multiple placeholder="Select">
-                                <el-option v-for="(value,modifier) in modifierMap" :key="value" :label="modifier" :value="value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="Key">
-                            <el-input v-model="scope.row.editing.key" style="width:220px;"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Expression">
-                            <el-input v-model="scope.row.editing.key" style="width:220px;"></el-input>
-                        </el-form-item>
-                    </el-form>
+                    <RuleEditor :data="scope.row.editing" />
                 </template>
             </el-table-column>
             <el-table-column label="Modifiers" align="left" width="180">

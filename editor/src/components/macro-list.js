@@ -1,5 +1,10 @@
 import MacroLine from "@/components/macro-line";
 import Expression from "@/components/expression";
+import RuleEditor from "@/components/rule-editor";
+import {
+    shortModifierMap,
+    modifierMap
+} from "@/common";
 
 const config = `!<+a::blackmiaool
 ^!+a::qk333333
@@ -42,26 +47,7 @@ const config = `!<+a::blackmiaool
 # +: shift
 # #: win`;
 
-const shortModifierMap = {
-    "^": "Ctrl",
-    "!": "Alt",
-    "+": "Shift",
-    "#": "Win"
-};
-const modifierMap = {
-    Ctrl: 1 + 16,
-    Shift: 2 + 32,
-    Alt: 4 + 64,
-    Win: 8 + 128,
-    LCtrl: 1,
-    LShift: 2,
-    LAlt: 4,
-    LWin: 8,
-    RCtrl: 16,
-    RShift: 32,
-    RAlt: 64,
-    RWin: 128
-};
+
 const printableKeyMap = {
     leftbracket: '{',
     rightbracket: '}',
@@ -185,7 +171,7 @@ const list = config
         return ret;
     })
     .filter(line => line);
-console.log('list', list);
+console.log('list2', list);
 export default {
     name: "MacroList",
     data() {
@@ -197,6 +183,7 @@ export default {
     },
     components: {
         MacroLine,
-        Expression
+        Expression,
+        RuleEditor
     }
 };
