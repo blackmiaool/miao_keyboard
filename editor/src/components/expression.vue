@@ -11,19 +11,40 @@
             <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${section.value.text} ${section.value.action}`">
                 <i v-if="section.value.action==='down'" class="fa fa-hand-o-down" aria-hidden="true"></i>
                 <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-o-up"></i>
-                {{section.value.text}}
+                {{getModifierText(section.value.modifiers)}}
             </span>
         </section>
     </div>
 </template>
 
 <script>
+import { shortModifierMap } from "@/common";
+
 export default {
     name: "Expression",
     props: ["expression"],
     methods: {
         upperCaseFirst(text) {
             return text.replace(/^[\s\S]/, ch => ch.toUpperCase());
+        },
+        getModifierText(modifiers) {
+            const text = modifiers
+                .map(arr => {
+                    let modifier = "";
+                    if (arr[0] === "<") {
+                        modifier += "L";
+                    } else if (arr[0] === ">") {
+                        modifier += "R";
+                    } else {
+                        modifier += shortModifierMap[arr[0]];
+                    }
+                    if (arr[1]) {
+                        modifier += shortModifierMap[arr[1]];
+                    }
+                    return modifier;
+                })
+                .join("+");
+            return text;
         }
     },
     data() {
@@ -36,7 +57,7 @@ export default {
 <style scoped lang="less">
 .root {
     text-align: left;
-    padding: 2px 5px;
+    padding: 2px 0px;
 }
 section {
     display: inline-block;

@@ -1,5 +1,6 @@
 import MacroLine from "@/components/macro-line";
-import Expression from "@/components/expression";
+import ExpressionComp from "@/components/expression";
+import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import {
     shortModifierMap,
@@ -48,95 +49,6 @@ const config = `!<+a::blackmiaool
 # #: win`;
 
 
-const printableKeyMap = {
-    leftbracket: '{',
-    rightbracket: '}',
-};
-function match2arr(str, reg) {
-    const ret = [];
-    let result;
-    // eslint-disable-next-line no-cond-assign
-    while (result = reg.exec(str)) {
-        ret.push(result.slice(1));
-    }
-    return ret;
-}
-function matchSubPattern(expression, patterns) {
-    const output = [];
-    let pos = 0;
-    expression = expression.trim();
-    while (pos !== expression.length) {
-        const strThis = expression.substr(pos);
-        const found = patterns.some(({ reg, mode }) => {
-            const match = strThis.match(reg);
-            if (match) {
-                let foundPrint = false;
-                const last = output[output.length - 1];
-
-                if (mode === 'print') {
-                    if (last && last.mode === 'print') {
-                        last.value += match[0];
-                        foundPrint = true;
-                    }
-                } else if (mode === 'press-key') {
-                    const toPrint = printableKeyMap[match[1]];
-
-                    if (toPrint) {
-                        foundPrint = true;
-                        if (last && last.mode === 'print') {
-                            last.value += toPrint;
-                        } else {
-                            output.push({ value: match[0], mode: 'print' });
-                        }
-                    }
-                }
-                if (!foundPrint) {
-                    if (mode === 'print') {
-                        output.push({ value: match[0], mode });
-                    } else if (mode === 'press-key') {
-                        output.push({ value: match[1], mode });
-                    } else if (mode === 'press-toggle') {
-                        const modifiers = match2arr(match[1], /([<>]?)([\^+!#])/g);
-                        const action = match[2];
-                        const text = modifiers.map((arr) => {
-                            let modifier = "";
-                            if (arr[0] === '<') {
-                                modifier += "L";
-                            } else if (arr[0] === '>') {
-                                modifier += 'R';
-                            } else {
-                                modifier += shortModifierMap[arr[0]];
-                            }
-                            if (arr[1]) {
-                                modifier += shortModifierMap[arr[1]];
-                            }
-                            return modifier;
-                        }).join('+');
-
-                        output.push({
-                            value: {
-                                modifiers,
-                                action,
-                                text
-                            },
-                            mode
-                        });
-                    }
-                }
-
-
-                pos += match[0].length;
-                return true;
-            }
-            return false;
-        });
-        if (!found) {
-            console.warn('invalid expression', expression, pos);
-            break;
-        }
-    }
-    return output;
-}
 function modifier2PlainText(modifier) {
     let ret = "";
     if (modifier[0] === "<") {
@@ -161,10 +73,7 @@ const list = config
             key: match[2].toUpperCase(),
             // local key_press_pattern="{([^-]+)-([%d%a]+)}";
             // "[^{}]+","{%a+}",
-            expression: matchSubPattern(match[3], [
-                { reg: /^[^{}]+/, mode: "print" },
-                { reg: /^{([A-Za-z]+)}/, mode: 'press-key' },
-                { reg: /^{([^-]+)-([\da-zA-Z]+)}/, mode: 'press-toggle' }]),
+            expression: (new Expression(match[3])).data,
             editing: {},
         };
 
@@ -183,7 +92,7 @@ export default {
     },
     components: {
         MacroLine,
-        Expression,
+        ExpressionComp,
         RuleEditor
     }
 };

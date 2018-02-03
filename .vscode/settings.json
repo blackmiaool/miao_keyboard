@@ -22,5 +22,23 @@
     "c-cpp-flylint.flexelint.enable": false,
     "editor.formatOnSave": true,
     "editor.tabSize": 4,
-    "vetur.format.defaultFormatter.html": "js-beautify-html"
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "eslint.validate": [
+        {
+            "language": "vue",
+            "autoFix": true
+        },
+        {
+            "language": "html",
+            "autoFix": true
+        },
+        {
+            "language": "javascript",
+            "autoFix": true
+        },
+        {
+            "language": "javascriptreact",
+            "autoFix": true
+        }
+    ]
 }

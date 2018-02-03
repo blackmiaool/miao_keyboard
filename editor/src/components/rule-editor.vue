@@ -1,8 +1,8 @@
 <template>
     <div @keydown="onKeyDown">
-        <el-form ref="form" label-width="120px">
+        <el-form ref="form" label-width="100px">
             <el-form-item label="Modifiers">
-                <el-select v-model="data.modifiers" multiple placeholder="Select" @visible-change="visibleChange">
+                <el-select v-model="data.modifiers" multiple placeholder="Select" @visible-change="visibleChange" style="width:400px;">
                     <el-option v-for="(value,modifier) in modifierMap" :key="value" :label="modifier" :value="modifier">
                     </el-option>
                 </el-select>
@@ -11,7 +11,18 @@
                 <el-input v-model="data.key" style="width:220px;"></el-input>
             </el-form-item>
             <el-form-item label="Expression">
-                <el-input v-model="data.key" style="width:220px;"></el-input>
+                <div @keydown="onInputExpressionDown" @keyup="onInputExpressionUp">
+                    <el-input style="width:150px;color:white;" v-model="expressionInput" placeholder="Focus to input"></el-input>
+                    <el-checkbox v-model="blockModifier">BlockModifier</el-checkbox>
+                </div>
+                <ExpressionComp :expression="data.expression.data" />
+                <div>{{data.expression.toString()}}</div>
+            </el-form-item>
+            <el-form-item label="">
+
+            </el-form-item>
+            <el-form-item label="">
+
             </el-form-item>
         </el-form>
     </div>
@@ -19,19 +30,19 @@
 </template>
 
 <script>
-import { modifierMap } from "@/common";
+import ExpressionComp from "@/components/expression";
+import { modifierMap, code2modifier } from "@/common";
+import Expression from "@/expression";
 
-const code2modifier = {
-    ControlLeft: "LCtrl",
-    ControlRight: "RCtrl",
-    AltLeft: "LAlt",
-    AltRight: "RAlt",
-    ShiftLeft: "LShift",
-    ShiftRight: "RShift",
-    WinLeft: "LWin",
-    WinRight: "RWin"
-};
 export default {
+    created() {
+        this.cachedData = JSON.parse(JSON.stringify(this.cacheData));
+        console.log("this.cachedData", this.cachedData);
+        Object.assign(this.data, this.cachedData);
+
+        this.data.expression = new Expression(this.data.expression);
+        console.log("mounted", this.data);
+    },
     methods: {
         visibleChange(state) {
             this.acceptingModifer = state;
@@ -45,10 +56,39 @@ export default {
             console.log("modifier", modifier);
             if (modifier) {
                 const set = new Set(this.data.modifiers);
-                set.add(modifier);
+
+                if (set.has(modifier)) {
+                    set.delete(modifier);
+                } else {
+                    set.add(modifier);
+                }
                 this.data.modifiers = [...set];
-                console.log(1, this.data.modifiers);
             }
+            e.preventDefault();
+        },
+        onInputExpressionUp(e) {
+            if (code2modifier[e.code]) {
+                if (!this.blockModifier) {
+                    this.data.expression.addModifier(e.code, "up");
+                }
+            }
+        },
+        onInputExpressionDown(e) {
+            console.log("e", e);
+            const key = e.key;
+            if (key.match(/^[a-zA-Z0-9]$/) || key.match(/^[\S]$/)) {
+                this.data.expression.addPrint(key);
+            } else if (code2modifier[e.code]) {
+                if (!this.blockModifier) {
+                    this.data.expression.addModifier(e.code, "down");
+                }
+            } else {
+                this.data.expression.addPress(key);
+            }
+            this.$nextTick(() => {
+                this.expressionInput = "";
+            });
+            e.preventDefault();
         }
     },
     watch: {
@@ -59,12 +99,28 @@ export default {
             deep: true
         }
     },
-    props: ["data"],
+    props: {
+        cacheData: {
+            type: Object
+        }
+    },
     data() {
         return {
+            cachedData: undefined,
             modifierMap,
-            acceptingModifer: false
+            acceptingModifer: false,
+            expressionInput: "",
+            expression: [],
+            data: {
+                modifiers: undefined,
+                key: undefined,
+                expression: undefined
+            },
+            blockModifier: true
         };
+    },
+    components: {
+        ExpressionComp
     }
 };
 </script>

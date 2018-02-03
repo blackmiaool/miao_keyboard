@@ -3,7 +3,7 @@
         <el-table :data="list" stripe class="table">
             <el-table-column type="expand">
                 <template slot-scope="scope" align="left">
-                    <RuleEditor :data="scope.row.editing" />
+                    <RuleEditor :cache-data="scope.row" />
                 </template>
             </el-table-column>
             <el-table-column label="Modifiers" align="left" width="180">
@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column label="Expression">
                 <template slot-scope="scope">
-                    <Expression :expression="scope.row.expression" />
+                    <ExpressionComp :expression="scope.row.expression" />
                 </template>
             </el-table-column>
             <el-table-column label="Action" align="center" width="220">
