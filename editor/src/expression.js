@@ -1,13 +1,5 @@
-import { printableKeyMap, match2arr, code2short } from "@/common";
+import { printableKeyMap, match2arr, code2short, shiftTable, ascii2usb } from "@/common";
 
-const ascii2usb = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    44, 30, 52, 32, 33, 34, 36, 52, 38, 39, 37, 46, 54, 86, 55, 56,
-    39, 30, 31, 32, 33, 34, 35, 36, 37, 38, 51, 51, 54, 46, 55, 56,
-    31, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0, 0, 0,
-    53, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 50, 0, 53, 0];
 
 const key2usb = {
     Enter: 40,
@@ -183,7 +175,11 @@ export default class Expression {
                 }
                 case "print":
                     return item.value.split("").map((char) => {
+                        const isShift = shiftTable[char.charCodeAt(0)];
                         const usbCode = ascii2usb[char.charCodeAt(0)];
+                        if (isShift) {
+                            return `${shortMap["<+"]},${usbCode}`;
+                        }
                         if (pressingModifierCode === 0) {
                             return `${usbCode}`;
                         }

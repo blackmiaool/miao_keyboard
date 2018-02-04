@@ -8,7 +8,7 @@ local ahk_data={};
 -- key_index: (most user may modify it) record 3 modes' usb value in a key map
 -- asciiusb: (user shouldn't modify it) ascii value to usb value
 local key_index_data=init_datasheet("config/key_index.txt",3); 
-local ascii2usb_data=init_datasheet("config/ascii2usb.txt",3);
+-- init_datasheet("config/ascii2usb.txt",3);
 
 -- count of rows and column in the "key_index.txt" file
 local rows=5;
@@ -31,10 +31,8 @@ local key_map_mode=1;
 
 -- use to solve linux capslock delay bug
 local capslockCode=57;
-local clear_key,single_key,get_bit,modifier_compare,output_ahk,media_output,media_output,modifiers2value,ahk_parse,match_sub_pattern,press_ascii,press_key,press_string,whole_press_key,mutate_modifiers,set_key_map_mode,key_input_underlying;
-function ascii2usb(ascii)
-    return read_datasheet(ascii2usb_data,ascii)
-end
+local clear_key,single_key,get_bit,modifier_compare,output_ahk,media_output,media_output,modifiers2value,ahk_parse,set_key_map_mode,key_input_underlying;
+
 
 function get_key_from_position(pos,index)
     if not index then
@@ -125,80 +123,29 @@ local media_map={
     [128]=0xe9,
     [129]=0xea,
 }
+local withModifierPattern="^(%d+),(%d+)$";
+local keyPattern="^(%d+)$";
 output_ahk= function (expression)
+    print(expression);
     clear_key();
-    local result= match_sub_pattern(expression,"[^{}]+","{%a+}",key_press_pattern);
-    -- parse expression into sections
-    for i,sub_express in ipairs(result) do
-        -- just print
-        if sub_express[1]==1 then
-            press_string(sub_express[2]);
-        -- press a key
-        elseif sub_express[1]==2 then
-            local str=string.sub(sub_express[2],2,-2);
-            if ahk_avaliable_function[str] then
-                ahk_avaliable_function[str]()
-            else
-                local index = get_key_index(str);
-                if index>0 then
-                    if index>127 then
-                        press_key(index-128,true);
-                    else
-                        press_key(index);
-                    end                    
-                else 
-                 
-                end                
-            end
-        -- modifier key down or key up                    
-        elseif sub_express[1]==3 then
-            for modifiers, operation in string.gmatch(sub_express[2], key_press_pattern) do
-                -- print('modifier',modifiers2value(modifiers),operation);
-                if operation == "down" then
-                    mutate_modifiers(modifiers,1);                    
-                elseif operation == "up" then
-                    mutate_modifiers(modifiers,-1);                    
-                end                
-            end            
-        end    
+    for section in string.gmatch(expression,"[^ ]+") do 
+        if string.match(section,withModifierPattern) then
+            local modifier,key = string.match(section,withModifierPattern);
+            single_key(tonumber(modifier),key);            
+        elseif string.match(section,keyPattern) then
+           
+            local key=string.match(section,keyPattern);
+            single_key(0,key);            
+        end        
+        delay(30); 
     end
-    pressing_modifier_map={};
-    pressing_modifier_value=0;
 end
 
 
-
-local modifier2val={
-    ["^"]=1+16,
-    ["+"]=2+32,
-    ["!"]=4+64,
-    ["#"]=8+128,
-    ["<^"]=1,
-    ["<+"]=2,
-    ["<!"]=4,
-    ["<#"]=8,
-    [">^"]=16,
-    [">+"]=32,
-    [">!"]=64,
-    [">#"]=128
-}
-local modifier_pattern="[<>]?[%^%+!#]";
-modifiers2value= function (modifiers)
-    local ret=0;
-    for modifier in string.gmatch(modifiers,modifier_pattern) do
-        ret = ret + modifier2val[modifier];
-    end
-    return ret;
-end
 ahk_parse= function (text_input)
-    for modifiers,key,expression in string.gmatch(text_input,"([%^%+!#<>]*)([%a%d]+)::(%g+)") do
-        local modifiers=modifiers2value(modifiers);
-        local key_index;
-        if string.match(key,"^%d%d$") or string.match(key,"^%d%d%d$") then
-            key_index=tonumber(key);
-        else
-            key_index=ascii2usb(string.byte(key));
-        end
+    for modifiers,key,expression in string.gmatch(text_input,"(%d+)@(%d+)@([^\n]+)") do
+        local key_index=tonumber(key);
+        
         if not ahk_data[key_index] then
             ahk_data[key_index]={}
         end
@@ -207,102 +154,22 @@ ahk_parse= function (text_input)
 end
 
 
-match_sub_pattern= function (str,...)
-    local output = {};
-    local patterns={...};
-    local current = 1;
-    while pos ~= #str do
-        local pos;
-        local kind;
-        for i,p in ipairs(patterns) do
-            local l1,l2=string.find(str,p,current);
-            if l1==current then
-                pos=l2;
-                kind=i;
-                break;
-            end
-        end
-        if pos then
-            table.insert(output,{kind,string.sub(str,current,pos)})
-            current=pos+1;
-        else
-            break;
-        end
-    end
-    return output;
-end
 
-local pressing_modifier_map={};
-local pressing_modifier_value=0;
 
 function clear_key()
     single_key(0,0);    
 end
 
 single_key=function(modifier,key)
-    output(bit32.bor(modifier,pressing_modifier_value),0,key,0,0,0,0,0)
+    output(modifier,0,key,0,0,0,0,0)
 end
 
-press_string= function (str)
-    clear_key();
-    for i=1,#str do
-        press_ascii(str[i]);
-        clear_key();
-        delay(30);
-    end
-end
 
-press_key= function (index,shift)
-    clear_key();
-    local modifier=0;
-    if shift then
-        modifier=2;
-    end
-    single_key(modifier,index);
-end
 
-press_ascii= function (ascii)
-    local byte=string.byte(ascii);
-    
-    if get_shift(byte)==0 then
-        single_key(0,ascii2usb(byte));
-    else
-        single_key(2,ascii2usb(byte));
-    end
-end
-
-whole_press_key= function (key)
-    press_ascii(key);
-    delay(30);
-    clear_key();
-    delay(30);
-end
 
 local key_press_pattern="{([^-]+)-([%d%a]+)}";
 
 
-mutate_modifiers= function (modifiers,mutation)
-    function mutate_modifier(modifier)
-        if not pressing_modifier_map[modifier] then
-            pressing_modifier_map[modifier]=0;    
-        end        
-        pressing_modifier_map[modifier]=pressing_modifier_map[modifier]+mutation;        
-    end
-    for modifier in string.gmatch(modifiers,modifier_pattern) do
-        if modifier[1]=="<" or modifier[1]==">" then
-            mutate_modifier(modifier);            
-        else 
-            mutate_modifier("<"..modifier);
-            mutate_modifier(">"..modifier);            
-        end
-    end    
-    pressing_modifier_value=0;
-    for modifier,value in pairs(pressing_modifier_map) do
-        if value>0 then
-            pressing_modifier_value=bit32.bor(pressing_modifier_value,modifier2val[modifier]);            
-        end        
-    end
-end
 
 media_output= function (value)
     mouse_output(3,value%256,math.floor(value/256),0,0);
@@ -403,9 +270,10 @@ function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)
     return true;
 end
 function main()
-    collectgarbage();
+    
     
     local ahk_file=read_file("config/config.txt"); 
     ahk_parse(ahk_file);
-    ahk_file=nil;    
+    ahk_file=nil;  
+    collectgarbage();  
 end

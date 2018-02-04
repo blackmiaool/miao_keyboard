@@ -5,7 +5,8 @@ import RuleEditor from "@/components/rule-editor";
 import {
     shortModifierMap,
     modifierMap,
-    code2short
+    ascii2usb,
+    code2usb
 } from "@/common";
 
 let config = `!<+a::blackmiaool
@@ -34,7 +35,6 @@ let config = `!<+a::blackmiaool
 <+w::ilwt.science
 <+o::const{space}
 <+u::sudo{space}apt-get{space}install
-<^<!r::{restart}
 <+n::(()=>{leftbracket}{rightbracket});{left}{left}{left}{enter}
 140::{<^-down}{left}
 141::{<^-down}{right}
@@ -115,10 +115,17 @@ export default {
         exportConfig() {
             console.log(this.list);
             const txt = this.list.map((li) => {
-                const modifiers = li.modifiers.map((modifier) => {
-                    return code2short[modifier];
-                }).join('');
-                return `${modifiers}${li.key}@${li.expression.toPlainText()}`;
+                const modifiers = li.modifiers.reduce((p, modifier) => {
+                    // eslint-disable-next-line no-bitwise
+                    return p | code2usb[modifier];
+                }, 0);
+                let keyCode;
+                if (li.key.match(/^\d{2,3}$/)) {
+                    keyCode = li.key;
+                } else {
+                    keyCode = ascii2usb[li.key.charCodeAt(0)];
+                }
+                return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
             }).join('\n');
             // console.log(JSON.stringify(this.list));
             console.log(txt);
