@@ -9,8 +9,6 @@ import {
 } from "@/common";
 
 let config = `!<+a::blackmiaool
-^!+a::qk333333
-<+d::sll{space}l
 >^w::{esc}
 >^n::{down}
 >^p::{up}
@@ -26,10 +24,8 @@ let config = `!<+a::blackmiaool
 <+f::function
 <+l::local{space} 
 <+r::return{space}
-<+q::qk333333
 >+q::~
 >+w::\` 
-<+s::sunqimin
 <+i::@xiaomi.com
 <+b::blackmiaool
 <+c::console.log(){left}
@@ -122,7 +118,7 @@ export default {
                 const modifiers = li.modifiers.map((modifier) => {
                     return code2short[modifier];
                 }).join('');
-                return `${modifiers}${li.key}::${li.expression.toPlainText()}`;
+                return `${modifiers}${li.key}@${li.expression.toPlainText()}`;
             }).join('\n');
             // console.log(JSON.stringify(this.list));
             console.log(txt);
