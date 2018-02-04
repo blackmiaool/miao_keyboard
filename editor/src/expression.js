@@ -1,5 +1,49 @@
 import { printableKeyMap, match2arr, code2short } from "@/common";
 
+const ascii2usb = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    44, 30, 52, 32, 33, 34, 36, 52, 38, 39, 37, 46, 54, 86, 55, 56,
+    39, 30, 31, 32, 33, 34, 35, 36, 37, 38, 51, 51, 54, 46, 55, 56,
+    31, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0, 0, 0,
+    53, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 50, 0, 53, 0];
+
+const key2usb = {
+    Enter: 40,
+    Escape: 41,
+    Backspace: 42,
+    Tab: 43,
+    Space: 44,
+    CapsLock: 57,
+    F1: 58,
+    F2: 59,
+    F3: 60,
+    F4: 61,
+    F5: 62,
+    F6: 63,
+    F7: 64,
+    F8: 65,
+    F9: 66,
+    F10: 67,
+    F11: 68,
+    F12: 69,
+    PrintScreen: 70,
+    ScrollLock: 71,
+    Pause: 72,
+    Insert: 73,
+    Home: 74,
+    PageUp: 75,
+    Delete: 76,
+    End: 77,
+    PageDown: 78,
+    ArrowRight: 79,
+    ArrowLeft: 80,
+    ArrowDown: 81,
+    ArrowUp: 82,
+    NumLock: 83,
+};
+
 export default class Expression {
     constructor(rawText) {
         if (typeof rawText === 'string') {
@@ -108,6 +152,64 @@ export default class Expression {
     }
     toJSON() {
         return this.toString();
+    }
+    toPlainText() {
+        const shortMap = {
+            "^": 1 + 16,
+            "+": 2 + 32,
+            "!": 4 + 64,
+            "#": 8 + 128,
+            "<^": 1,
+            "<+": 2,
+            "<!": 4,
+            "<#": 8,
+            ">^": 16,
+            ">+": 32,
+            ">!": 64,
+            ">#": 128
+        };
+        let pressingModifierCode = 0;
+        return this.data.map((item) => {
+            switch (item.mode) {
+                case "press-key": {
+                    const usbCode = key2usb[item.value];
+                    if (!usbCode) {
+                        console.warn('unknown key');
+                    }
+                    if (pressingModifierCode === 0) {
+                        return `${usbCode}`;
+                    }
+                    return `${pressingModifierCode},${usbCode}`;
+                }
+                case "print":
+                    return item.value.split("").map((char) => {
+                        const usbCode = ascii2usb[char.charCodeAt(0)];
+                        if (pressingModifierCode === 0) {
+                            return `${usbCode}`;
+                        }
+                        return `${pressingModifierCode},${usbCode}`;
+                    }).join(' ');
+                case "press-toggle":
+                    {
+                        const modifierValue = item.value.modifiers.reduce((p, modifier) => {
+                            modifier = modifier.join('');
+                            // eslint-disable-next-line no-bitwise
+                            return p | shortMap[modifier];
+                        }, 0);
+                        if (item.value.action === 'down') {
+                            // eslint-disable-next-line no-bitwise
+                            pressingModifierCode |= modifierValue;
+                        } else {
+                            // eslint-disable-next-line no-bitwise
+                            pressingModifierCode &= ~modifierValue;
+                        }
+                        return `${pressingModifierCode},0`;
+                    }
+                default:
+                    console.warn('unknown mode', item.mode);
+                    return '';
+            }
+        }).join(' ');
     }
     toString() {
         return this.data.map((item) => {

@@ -1,9 +1,9 @@
 <template>
     <div class="comp-macro-list table-wrap">
-        <el-table :data="list" stripe class="table">
+        <el-table :data="list" stripe class="table" ref="table">
             <el-table-column type="expand">
                 <template slot-scope="scope" align="left">
-                    <RuleEditor :cache-data="scope.row" />
+                    <RuleEditor :value="scope.row" @input="onSave(scope.row,$event)" />
                 </template>
             </el-table-column>
             <el-table-column label="Modifiers" align="left" width="180">
@@ -23,7 +23,7 @@
             <el-table-column label="Action" align="center" width="220">
                 <template slot-scope="scope">
                     <span class="miao-hover">
-                        <el-button type="success" size="mini" @click="$emit('edit')">
+                        <el-button type="success" size="mini" @click="edit(scope.row)">
                             <i class="fa fa-edit"></i> Edit</el-button>
 
                         <el-button type="danger" size="mini" @click="$emit('delete')">
@@ -32,6 +32,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-button type="success" @click="exportConfig">Export</el-button>
     </div>
 </template>
 

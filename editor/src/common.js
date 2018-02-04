@@ -1,29 +1,34 @@
 export const shortModifierMap = {
-    "^": "Ctrl",
+    "^": "Control",
     "!": "Alt",
     "+": "Shift",
     "#": "Meta"
 };
+
 export const code2short = {
     ControlLeft: "<^",
     ControlRight: ">^",
+    Control: "^",
     AltLeft: "<!",
     AltRight: ">!",
+    Alt: "!",
     ShiftLeft: "<+",
     ShiftRight: ">+",
+    Shift: "+",
     MetaLeft: "<#",
-    MetaRight: ">#"
+    MetaRight: ">#",
+    Meta: "#"
 };
 export const modifierMap = {
-    Ctrl: 1 + 16,
+    Control: 1 + 16,
     Shift: 2 + 32,
     Alt: 4 + 64,
     Win: 8 + 128,
-    LCtrl: 1,
+    LControl: 1,
     LShift: 2,
     LAlt: 4,
     LMeta: 8,
-    RCtrl: 16,
+    RControl: 16,
     RShift: 32,
     RAlt: 64,
     RMeta: 128
@@ -42,8 +47,8 @@ export function match2arr(str, reg) {
     return ret;
 }
 export const code2modifier = {
-    ControlLeft: "LCtrl",
-    ControlRight: "RCtrl",
+    ControlLeft: "LControl",
+    ControlRight: "RControl",
     AltLeft: "LAlt",
     AltRight: "RAlt",
     ShiftLeft: "LShift",

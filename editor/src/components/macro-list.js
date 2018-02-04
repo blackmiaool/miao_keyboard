@@ -4,10 +4,11 @@ import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import {
     shortModifierMap,
-    modifierMap
+    modifierMap,
+    code2short
 } from "@/common";
 
-const config = `!<+a::blackmiaool
+let config = `!<+a::blackmiaool
 ^!+a::qk333333
 <+d::sll{space}l
 >^w::{esc}
@@ -47,16 +48,29 @@ const config = `!<+a::blackmiaool
 # !: alt
 # +: shift
 # #: win`;
-
+config = config
+    .replace(/{space}/g, "{Space}")
+    .replace(/{esc}/g, "{Escape}")
+    .replace(/{down}/g, "{ArrowDown}")
+    .replace(/{up}/g, "{ArrowUp}")
+    .replace(/{right}/g, "{ArrowRight}")
+    .replace(/{left}/g, "{ArrowLeft}")
+    .replace(/{home}/g, "{Home}")
+    .replace(/{end}/g, "{End}")
+    .replace(/{deleteforward}/g, "{Delete}")
+    .replace(/{pagedown}/g, "{PageDown}")
+    .replace(/{pageup}/g, "{PageUp}")
+    .replace(/{printscreen}/g, "{PrintScreen}")
+    .replace(/{enter}/g, "{Enter}");
 
 function modifier2PlainText(modifier) {
-    let ret = "";
+    let ret = '';
     if (modifier[0] === "<") {
-        ret += "L";
+        ret = "Left";
     } else if (modifier[0] === ">") {
-        ret += "R";
+        ret = "Right";
     }
-    ret += shortModifierMap[modifier[modifier.length - 1]];
+    ret = shortModifierMap[modifier[modifier.length - 1]] + ret;
     return ret;
 }
 const list = config
@@ -73,8 +87,7 @@ const list = config
             key: match[2].toUpperCase(),
             // local key_press_pattern="{([^-]+)-([%d%a]+)}";
             // "[^{}]+","{%a+}",
-            expression: (new Expression(match[3])).data,
-            editing: {},
+            expression: (new Expression(match[3])),
         };
 
         return ret;
@@ -89,6 +102,31 @@ export default {
             list,
             modifierMap,
         };
+    },
+    mounted() {
+        window.a = () => {
+            console.log(this.list);
+        };
+    },
+    methods: {
+        edit(row) {
+            this.$refs.table.toggleRowExpansion(row);
+        },
+        onSave(oldRow, newRow) {
+            Object.assign(oldRow, newRow);
+            this.$refs.table.toggleRowExpansion(oldRow);
+        },
+        exportConfig() {
+            console.log(this.list);
+            const txt = this.list.map((li) => {
+                const modifiers = li.modifiers.map((modifier) => {
+                    return code2short[modifier];
+                }).join('');
+                return `${modifiers}${li.key}::${li.expression.toPlainText()}`;
+            }).join('\n');
+            // console.log(JSON.stringify(this.list));
+            console.log(txt);
+        }
     },
     components: {
         MacroLine,

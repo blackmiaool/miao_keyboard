@@ -11,18 +11,16 @@
                 <el-input v-model="data.key" style="width:220px;"></el-input>
             </el-form-item>
             <el-form-item label="Expression">
-                <div @keydown="onInputExpressionDown" @keyup="onInputExpressionUp">
+                <div @keydown.prevent="onInputExpressionDown" @keyup="onInputExpressionUp">
                     <el-input style="width:150px;color:white;" v-model="expressionInput" placeholder="Focus to input"></el-input>
                     <el-checkbox v-model="blockModifier">BlockModifier</el-checkbox>
                 </div>
-                <ExpressionComp :expression="data.expression.data" />
+                <ExpressionComp :expression="data.expression" />
                 <div>{{data.expression.toString()}}</div>
+                <div>{{data.expression.toPlainText()}}</div>
             </el-form-item>
-            <el-form-item label="">
-
-            </el-form-item>
-            <el-form-item label="">
-
+            <el-form-item label="Key">
+                <el-button type="primary" @click="onSubmit">Save</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -36,7 +34,7 @@ import Expression from "@/expression";
 
 export default {
     created() {
-        this.cachedData = JSON.parse(JSON.stringify(this.cacheData));
+        this.cachedData = JSON.parse(JSON.stringify(this.value));
         console.log("this.cachedData", this.cachedData);
         Object.assign(this.data, this.cachedData);
 
@@ -75,6 +73,7 @@ export default {
         },
         onInputExpressionDown(e) {
             console.log("e", e);
+            console.log(e.key);
             const key = e.key;
             if (key.match(/^[a-zA-Z0-9]$/) || key.match(/^[\S]$/)) {
                 this.data.expression.addPrint(key);
@@ -88,7 +87,13 @@ export default {
             this.$nextTick(() => {
                 this.expressionInput = "";
             });
-            e.preventDefault();
+        },
+        onSubmit() {
+            if (this.data.key && this.data.key.length === 1) {
+                this.data.key = this.data.key.toUpperCase();
+            }
+            console.log(this.data);
+            this.$emit("input", this.data);
         }
     },
     watch: {
@@ -100,7 +105,7 @@ export default {
         }
     },
     props: {
-        cacheData: {
+        value: {
             type: Object
         }
     },

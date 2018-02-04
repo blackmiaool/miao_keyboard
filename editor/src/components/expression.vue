@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <section v-for="(section,i) in expression" :key="i">
+        <section v-for="(section,i) in expression.data" :key="i" style="line-height:28px;">
             <span v-if="section.mode==='print'" :title="`print ${section.value}`" class="print-section">
                 {{section.value}}
             </span>
