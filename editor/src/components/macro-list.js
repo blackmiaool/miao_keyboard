@@ -38,6 +38,9 @@ let config = `!<+a::blackmiaool
 <+n::(()=>{leftbracket}{rightbracket});{left}{left}{left}{enter}
 140::{<^-down}{left}
 141::{<^-down}{right}
+129::{VolumeDown}
+128::{VolumeUp}
+127::{Mute}
 # <: left modifier key
 # >: right modifier key
 # ^: ctrl

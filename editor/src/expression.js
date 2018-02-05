@@ -34,6 +34,16 @@ const key2usb = {
     ArrowDown: 81,
     ArrowUp: 82,
     NumLock: 83,
+
+};
+const media2usb = {
+    VolumeDown: 0xea,
+    VolumeUp: 0xe9,
+    Mute: 0xe2,
+    // macbook only
+    BrightDown: 0x70,
+    // macbook only
+    BrightUp: 0x6f
 };
 
 export default class Expression {
@@ -164,7 +174,12 @@ export default class Expression {
         return this.data.map((item) => {
             switch (item.mode) {
                 case "press-key": {
-                    const usbCode = key2usb[item.value];
+                    let usbCode;
+                    if (key2usb[item.value]) {
+                        usbCode = key2usb[item.value];
+                    } else if (media2usb[item.value]) {
+                        usbCode = `M${media2usb[item.value]}`;
+                    }
                     if (!usbCode) {
                         console.warn('unknown key');
                     }

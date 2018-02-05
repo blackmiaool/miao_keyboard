@@ -119,28 +119,36 @@ local media_map={
     [124]=0x70,
     [125]=0x6f,
     [126]=0x65,
-    [127]=0xe2,
-    [128]=0xe9,
-    [129]=0xea,
 }
+local pressed_media=false;
 local withModifierPattern="^(%d+),(%d+)$";
 local keyPattern="^(%d+)$";
+local mediaPattern="^M(%d+)$";
 output_ahk= function (expression)
-    print(expression);
     clear_key();
+    local modifier_this_turn=0;
+    local first=true;
     for section in string.gmatch(expression,"[^ ]+") do 
+        if not first then
+            single_key(modifier_this_turn,0);
+            delay(15);
+        end
         if string.match(section,withModifierPattern) then
             local modifier,key = string.match(section,withModifierPattern);
-            single_key(tonumber(modifier),key);            
-        elseif string.match(section,keyPattern) then
-           
+            single_key(tonumber(modifier),tonumber(key));            
+            modifier_this_turn=modifier;
+        elseif string.match(section,keyPattern) then           
             local key=string.match(section,keyPattern);
-            single_key(0,key);            
+            single_key(0,tonumber(key));
+        elseif string.match(section,mediaPattern) then           
+            local key=string.match(section,mediaPattern);
+            media_output(tonumber(key));
+            pressed_media=true;
         end        
-        delay(30); 
+        delay(15);   
+        first=false;      
     end
 end
-
 
 ahk_parse= function (text_input)
     for modifiers,key,expression in string.gmatch(text_input,"(%d+)@(%d+)@([^\n]+)") do
@@ -174,7 +182,7 @@ local key_press_pattern="{([^-]+)-([%d%a]+)}";
 media_output= function (value)
     mouse_output(3,value%256,math.floor(value/256),0,0);
 end
-local pressed_media=false;
+
 local pressed_capslock=false;
 key_input_underlying=function (modifiers,cnt,key_arr)
     local final_normal_keys={};
