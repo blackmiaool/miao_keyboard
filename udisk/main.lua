@@ -116,8 +116,6 @@ local previous_key_map_mode=1;
 local previous_capslock=false;
 
 local media_map={
-    [124]=0x70,
-    [125]=0x6f,
     [126]=0x65,
 }
 local pressed_media=false;

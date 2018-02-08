@@ -41,6 +41,8 @@ let config = `!<+a::blackmiaool
 129::{VolumeDown}
 128::{VolumeUp}
 127::{Mute}
+124::{BrightDown}
+125::{BrightUp}
 # <: left modifier key
 # >: right modifier key
 # ^: ctrl

@@ -14,13 +14,22 @@
                 <div @keydown.prevent="onInputExpressionDown" @keyup="onInputExpressionUp">
                     <el-input style="width:150px;color:white;" v-model="expressionInput" placeholder="Focus to input"></el-input>
                     <el-checkbox v-model="blockModifier">BlockModifier</el-checkbox>
+                    <el-select v-model="selectedConsumer" @change="consumerChange" style="width:120px;" placeholder="Media">
+                        <el-option v-for="(usb,consumer) in consumer2usb" :key="usb" :label="consumer" :value="consumer">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="selectedKey" @change="keyChange" style="width:120px;" placeholder="Key">
+                        <el-option v-for="(usb,key) in key2usb" :key="usb" :label="key" :value="key">
+                        </el-option>
+                    </el-select>
                 </div>
                 <ExpressionComp :expression="data.expression" />
                 <div>{{data.expression.toString()}}</div>
                 <div>{{data.expression.toPlainText()}}</div>
             </el-form-item>
-            <el-form-item label="Key">
+            <el-form-item label="">
                 <el-button type="primary" @click="onSubmit">Save</el-button>
+                <el-button type="danger" @click="onClear">Clear</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -29,7 +38,7 @@
 
 <script>
 import ExpressionComp from "@/components/expression";
-import { modifierMap, code2modifier } from "@/common";
+import { modifierMap, code2modifier, consumer2usb, key2usb } from "@/common";
 import Expression from "@/expression";
 
 export default {
@@ -42,6 +51,19 @@ export default {
         console.log("mounted", this.data);
     },
     methods: {
+        onClear() {
+            this.data.expression = new Expression([]);
+            this.data.modifiers = [];
+            this.data.key = undefined;
+        },
+        keyChange(key) {
+            this.data.expression.addPress(key);
+            this.selectedKey = undefined;
+        },
+        consumerChange(consumer) {
+            this.data.expression.addPress(consumer);
+            this.selectedConsumer = undefined;
+        },
         visibleChange(state) {
             this.acceptingModifer = state;
         },
@@ -111,6 +133,10 @@ export default {
     },
     data() {
         return {
+            selectedKey: undefined,
+            key2usb,
+            selectedConsumer: undefined,
+            consumer2usb,
             cachedData: undefined,
             modifierMap,
             acceptingModifer: false,

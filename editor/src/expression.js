@@ -1,50 +1,4 @@
-import { printableKeyMap, match2arr, code2short, shiftTable, ascii2usb } from "@/common";
-
-
-const key2usb = {
-    Enter: 40,
-    Escape: 41,
-    Backspace: 42,
-    Tab: 43,
-    Space: 44,
-    CapsLock: 57,
-    F1: 58,
-    F2: 59,
-    F3: 60,
-    F4: 61,
-    F5: 62,
-    F6: 63,
-    F7: 64,
-    F8: 65,
-    F9: 66,
-    F10: 67,
-    F11: 68,
-    F12: 69,
-    PrintScreen: 70,
-    ScrollLock: 71,
-    Pause: 72,
-    Insert: 73,
-    Home: 74,
-    PageUp: 75,
-    Delete: 76,
-    End: 77,
-    PageDown: 78,
-    ArrowRight: 79,
-    ArrowLeft: 80,
-    ArrowDown: 81,
-    ArrowUp: 82,
-    NumLock: 83,
-
-};
-const media2usb = {
-    VolumeDown: 0xea,
-    VolumeUp: 0xe9,
-    Mute: 0xe2,
-    // macbook only
-    BrightDown: 0x70,
-    // macbook only
-    BrightUp: 0x6f
-};
+import { printableKeyMap, match2arr, code2short, shiftTable, ascii2usb, consumer2usb, shortMap, key2usb } from "@/common";
 
 export default class Expression {
     constructor(rawText) {
@@ -156,20 +110,6 @@ export default class Expression {
         return this.toString();
     }
     toPlainText() {
-        const shortMap = {
-            "^": 1 + 16,
-            "+": 2 + 32,
-            "!": 4 + 64,
-            "#": 8 + 128,
-            "<^": 1,
-            "<+": 2,
-            "<!": 4,
-            "<#": 8,
-            ">^": 16,
-            ">+": 32,
-            ">!": 64,
-            ">#": 128
-        };
         let pressingModifierCode = 0;
         return this.data.map((item) => {
             switch (item.mode) {
@@ -177,8 +117,8 @@ export default class Expression {
                     let usbCode;
                     if (key2usb[item.value]) {
                         usbCode = key2usb[item.value];
-                    } else if (media2usb[item.value]) {
-                        usbCode = `M${media2usb[item.value]}`;
+                    } else if (consumer2usb[item.value]) {
+                        usbCode = `M${consumer2usb[item.value]}`;
                     }
                     if (!usbCode) {
                         console.warn('unknown key');

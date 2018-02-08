@@ -5,7 +5,8 @@
                 {{section.value}}
             </span>
             <span v-if="section.mode==='press-key'" :title="'Press '+upperCaseFirst(section.value)+ ' Key'" class="press-key-section el-button--primary">
-                <i class="fa fa-gavel" aria-hidden="true"></i>
+                <i v-if="!isConsumer(section.value)" class="fa fa-gavel" aria-hidden="true"></i>
+                <i v-if="isConsumer(section.value)" class="fa fa-headphones" aria-hidden="true"></i>
                 {{upperCaseFirst(section.value)}}
             </span>
             <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${section.value.text} ${section.value.action}`">
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { shortModifierMap } from "@/common";
+import { shortModifierMap, consumer2usb } from "@/common";
 
 export default {
     name: "Expression",
@@ -26,6 +27,9 @@ export default {
     methods: {
         upperCaseFirst(text) {
             return text.replace(/^[\s\S]/, ch => ch.toUpperCase());
+        },
+        isConsumer(key) {
+            return consumer2usb[key];
         },
         getModifierText(modifiers) {
             const text = modifiers
