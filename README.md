@@ -14,3 +14,8 @@
 * Different modes for different key maps
 * Media functions (HID consumer page)
 
+### Enable web feature
+```bash
+sudo sh -c "touch /etc/udev/rules.d/50-miao_keyboard.rules && echo 'SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0483\", MODE=\"0664\", GROUP=\"plugdev\"' >> /etc/udev/rules.d/50-miao_keyboard.rules && service udev restart"
+```
+Unplug and plug usb.
