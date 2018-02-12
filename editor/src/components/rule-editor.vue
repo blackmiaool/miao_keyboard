@@ -24,7 +24,6 @@
                     </el-select>
                 </div>
                 <ExpressionComp :expression="data.expression" />
-                <div>{{data.expression.toString()}}</div>
                 <div>{{data.expression.toPlainText()}}</div>
             </el-form-item>
             <el-form-item label="">
