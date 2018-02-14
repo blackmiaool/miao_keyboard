@@ -2,12 +2,7 @@ import MacroLine from "@/components/macro-line";
 import ExpressionComp from "@/components/expression";
 import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
-import {
-    shortModifierMap,
-    modifierMap,
-    ascii2usb,
-    code2usb
-} from "@/common";
+import { shortModifierMap, modifierMap, ascii2usb, code2usb } from "@/common";
 
 let config = `!<+a::blackmiaool
 >^w::{esc}
@@ -65,7 +60,7 @@ config = config
     .replace(/{enter}/g, "{Enter}");
 
 function modifier2PlainText(modifier) {
-    let ret = '';
+    let ret = "";
     if (modifier[0] === "<") {
         ret = "Left";
     } else if (modifier[0] === ">") {
@@ -74,6 +69,11 @@ function modifier2PlainText(modifier) {
     ret = shortModifierMap[modifier[modifier.length - 1]] + ret;
     return ret;
 }
+// let uid = 0;
+// function assignUid(obj) {
+//     obj.uid = uid++;
+//     return obj;
+// }
 const list = config
     .split(/\r?\n/)
     .map(line => {
@@ -86,23 +86,23 @@ const list = config
                 modifier2PlainText
             ),
             key: match[2].toUpperCase(),
-            // local key_press_pattern="{([^-]+)-([%d%a]+)}";
-            // "[^{}]+","{%a+}",
-            expression: (new Expression(match[3])),
+            // local key_press_pattern="{([^-]+)-([%d%a]+)}"; "[^{}]+","{%a+}",
+            expression: new Expression(match[3])
         };
 
         return ret;
     })
     .filter(line => line);
-console.log('list2', list);
+// list.forEach(line => {
+//     line.expression.data.map(assignUid);
+// });
+
+console.log("list2", list);
+
 export default {
     name: "MacroList",
     data() {
-        return {
-            msg: "Welcome to Your Vue.js App",
-            list,
-            modifierMap,
-        };
+        return { msg: "Welcome to Your Vue.js App", list, modifierMap };
     },
     mounted() {
         window.a = () => {
@@ -119,19 +119,21 @@ export default {
         },
         exportConfig() {
             console.log(this.list);
-            const txt = this.list.map((li) => {
-                const modifiers = li.modifiers.reduce((p, modifier) => {
-                    // eslint-disable-next-line no-bitwise
-                    return p | code2usb[modifier];
-                }, 0);
-                let keyCode;
-                if (li.key.match(/^\d{2,3}$/)) {
-                    keyCode = li.key;
-                } else {
-                    keyCode = ascii2usb[li.key.charCodeAt(0)];
-                }
-                return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
-            }).join('\n');
+            const txt = this.list
+                .map(li => {
+                    const modifiers = li.modifiers.reduce((p, modifier) => {
+                        // eslint-disable-next-line no-bitwise
+                        return p | code2usb[modifier];
+                    }, 0);
+                    let keyCode;
+                    if (li.key.match(/^\d{2,3}$/)) {
+                        keyCode = li.key;
+                    } else {
+                        keyCode = ascii2usb[li.key.charCodeAt(0)];
+                    }
+                    return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
+                })
+                .join("\n");
             // console.log(JSON.stringify(this.list));
             console.log(txt);
         }

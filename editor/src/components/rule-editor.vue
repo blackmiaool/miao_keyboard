@@ -23,12 +23,13 @@
                         </el-option>
                     </el-select>
                 </div>
-                <ExpressionComp :expression="data.expression" />
+                <ExpressionComp :expression="data.expression" :editable="true" />
                 <div>{{data.expression.toPlainText()}}</div>
             </el-form-item>
             <el-form-item label="">
                 <el-button type="primary" @click="onSubmit">Save</el-button>
                 <el-button type="danger" @click="onClear">Clear</el-button>
+                <el-button type="danger" @click="onClearExpression">Clear Expression</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -50,6 +51,9 @@ export default {
         console.log("mounted", this.data);
     },
     methods: {
+        onClearExpression() {
+            this.data.expression.empty();
+        },
         onClear() {
             this.data.expression = new Expression([]);
             this.data.modifiers = [];
@@ -119,9 +123,7 @@ export default {
     },
     watch: {
         data: {
-            handler: newValue => {
-                console.log(newValue);
-            },
+            handler: newValue => {},
             deep: true
         }
     },

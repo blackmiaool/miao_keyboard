@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "*.js": "javascriptreact",
+        "*.js": "javascript",
         "*.lessx": "less",
         "lua_inf.h": "c",
         "app.h": "c",
@@ -34,10 +34,6 @@
         },
         {
             "language": "javascript",
-            "autoFix": true
-        },
-        {
-            "language": "javascriptreact",
             "autoFix": true
         }
     ]

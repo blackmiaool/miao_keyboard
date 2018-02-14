@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column label="Expression">
                 <template slot-scope="scope">
-                    <ExpressionComp :expression="scope.row.expression" />
+                    <ExpressionComp :expression="scope.row.expression" :editable="false" />
                 </template>
             </el-table-column>
             <el-table-column label="Action" align="center" width="220">
@@ -32,7 +32,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-button type="success" @click="exportConfig">Export</el-button>
+        <el-button type="success" @click="exportConfig" class="clickable">Export</el-button>
     </div>
 </template>
 

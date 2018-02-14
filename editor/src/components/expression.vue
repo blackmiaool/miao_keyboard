@@ -1,6 +1,6 @@
 <template>
-    <div class="root">
-        <section v-for="(section,i) in expression.data" :key="i" style="line-height:28px;">
+    <draggable v-model="expression.data" class="root" :options="{animation:250,disabled:!editable}">
+        <section v-for="(section,i) in expression.data" :key="i" style="">
             <span v-if="section.mode==='print'" :title="`print ${section.value}`" class="print-section">
                 {{section.value}}
             </span>
@@ -14,17 +14,25 @@
                 <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-o-up"></i>
                 {{getModifierText(section.value.modifiers)}}
             </span>
+            <i v-if="editable" class="fa fa-minus-circle delete-btn clickable" @click="deleteSection(i)"></i>
         </section>
-    </div>
+    </draggable>
 </template>
 
 <script>
 import { shortModifierMap, consumer2usb } from "@/common";
+import draggable from "vuedraggable";
 
 export default {
     name: "Expression",
-    props: ["expression"],
+    props: ["expression", "editable"],
+    mounted() {
+        console.log("t", this.editable);
+    },
     methods: {
+        deleteSection(i) {
+            this.expression.data.splice(i, 1);
+        },
         upperCaseFirst(text) {
             return text.replace(/^[\s\S]/, ch => ch.toUpperCase());
         },
@@ -53,17 +61,51 @@ export default {
     },
     data() {
         return {};
+    },
+    components: {
+        draggable
     }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+@import "../less/mixin.less";
+// .list-enter-active,
+// .list-leave-active {
+//     transition: all 1s;
+// }
+// .list-enter,
+// .list-leave-to {
+//     opacity: 0;
+//     transform: translateY(30px);
+// }
 .root {
     text-align: left;
     padding: 2px 0px;
 }
+.delete-btn {
+    position: absolute;
+    top: 3px;
+    left: 1px;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #aaa;
+    &:hover {
+        color: gray;
+    }
+    &:after {
+        content: "";
+        .crop(0);
+        background-color: white;
+        z-index: -1;
+        border-radius: 1000px;
+    }
+}
 section {
+    position: relative;
+    line-height: 28px;
+    transition: 0.3s all;
     display: inline-block;
     margin: 1px 3px;
 
