@@ -9,7 +9,7 @@ import router from './router';
 
 // import Vue from "vue";
 
-// require("./assets/css/font-awesome.min.css");
+require("./assets/css/fontawesome-all.css");
 
 Vue.use(ElementUI);
 

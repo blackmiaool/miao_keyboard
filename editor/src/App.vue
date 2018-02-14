@@ -5,7 +5,7 @@
 </template>
 
 <script>
-require("./assets/css/font-awesome.min.css");
+// require("./assets/css/fontawesome.min.css");
 
 export default {
     name: "App"
