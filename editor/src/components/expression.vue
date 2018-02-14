@@ -9,9 +9,9 @@
                 <i v-if="isConsumer(section.value)" class="fa fa-headphones" aria-hidden="true"></i>
                 {{upperCaseFirst(section.value)}}
             </span>
-            <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${section.value.text} ${section.value.action}`">
-                <i v-if="section.value.action==='down'" class="fa fa-hand-o-down" aria-hidden="true"></i>
-                <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-o-up"></i>
+            <span v-if="section.mode==='press-toggle'" class="press-toggle-section" :title="`${getModifierText(section.value.modifiers)} ${section.value.action}`">
+                <i v-if="section.value.action==='down'" class="fa fa-hand-point-down" aria-hidden="true"></i>
+                <i v-if="section.value.action==='up'" aria-hidden="true" class="fa fa-hand-point-up"></i>
                 {{getModifierText(section.value.modifiers)}}
             </span>
             <i v-if="editable" class="fa fa-minus-circle delete-btn clickable" @click="deleteSection(i)"></i>

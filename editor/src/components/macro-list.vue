@@ -1,5 +1,9 @@
 <template>
     <div class="comp-macro-list table-wrap">
+        <header>
+            <i class="redo-btn fa fa-undo" :class="{active:listUndo.canUndo()}" @click="listUndo.undo()"></i>
+            <i class="undo-btn fa fa-redo" :class="{active:listUndo.canRedo()}" @click="listUndo.redo()"></i>
+        </header>
         <el-table :data="list" stripe class="table" ref="table">
             <el-table-column type="expand">
                 <template slot-scope="scope" align="left">
@@ -26,13 +30,14 @@
                         <el-button type="success" size="mini" @click="edit(scope.row)">
                             <i class="fa fa-edit"></i> Edit</el-button>
 
-                        <el-button type="danger" size="mini" @click="$emit('delete')">
+                        <el-button type="danger" size="mini" @click="deleteLine(scope.row)">
                             <i class="fa fa-trash"></i> Delete</el-button>
                     </span>
                 </template>
             </el-table-column>
         </el-table>
-        <el-button type="success" @click="exportConfig" class="clickable">Export</el-button>
+        <el-button type="success" @click="exportConfig" class="clickable export-btn">
+            <i class="fa fa-paper-plane"></i> Export</el-button>
     </div>
 </template>
 
@@ -41,6 +46,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+.redo-btn,
+.undo-btn {
+    opacity: 0.5;
+    &.active {
+        opacity: 1;
+    }
+}
+
 .table-wrap {
     text-align: center;
     padding: 30px;
@@ -74,6 +87,10 @@ tr:hover {
 }
 </style>
 <style lang="less">
+.export-btn {
+    width: 100%;
+    margin-top: 10px;
+}
 // .comp-macro-list {
 //     .el-table {
 //         background-color: transparent !important;

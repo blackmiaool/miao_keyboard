@@ -1,8 +1,9 @@
-import MacroLine from "@/components/macro-line";
+// import MacroLine from "@/components/macro-line";
 import ExpressionComp from "@/components/expression";
 import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import { shortModifierMap, modifierMap, ascii2usb, code2usb } from "@/common";
+import Undo from "../undo";
 
 let config = `!<+a::blackmiaool
 >^w::{esc}
@@ -96,20 +97,39 @@ const list = config
 // list.forEach(line => {
 //     line.expression.data.map(assignUid);
 // });
+// eslint-disable-next-line no-new
+const listUndo = new Undo({ data: list });
 
 console.log("list2", list);
 
 export default {
     name: "MacroList",
     data() {
-        return { msg: "Welcome to Your Vue.js App", list, modifierMap };
+        return { list, modifierMap, listUndo };
     },
     mounted() {
         window.a = () => {
             console.log(this.list);
         };
+        this.listUndo.register({
+            name: "delete line",
+            exec(lineNum) {
+                const line = this.data.splice(lineNum, 1);
+                return line;
+            },
+            undo(lineNum, line) {
+                this.data.splice(lineNum, 0, ...line);
+            }
+        });
     },
     methods: {
+        deleteLine(row) {
+            const index = this.list.indexOf(row);
+            console.log("index", index);
+            this.listUndo.exec("delete line", index);
+            // this.listUndo.
+            // this.list.splice()
+        },
         edit(row) {
             this.$refs.table.toggleRowExpansion(row);
         },
@@ -139,7 +159,7 @@ export default {
         }
     },
     components: {
-        MacroLine,
+        // MacroLine,
         ExpressionComp,
         RuleEditor
     }
