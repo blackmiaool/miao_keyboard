@@ -25,7 +25,6 @@ extern u8 USB_STATUS_REG;
 
 int calc_free_memory(u32 last, u32 base)
 {
-
     for (int i = 0; i <= 10; i++)
     {
         char *area = (char *)malloc(i * base + last);
@@ -57,6 +56,7 @@ static void timer_init()
     TIM1->PSC = 7199;  //0.1ms per tick
     TIM1->CR1 |= 0x01;
 }
+extern void init_USB_string(void);
 int main(void)
 {
     Stm32_Clock_Init(9);
@@ -65,11 +65,11 @@ int main(void)
 
     // free JTAG pins
     JTAG_Set(1);
-
+		init_USB_string();
     // init usb hardware
     USB_Cable_Init();
     USB_Cable_Config(ENABLE);
-
+		
     timer_init();
 
     // wait for flash

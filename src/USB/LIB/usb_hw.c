@@ -14,7 +14,7 @@ void USB_Cable_Config (FunctionalState NewState)
     }
     else
     {
-PAout(3)=0;
+				PAout(3)=0;
     }
 }
 

@@ -34,20 +34,20 @@ static int stripping=0;            /* strip debug information? */
 static char Output[]={ OUTPUT };    /* default output file name */
 static const char* output=Output;    /* actual output file name */
 static const char* progname=PROGNAME;    /* actual program name */
-void exit(int a){
+void exit1(int a){
 
 }
 static void fatal(const char* message)
 {
  fprintf(stderr,"%s: %s\n",progname,message);
- exit(EXIT_FAILURE);
+ exit1(EXIT_FAILURE);
     
 }
 
 static void cannot(const char* what)
 {
  fprintf(stderr,"%s: cannot %s %s: %s\n",progname,what,output,strerror(errno));
- exit(EXIT_FAILURE);
+ exit1(EXIT_FAILURE);
 }
 
 static void usage(const char* message)
@@ -67,7 +67,7 @@ static void usage(const char* message)
   "  --       stop handling options\n"
   "  -        stop handling options and process stdin\n"
   ,progname,Output);
- exit(EXIT_FAILURE);
+ exit1(EXIT_FAILURE);
 }
 
 #define IS(s)    (strcmp(argv[i],s)==0)
@@ -115,7 +115,7 @@ static int doargs(int argc, char* argv[])
  if (version)
  {
   printf("%s\n",LUA_COPYRIGHT);
-  if (version==argc-1) exit(EXIT_SUCCESS);
+  if (version==argc-1) exit1(EXIT_SUCCESS);
  }
  return i;
 }

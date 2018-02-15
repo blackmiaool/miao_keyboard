@@ -173,29 +173,29 @@ void Joystick_Send(u8 buf0, u8* buf1)
 *******************************************************************************/
 void Get_SerialNum(void)
 {
-  u32 Device_Serial0, Device_Serial1, Device_Serial2;
+//  u32 Device_Serial0, Device_Serial1, Device_Serial2;
 
-  Device_Serial0 = *(u32*)(0x1FFFF7E8);
-  Device_Serial1 = *(u32*)(0x1FFFF7EC);
-  Device_Serial2 = *(u32*)(0x1FFFF7F0);
+//  Device_Serial0 = *(u32*)(0x1FFFF7E8);
+//  Device_Serial1 = *(u32*)(0x1FFFF7EC);
+//  Device_Serial2 = *(u32*)(0x1FFFF7F0);
 
-  if (Device_Serial0 != 0)
-  {
-    Joystick_StringSerial[2] = (u8)(Device_Serial0 & 0x000000FF);
-    Joystick_StringSerial[4] = (u8)((Device_Serial0 & 0x0000FF00) >> 8);
-    Joystick_StringSerial[6] = (u8)((Device_Serial0 & 0x00FF0000) >> 16);
-    Joystick_StringSerial[8] = (u8)((Device_Serial0 & 0xFF000000) >> 24);
+//  if (Device_Serial0 != 0)
+//  {
+//    Joystick_StringSerial[2] = (u8)(Device_Serial0 & 0x000000FF);
+//    Joystick_StringSerial[4] = (u8)((Device_Serial0 & 0x0000FF00) >> 8);
+//    Joystick_StringSerial[6] = (u8)((Device_Serial0 & 0x00FF0000) >> 16);
+//    Joystick_StringSerial[8] = (u8)((Device_Serial0 & 0xFF000000) >> 24);
 
-    Joystick_StringSerial[10] = (u8)(Device_Serial1 & 0x000000FF);
-    Joystick_StringSerial[12] = (u8)((Device_Serial1 & 0x0000FF00) >> 8);
-    Joystick_StringSerial[14] = (u8)((Device_Serial1 & 0x00FF0000) >> 16);
-    Joystick_StringSerial[16] = (u8)((Device_Serial1 & 0xFF000000) >> 24);
+//    Joystick_StringSerial[10] = (u8)(Device_Serial1 & 0x000000FF);
+//    Joystick_StringSerial[12] = (u8)((Device_Serial1 & 0x0000FF00) >> 8);
+//    Joystick_StringSerial[14] = (u8)((Device_Serial1 & 0x00FF0000) >> 16);
+//    Joystick_StringSerial[16] = (u8)((Device_Serial1 & 0xFF000000) >> 24);
 
-    Joystick_StringSerial[18] = (u8)(Device_Serial2 & 0x000000FF);
-    Joystick_StringSerial[20] = (u8)((Device_Serial2 & 0x0000FF00) >> 8);
-    Joystick_StringSerial[22] = (u8)((Device_Serial2 & 0x00FF0000) >> 16);
-    Joystick_StringSerial[24] = (u8)((Device_Serial2 & 0xFF000000) >> 24);
-  }
+//    Joystick_StringSerial[18] = (u8)(Device_Serial2 & 0x000000FF);
+//    Joystick_StringSerial[20] = (u8)((Device_Serial2 & 0x0000FF00) >> 8);
+//    Joystick_StringSerial[22] = (u8)((Device_Serial2 & 0x00FF0000) >> 16);
+//    Joystick_StringSerial[24] = (u8)((Device_Serial2 & 0xFF000000) >> 24);
+//  }
 }
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

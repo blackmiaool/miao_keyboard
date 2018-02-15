@@ -105,14 +105,15 @@ ONE_DESCRIPTOR Mouse_Hid_Descriptor =                                //
         };                                                                //
 /*******************************************************************/
 
-ONE_DESCRIPTOR String_Descriptor[5] =
-{
-    {(u8*)Joystick_StringLangID, JOYSTICK_SIZ_STRING_LANGID},
-    {(u8*)Joystick_StringVendor, JOYSTICK_SIZ_STRING_VENDOR},
-    {(u8*)Joystick_StringProduct, JOYSTICK_SIZ_STRING_PRODUCT},
-    {(u8*)Joystick_StringSerial, JOYSTICK_SIZ_STRING_SERIAL},
-    {(u8*)Joystick_StringSerial, JOYSTICK_SIZ_STRING_SERIAL}
-};
+ONE_DESCRIPTOR String_Descriptor[5];
+//				=
+//{
+//    {(u8*)Joystick_StringLangID, JOYSTICK_SIZ_STRING_LANGID},
+//    {(u8*)Joystick_StringVendor, JOYSTICK_SIZ_STRING_VENDOR},
+//    {(u8*)Joystick_StringProduct, JOYSTICK_SIZ_STRING_PRODUCT},
+//    {(u8*)Joystick_StringSerial, JOYSTICK_SIZ_STRING_SERIAL},
+//    {(u8*)Joystick_StringSerial, JOYSTICK_SIZ_STRING_SERIAL}
+//};
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/

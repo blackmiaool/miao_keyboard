@@ -423,9 +423,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>USER</GroupName>
-        </Group>
-        <Group>
           <GroupName>SYSTEM</GroupName>
           <Files>
             <File>
@@ -449,11 +446,6 @@
               <FilePath>..\STM32lib\stm32lib.c</FilePath>
             </File>
             <File>
-              <FileName>commu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commu.c</FilePath>
-            </File>
-            <File>
               <FileName>usb_process.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\USB\usb_process.c</FilePath>
@@ -467,11 +459,6 @@
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\SPI\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>commu_mcu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commu_mcu.c</FilePath>
             </File>
           </Files>
         </Group>

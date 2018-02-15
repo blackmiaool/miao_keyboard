@@ -22,47 +22,47 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define -----------------------------------------------------------*/
-#define USB_DEVICE_DESCRIPTOR_TYPE              0x01
-#define USB_CONFIGURATION_DESCRIPTOR_TYPE       0x02
-#define USB_STRING_DESCRIPTOR_TYPE              0x03
-#define USB_INTERFACE_DESCRIPTOR_TYPE           0x04
-#define USB_ENDPOINT_DESCRIPTOR_TYPE            0x05
+#define USB_DEVICE_DESCRIPTOR_TYPE 0x01
+#define USB_CONFIGURATION_DESCRIPTOR_TYPE 0x02
+#define USB_STRING_DESCRIPTOR_TYPE 0x03
+#define USB_INTERFACE_DESCRIPTOR_TYPE 0x04
+#define USB_ENDPOINT_DESCRIPTOR_TYPE 0x05
 
-#define HID_DESCRIPTOR_TYPE                     0x21
-#define JOYSTICK_SIZ_HID_DESC                   0x09
+#define HID_DESCRIPTOR_TYPE 0x21
+#define JOYSTICK_SIZ_HID_DESC 0x09
 
-#define JOYSTICK_SIZ_DEVICE_DESC                18
+#define JOYSTICK_SIZ_DEVICE_DESC 18
 /*********************************************************/
-#define KP_OFF_HID_DESC                            18
-#define Mouse_OFF_HID_DESC                        50
+#define KP_OFF_HID_DESC 18
+#define Mouse_OFF_HID_DESC 50
 
-#define JOYSTICK_SIZ_CONFIG_DESC                (66+23)//+58)
-#define KP_ReportDescriptor_Size                64
-#define Mouse_ReportDescriptor_Size                132
+#define JOYSTICK_SIZ_CONFIG_DESC (66 + 23) //+58)
+#define KP_ReportDescriptor_Size 64
+#define Mouse_ReportDescriptor_Size 132
 /*********************************************************/
-#define JOYSTICK_SIZ_STRING_LANGID              4
-#define JOYSTICK_SIZ_STRING_VENDOR              38
-#define JOYSTICK_SIZ_STRING_PRODUCT             30
-#define JOYSTICK_SIZ_STRING_SERIAL              26
+//#define JOYSTICK_SIZ_STRING_LANGID 4
+//#define JOYSTICK_SIZ_STRING_VENDOR 38
+//#define JOYSTICK_SIZ_STRING_PRODUCT 30
+//#define JOYSTICK_SIZ_STRING_SERIAL 26
 
-#define STANDARD_ENDPOINT_DESC_SIZE             0x09
+#define STANDARD_ENDPOINT_DESC_SIZE 0x09
 
-#define STANDARD_ENDPOINT_DESC_SIZE             0x09
-#define USB_DEVICE_DESCRIPTOR_TYPE              0x01
-#define USB_CONFIGURATION_DESCRIPTOR_TYPE       0x02
-#define USB_STRING_DESCRIPTOR_TYPE              0x03
-#define USB_INTERFACE_DESCRIPTOR_TYPE           0x04
-#define USB_ENDPOINT_DESCRIPTOR_TYPE            0x05
+#define STANDARD_ENDPOINT_DESC_SIZE 0x09
+#define USB_DEVICE_DESCRIPTOR_TYPE 0x01
+#define USB_CONFIGURATION_DESCRIPTOR_TYPE 0x02
+#define USB_STRING_DESCRIPTOR_TYPE 0x03
+#define USB_INTERFACE_DESCRIPTOR_TYPE 0x04
+#define USB_ENDPOINT_DESCRIPTOR_TYPE 0x05
 
-#define VIRTUAL_COM_PORT_DATA_SIZE              64
-#define VIRTUAL_COM_PORT_INT_SIZE               8
+#define VIRTUAL_COM_PORT_DATA_SIZE 64
+#define VIRTUAL_COM_PORT_INT_SIZE 8
 
-#define VIRTUAL_COM_PORT_SIZ_DEVICE_DESC        18
-#define VIRTUAL_COM_PORT_SIZ_CONFIG_DESC        67
-#define VIRTUAL_COM_PORT_SIZ_STRING_LANGID      4
-#define VIRTUAL_COM_PORT_SIZ_STRING_VENDOR      38
-#define VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT     50
-#define VIRTUAL_COM_PORT_SIZ_STRING_SERIAL      26
+#define VIRTUAL_COM_PORT_SIZ_DEVICE_DESC 18
+#define VIRTUAL_COM_PORT_SIZ_CONFIG_DESC 67
+#define VIRTUAL_COM_PORT_SIZ_STRING_LANGID 4
+#define VIRTUAL_COM_PORT_SIZ_STRING_VENDOR 38
+#define VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT 50
+#define VIRTUAL_COM_PORT_SIZ_STRING_SERIAL 26
 
 /* Exported functions ------------------------------------------------------- */
 /*******************************************************************************/
@@ -72,10 +72,10 @@ extern const u8 MouseReportDescriptor[Mouse_ReportDescriptor_Size];
 
 extern const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC];
 extern const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC];
-extern const u8 Joystick_StringLangID[JOYSTICK_SIZ_STRING_LANGID];
-extern const u8 Joystick_StringVendor[JOYSTICK_SIZ_STRING_VENDOR];
-extern const u8 Joystick_StringProduct[JOYSTICK_SIZ_STRING_PRODUCT];
-extern u8 Joystick_StringSerial[JOYSTICK_SIZ_STRING_SERIAL];
+//extern const u8 Joystick_StringLangID[JOYSTICK_SIZ_STRING_LANGID];
+//extern u8 *Joystick_StringVendor;
+//extern const u8 Joystick_StringProduct[JOYSTICK_SIZ_STRING_PRODUCT];
+//extern u8 Joystick_StringSerial[JOYSTICK_SIZ_STRING_SERIAL];
 
 #endif /* __USB_DESC_H */
 
