@@ -1,9 +1,12 @@
 // import MacroLine from "@/components/macro-line";
+import Vue from "vue";
+import draggable from "vuedraggable";
 import ExpressionComp from "@/components/expression";
 import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import { shortModifierMap, modifierMap, ascii2usb, code2usb } from "@/common";
 import Undo from "../undo";
+import Rule from "../rule";
 
 let config = `!<+a::blackmiaool
 >^w::{esc}
@@ -60,38 +63,14 @@ config = config
     .replace(/{printscreen}/g, "{PrintScreen}")
     .replace(/{enter}/g, "{Enter}");
 
-function modifier2PlainText(modifier) {
-    let ret = "";
-    if (modifier[0] === "<") {
-        ret = "Left";
-    } else if (modifier[0] === ">") {
-        ret = "Right";
-    }
-    ret = shortModifierMap[modifier[modifier.length - 1]] + ret;
-    return ret;
-}
-// let uid = 0;
-// function assignUid(obj) {
-//     obj.uid = uid++;
-//     return obj;
-// }
 const list = config
     .split(/\r?\n/)
     .map(line => {
-        const match = line.match(/([\^+!#<>]*)([\da-zA-Z]+)::([\s\S]+)/);
-        if (!match) {
+        if (!Rule.format0Reg.test(line)) {
             return null;
         }
-        const ret = {
-            modifiers: (match[1].match(/[<>]?[\^+!#]/g) || []).map(
-                modifier2PlainText
-            ),
-            key: match[2].toUpperCase(),
-            // local key_press_pattern="{([^-]+)-([%d%a]+)}"; "[^{}]+","{%a+}",
-            expression: new Expression(match[3])
-        };
 
-        return ret;
+        return Rule.fromFormat0(line);
     })
     .filter(line => line);
 // list.forEach(line => {
@@ -99,8 +78,6 @@ const list = config
 // });
 // eslint-disable-next-line no-new
 const listUndo = new Undo({ data: list });
-
-console.log("list2", list);
 
 export default {
     name: "MacroList",
@@ -111,18 +88,32 @@ export default {
         window.a = () => {
             console.log(this.list);
         };
-        this.listUndo.register({
-            name: "delete line",
-            exec(lineNum) {
-                const line = this.data.splice(lineNum, 1);
-                return line;
-            },
-            undo(lineNum, line) {
-                this.data.splice(lineNum, 0, ...line);
-            }
-        });
+        this.listUndo
+            .register({
+                name: "delete line",
+                exec(lineNum) {
+                    const line = this.data.splice(lineNum, 1);
+                    return line;
+                },
+                undo(lineNum, line) {
+                    this.data.splice(lineNum, 0, ...line);
+                }
+            })
+            .register({
+                name: "edit",
+                exec({ index, data }) {
+                    console.log("splice", data);
+                    return this.data.splice(index, 1, data);
+                },
+                undo({ index }, last) {
+                    this.data.splice(index, 1, ...last);
+                }
+            });
     },
     methods: {
+        add() {
+            this.list.push({});
+        },
         deleteLine(row) {
             const index = this.list.indexOf(row);
             console.log("index", index);
@@ -134,11 +125,12 @@ export default {
             this.$refs.table.toggleRowExpansion(row);
         },
         onSave(oldRow, newRow) {
-            Object.assign(oldRow, newRow);
+            // Object.assign(oldRow, newRow);
             this.$refs.table.toggleRowExpansion(oldRow);
+            const index = this.list.indexOf(oldRow);
+            this.listUndo.exec("edit", { index, data: newRow });
         },
         exportConfig() {
-            console.log(this.list);
             const txt = this.list
                 .map(li => {
                     const modifiers = li.modifiers.reduce((p, modifier) => {
@@ -161,6 +153,7 @@ export default {
     components: {
         // MacroLine,
         ExpressionComp,
-        RuleEditor
+        RuleEditor,
+        draggable
     }
 };

@@ -36,6 +36,9 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div>
+            <el-button type="primary" @click="add">Add</el-button>
+        </div>
         <el-button type="success" @click="exportConfig" class="clickable export-btn">
             <i class="fa fa-paper-plane"></i> Export</el-button>
     </div>

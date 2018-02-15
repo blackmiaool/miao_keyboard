@@ -44,6 +44,7 @@ class Undo {
     }
     register(command) {
         this.commands[command.name] = command;
+        return this;
     }
 }
 // const undo = new Undo({
