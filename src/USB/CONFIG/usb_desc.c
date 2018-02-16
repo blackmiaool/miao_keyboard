@@ -433,9 +433,9 @@ void init_config_descriptor()
       0x02, /* bInterfaceNumber: Number of Interface */
       0x00, /* bAlternateSetting: Alternate setting */
       0x02, /* bNumEndpoints: One endpoints used */
-      0xff, /* bInterfaceClass: Communication Interface Class */
-      0x01, /* bInterfaceSubClass: Abstract Control Model */
-      0x02, /* bInterfaceProtocol: Common AT commands */
+      0x00, /* bInterfaceClass: Communication Interface Class */
+      0x00, /* bInterfaceSubClass: Abstract Control Model */
+      0x00, /* bInterfaceProtocol: Common AT commands */
       0x00, /* iInterface: */
 
       /*Endpoint 2in Descriptor*/
@@ -458,7 +458,8 @@ void init_config_descriptor()
   };
   const u8 *third_interface;
   u8 third_interface_length;
-  if (udisk_mode || 1)
+	printf("udisk_mode%d",udisk_mode);
+  if (udisk_mode)
   {
     third_interface = interface_mass;
     third_interface_length = sizeof interface_mass;

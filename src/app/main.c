@@ -86,9 +86,10 @@ int main(void)
 
     // init usb
     keyboard_init();
+		keyboard_scan();
     init_USB_config();
     //exec before app_init to check if parse bmk files
-    keyboard_scan();
+    
 
     Set_USBClock();
     USB_Interrupts_Config();

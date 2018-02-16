@@ -191,22 +191,22 @@ void EP1_OUT_Callback(void)
 void EP3_IN_Callback(void)
 {
 //	printf("epi");
-//	if(udisk_mode){
+	if(udisk_mode){
 		Mass_Storage_In();
-//	}
+	}
   
 }
 u8 bufff[64];
 void EP4_OUT_Callback(void)
 {
 //	printf("epo");
-//	if(udisk_mode){
+	if(udisk_mode){
 		Mass_Storage_Out();
-//	}else{
+	}else{
 //		 u8 Data_Len = GetEPRxCount(ENDP4);
 //    PMAToUserBufferCopy(bufff, ENDP4_RXADDR, Data_Len);
 //		SetEPRxValid(ENDP4);
-//	}
+	}
 }
 void EP5_IN_Callback(void)
 {

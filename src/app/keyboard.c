@@ -167,7 +167,7 @@ static u8 first_scan = 1;
 
 static u16 matrix_debouncing[ROW_LEN];
 #define DEBOUNCE 5
-static u8 debouncing = DEBOUNCE;
+static u8 debouncing = 1;
 static u8 hardware_scan(u16 *map)
 {
     for (u8 i = 0; i < ROW_LEN; i++)
@@ -191,7 +191,9 @@ static u8 hardware_scan(u16 *map)
         }
         IOout(keyboard_gpio_rows[i].port, keyboard_gpio_rows[i].num, 1);
     }
-
+    if(first_scan){
+			debouncing=1;
+		}
     if (debouncing)
     {
         if (--debouncing)
@@ -239,7 +241,7 @@ static u8 has_key(key_t *keys, single_key_t key)
 #define RWin 0x80
 void keyboard_scan()
 {
-    if (!hardware_scan(key_val))
+    if (!hardware_scan(key_val)&&!first_scan)
     {
         return;
     }
@@ -389,7 +391,7 @@ void keyboard_send_wrap(key_t key_buf)
         first_scan = 0;
         clean_mode = check_key(key_buf, clean_key);
         udisk_mode = check_key(key_buf, udisk_key);
-        printf("udisk%d", udisk_mode);
+			  return ;
     }
 
     if (clean_mode)

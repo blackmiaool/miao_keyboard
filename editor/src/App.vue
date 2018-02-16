@@ -1,14 +1,17 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <div id="app">
+        <tabs/>
+        <router-view/>
+    </div>
 </template>
 
 <script>
 // require("./assets/css/fontawesome.min.css");
+import tabs from "@/components/tabs";
 
 export default {
-    name: "App"
+    name: "App",
+    components: { tabs }
 };
 </script>
 
