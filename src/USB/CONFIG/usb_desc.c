@@ -52,127 +52,127 @@ const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =
                                              device serial number */
         0x01 /*bNumConfigurations*/
 };           /* Joystick_DeviceDescriptor */
+u8 *Joystick_ConfigDescriptor;
+// const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
+//     {
+//         /***************配置描述符***********************/
+//         0x09,                              //bLength字段
+//         USB_CONFIGURATION_DESCRIPTOR_TYPE, //bDescriptorType字段
+//         //wTotalLength字段
+//         JOYSTICK_SIZ_CONFIG_DESC % 128,
+//         /* wTotalLength: Bytes returned */
+//         JOYSTICK_SIZ_CONFIG_DESC / 128,
 
-const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
-    {
-        /***************配置描述符***********************/
-        0x09,                              //bLength字段
-        USB_CONFIGURATION_DESCRIPTOR_TYPE, //bDescriptorType字段
-        //wTotalLength字段
-        JOYSTICK_SIZ_CONFIG_DESC % 128,
-        /* wTotalLength: Bytes returned */
-        JOYSTICK_SIZ_CONFIG_DESC / 128,
+//         0x03, //bNumInterfaces字段
+//         0x01, //bConfiguration字段
+//         0x00, //iConfigurationz字段
+//         0x80, //bmAttributes字段
+//         0x32, //bMaxPower字段
 
-        0x03, //bNumInterfaces字段
-        0x01, //bConfiguration字段
-        0x00, //iConfigurationz字段
-        0x80, //bmAttributes字段
-        0x32, //bMaxPower字段
+//         /*******************第一个接口描述符*********************/
+//         0x09, //bLength字段
+//         0x04, //bDescriptorType字段
+//         0x00, //bInterfaceNumber字段
+//         0x00, //bAlternateSetting字段
+//         0x02, //bNumEndpoints字段
+//         0x03, //bInterfaceClass字段
+//         0x01, //bInterfaceSubClass字段
+//         0x01, //bInterfaceProtocol字段
+//         0x00, //iConfiguration字段
 
-        /*******************第一个接口描述符*********************/
-        0x09, //bLength字段
-        0x04, //bDescriptorType字段
-        0x00, //bInterfaceNumber字段
-        0x00, //bAlternateSetting字段
-        0x02, //bNumEndpoints字段
-        0x03, //bInterfaceClass字段
-        0x01, //bInterfaceSubClass字段
-        0x01, //bInterfaceProtocol字段
-        0x00, //iConfiguration字段
+//         /******************HID描述符************************/
+//         0x09, //bLength字段
+//         0x21, //bDescriptorType字段
+//         0x10, //bcdHID字段
+//         0x01,
+//         0x21, //bCountyCode字段
+//         0x01, //bNumDescriptors字段
+//         0x22, //bDescriptorType字段
 
-        /******************HID描述符************************/
-        0x09, //bLength字段
-        0x21, //bDescriptorType字段
-        0x10, //bcdHID字段
-        0x01,
-        0x21, //bCountyCode字段
-        0x01, //bNumDescriptors字段
-        0x22, //bDescriptorType字段
+//         //bDescriptorLength字段。
+//         //下级描述符的长度。下级描述符为键盘报告描述符。
+//         sizeof(KeyboardReportDescriptor) & 0xFF,
+//         (sizeof(KeyboardReportDescriptor) >> 8) & 0xFF,
 
-        //bDescriptorLength字段。
-        //下级描述符的长度。下级描述符为键盘报告描述符。
-        sizeof(KeyboardReportDescriptor) & 0xFF,
-        (sizeof(KeyboardReportDescriptor) >> 8) & 0xFF,
+//         /**********************输入端点描述符***********************/
+//         0x07, //bLength字段
+//         0x05, //bDescriptorType字段
+//         0x81, //bEndpointAddress字段
+//         0x03, //bmAttributes字段
+//         0x10, //wMaxPacketSize字段
+//         0x00,
+//         0x0A, //bInterval字段
 
-        /**********************输入端点描述符***********************/
-        0x07, //bLength字段
-        0x05, //bDescriptorType字段
-        0x81, //bEndpointAddress字段
-        0x03, //bmAttributes字段
-        0x10, //wMaxPacketSize字段
-        0x00,
-        0x0A, //bInterval字段
+//         /**********************输出端点描述符***********************/
+//         0x07, //bLength字段
+//         0x05, //bDescriptorType字段
+//         0x01, //bEndpointAddress字段
+//         0x03, //bmAttributes字段
+//         0x10, //wMaxPacketSize字段
+//         0x00,
+//         0x0A, //bInterval字段
 
-        /**********************输出端点描述符***********************/
-        0x07, //bLength字段
-        0x05, //bDescriptorType字段
-        0x01, //bEndpointAddress字段
-        0x03, //bmAttributes字段
-        0x10, //wMaxPacketSize字段
-        0x00,
-        0x0A, //bInterval字段
+//         /*******************第二个接口描述符*********************/
+//         0x09, //bLength字段
+//         0x04, //bDescriptorType字段
+//         0x01, //bInterfaceNumber字段
+//         0x00, //bAlternateSetting字段
+//         0x01, //bNumEndpoints字段
+//         0x03, //bInterfaceClass字段
+//         0x01, //bInterfaceSubClass字段
+//         0x02, //bInterfaceProtocol字段
+//         0x00, //iConfiguration字段
 
-        /*******************第二个接口描述符*********************/
-        0x09, //bLength字段
-        0x04, //bDescriptorType字段
-        0x01, //bInterfaceNumber字段
-        0x00, //bAlternateSetting字段
-        0x01, //bNumEndpoints字段
-        0x03, //bInterfaceClass字段
-        0x01, //bInterfaceSubClass字段
-        0x02, //bInterfaceProtocol字段
-        0x00, //iConfiguration字段
+//         /******************HID描述符************************/
+//         0x09, //bLength字段
+//         0x21, //bDescriptorType字段
+//         0x10, //bcdHID字段
+//         0x01,
+//         0x21,                                 //bCountyCode字段
+//         0x01,                                 //bNumDescriptors字段
+//         0x22,                                 //bDescriptorType字段
+//         sizeof(MouseReportDescriptor) & 0xFF, //bDescriptorLength字段
+//         (sizeof(MouseReportDescriptor) >> 8) & 0xFF,
 
-        /******************HID描述符************************/
-        0x09, //bLength字段
-        0x21, //bDescriptorType字段
-        0x10, //bcdHID字段
-        0x01,
-        0x21,                                 //bCountyCode字段
-        0x01,                                 //bNumDescriptors字段
-        0x22,                                 //bDescriptorType字段
-        sizeof(MouseReportDescriptor) & 0xFF, //bDescriptorLength字段
-        (sizeof(MouseReportDescriptor) >> 8) & 0xFF,
+//         /**********************输入端点描述符***********************/
+//         0x07, //bLength字段
+//         0x05, //bDescriptorType字段
+//         0x82, //bEndpointAddress字段
+//         0x03, //bmAttributes字段。D1~D0为端点传输类型选择
+//         0x40, //wMaxPacketSize字段
+//         0x00,
+//         0x0A, //bInterval字段
 
-        /**********************输入端点描述符***********************/
-        0x07, //bLength字段
-        0x05, //bDescriptorType字段
-        0x82, //bEndpointAddress字段
-        0x03, //bmAttributes字段。D1~D0为端点传输类型选择
-        0x40, //wMaxPacketSize字段
-        0x00,
-        0x0A, //bInterval字段
+//         /*******************第三个接口描述符*********************/
+//         0x09, /* bLength: Interface Descriptor size */
+//         0x04, /* bDescriptorType: */
+//         /*      Interface descriptor type */
+//         0x02, /* bInterfaceNumber: Number of Interface */
+//         0x00, /* bAlternateSetting: Alternate setting */
+//         0x02, /* bNumEndpoints*/
+//         0x08, /* bInterfaceClass: MASS STORAGE Class */
+//         0x06, /* bInterfaceSubClass : SCSI transparent*/
+//         0x50, /* nInterfaceProtocol */
+//         4,    /* iInterface: */
+//         /* 18 */
+//         0x07, /*Endpoint descriptor length = 7*/
+//         0x05, /*Endpoint descriptor type */
+//         0x83, /*Endpoint address (IN, address 1) */
+//         0x02, /*Bulk endpoint type */
+//         0x40, /*Maximum packet size (64 bytes) */
+//         0x00,
+//         0x00, /*Polling interval in milliseconds */
+//         /* 25 */
+//         0x07, /*Endpoint descriptor length = 7 */
+//         0x05, /*Endpoint descriptor type */
+//         0x04, /*Endpoint address (OUT, address 2) */
+//         0x02, /*Bulk endpoint type */
+//         0x40, /*Maximum packet size (64 bytes) */
+//         0x00,
+//         0x00, /*Polling interval in milliseconds*/
+//               /*32*/
 
-        /*******************第三个接口描述符*********************/
-        0x09, /* bLength: Interface Descriptor size */
-        0x04, /* bDescriptorType: */
-        /*      Interface descriptor type */
-        0x02, /* bInterfaceNumber: Number of Interface */
-        0x00, /* bAlternateSetting: Alternate setting */
-        0x02, /* bNumEndpoints*/
-        0x08, /* bInterfaceClass: MASS STORAGE Class */
-        0x06, /* bInterfaceSubClass : SCSI transparent*/
-        0x50, /* nInterfaceProtocol */
-        4,    /* iInterface: */
-        /* 18 */
-        0x07, /*Endpoint descriptor length = 7*/
-        0x05, /*Endpoint descriptor type */
-        0x83, /*Endpoint address (IN, address 1) */
-        0x02, /*Bulk endpoint type */
-        0x40, /*Maximum packet size (64 bytes) */
-        0x00,
-        0x00, /*Polling interval in milliseconds */
-        /* 25 */
-        0x07, /*Endpoint descriptor length = 7 */
-        0x05, /*Endpoint descriptor type */
-        0x04, /*Endpoint address (OUT, address 2) */
-        0x02, /*Bulk endpoint type */
-        0x40, /*Maximum packet size (64 bytes) */
-        0x00,
-        0x00, /*Polling interval in milliseconds*/
-              /*32*/
-
-};
+// };
 ////////////////////////配置描述符集合完毕//////////////////////////
 //USB键盘报告描述符的定义
 const u8 KeyboardReportDescriptor[KP_ReportDescriptor_Size] =
@@ -291,18 +291,12 @@ const u8 MouseReportDescriptor[Mouse_ReportDescriptor_Size] =
 };
 ///////////////////////////报告描述符完毕////////////////////////////
 /* USB String Descriptors (optional) */
-//const u8 Joystick_StringLangID[JOYSTICK_SIZ_STRING_LANGID] =
-//    {
-//        JOYSTICK_SIZ_STRING_LANGID,
-//        USB_STRING_DESCRIPTOR_TYPE,
-//        0x09,
-//        0x04}; /* LangID = 0x0409: U.S. English */
 ONE_DESCRIPTOR *get_string_descriptor(char *str, u8 len)
 {
   u8 desc_len = (len)*2 + 2;
   char *buf = (char *)malloc(desc_len);
   ONE_DESCRIPTOR *ret = (ONE_DESCRIPTOR *)malloc(sizeof(ONE_DESCRIPTOR));
-  buf[0] = desc_len; 
+  buf[0] = desc_len;
   buf[1] = USB_STRING_DESCRIPTOR_TYPE;
   for (int i = 0; i < len; i++)
   {
@@ -314,9 +308,10 @@ ONE_DESCRIPTOR *get_string_descriptor(char *str, u8 len)
   return ret;
 }
 extern ONE_DESCRIPTOR String_Descriptor[5];
-void init_USB_string()
+extern ONE_DESCRIPTOR Config_Descriptor;
+void init_string_descriptor()
 {
-  char lang_string[] = {0x09, 0x04};
+  char lang_string[] = {0x09, 0x04}; /* LangID = 0x0409: U.S. English */
   String_Descriptor[0] = *get_string_descriptor(lang_string, sizeof lang_string);
   char vender_string[] = "blackmiaool";
   String_Descriptor[1] = *get_string_descriptor(vender_string, sizeof vender_string);
@@ -326,17 +321,214 @@ void init_USB_string()
   String_Descriptor[3] = *get_string_descriptor(serial_string, sizeof serial_string);
   String_Descriptor[4] = *get_string_descriptor(serial_string, sizeof serial_string);
 }
+static u8 KP_OFF_HID_DESC;
+static u8 Mouse_OFF_HID_DESC;
+extern u8 udisk_mode;
+void init_config_descriptor()
+{
+  const u8 interface_kb[] = {
+      0x09, //bLength字段
+      0x04, //bDescriptorType字段
+      0x00, //bInterfaceNumber字段
+      0x00, //bAlternateSetting字段
+      0x02, //bNumEndpoints字段
+      0x03, //bInterfaceClass字段
+      0x01, //bInterfaceSubClass字段
+      0x01, //bInterfaceProtocol字段
+      0x00, //iConfiguration字段
 
-//const u8 Joystick_StringProduct[JOYSTICK_SIZ_STRING_PRODUCT] =
-//    {
-//        JOYSTICK_SIZ_STRING_PRODUCT, /* bLength */
-//        USB_STRING_DESCRIPTOR_TYPE,  /* bDescriptorType */
-//        'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0, ' ', 0, 'J', 0,
-//        'n', 0, 'y', 0, 's', 0, 't', 0, 'i', 0, 'c', 0, 'k', 0};
-//u8 Joystick_StringSerial[JOYSTICK_SIZ_STRING_SERIAL] =
-//    {
-//        JOYSTICK_SIZ_STRING_SERIAL, /* bLength */
-//        USB_STRING_DESCRIPTOR_TYPE, /* bDescriptorType */
-//        'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0, '1', 0, '0', 0};
+      /******************HID描述符************************/
+      0x09, //bLength字段
+      0x21, //bDescriptorType字段
+      0x10, //bcdHID字段
+      0x01,
+      0x21, //bCountyCode字段
+      0x01, //bNumDescriptors字段
+      0x22, //bDescriptorType字段
+
+      //bDescriptorLength字段。
+      //下级描述符的长度。下级描述符为键盘报告描述符。
+      sizeof(KeyboardReportDescriptor) & 0xFF,
+      (sizeof(KeyboardReportDescriptor) >> 8) & 0xFF,
+
+      /**********************输入端点描述符***********************/
+      0x07, //bLength字段
+      0x05, //bDescriptorType字段
+      0x81, //bEndpointAddress字段
+      0x03, //bmAttributes字段
+      0x10, //wMaxPacketSize字段
+      0x00,
+      0x0A, //bInterval字段
+
+      /**********************输出端点描述符***********************/
+      0x07, //bLength字段
+      0x05, //bDescriptorType字段
+      0x01, //bEndpointAddress字段
+      0x03, //bmAttributes字段
+      0x10, //wMaxPacketSize字段
+      0x00,
+      0x0A, //bInterval字段
+  };
+  const u8 interface_mouse[] = {
+      0x09, //bLength字段
+      0x04, //bDescriptorType字段
+      0x01, //bInterfaceNumber字段
+      0x00, //bAlternateSetting字段
+      0x01, //bNumEndpoints字段
+      0x03, //bInterfaceClass字段
+      0x01, //bInterfaceSubClass字段
+      0x02, //bInterfaceProtocol字段
+      0x00, //iConfiguration字段
+
+      /******************HID描述符************************/
+      0x09, //bLength字段
+      0x21, //bDescriptorType字段
+      0x10, //bcdHID字段
+      0x01,
+      0x21,                                 //bCountyCode字段
+      0x01,                                 //bNumDescriptors字段
+      0x22,                                 //bDescriptorType字段
+      sizeof(MouseReportDescriptor) & 0xFF, //bDescriptorLength字段
+      (sizeof(MouseReportDescriptor) >> 8) & 0xFF,
+
+      /**********************输入端点描述符***********************/
+      0x07, //bLength字段
+      0x05, //bDescriptorType字段
+      0x82, //bEndpointAddress字段
+      0x03, //bmAttributes字段。D1~D0为端点传输类型选择
+      0x40, //wMaxPacketSize字段
+      0x00,
+      0x0A, //bInterval字段
+  };
+  const u8 interface_mass[] = {
+      0x09, /* bLength: Interface Descriptor size */
+      0x04, /* bDescriptorType: */
+      /*      Interface descriptor type */
+      0x02, /* bInterfaceNumber: Number of Interface */
+      0x00, /* bAlternateSetting: Alternate setting */
+      0x02, /* bNumEndpoints*/
+      0x08, /* bInterfaceClass: MASS STORAGE Class */
+      0x06, /* bInterfaceSubClass : SCSI transparent*/
+      0x50, /* nInterfaceProtocol */
+      4,    /* iInterface: */
+
+      0x07,       /*Endpoint descriptor length = 7*/
+      0x05,       /*Endpoint descriptor type */
+      0x83,       /*Endpoint address (IN, address 1) */
+      0x02,       /*Bulk endpoint type */
+      0x40,       /*Maximum packet size (64 bytes) */
+      0x00, 0x00, /*Polling interval in milliseconds */
+
+      0x07,       /*Endpoint descriptor length = 7 */
+      0x05,       /*Endpoint descriptor type */
+      0x04,       /*Endpoint address (OUT, address 2) */
+      0x02,       /*Bulk endpoint type */
+      0x40,       /*Maximum packet size (64 bytes) */
+      0x00, 0x00, /*Polling interval in milliseconds*/
+  };
+  const u8 interface_com[] = {
+      0x09, /* bLength: Interface Descriptor size */
+      0x04, /* bDescriptorType: Interface */
+      /* Interface descriptor type */
+      0x02, /* bInterfaceNumber: Number of Interface */
+      0x00, /* bAlternateSetting: Alternate setting */
+      0x02, /* bNumEndpoints: One endpoints used */
+      0xff, /* bInterfaceClass: Communication Interface Class */
+      0x01, /* bInterfaceSubClass: Abstract Control Model */
+      0x02, /* bInterfaceProtocol: Common AT commands */
+      0x00, /* iInterface: */
+
+      /*Endpoint 2in Descriptor*/
+      0x07, /* bLength: Endpoint Descriptor size */
+      0x05, /* bDescriptorType: Endpoint */
+      0x83, /* bEndpointAddress: (IN2) */
+      0x02, /* bmAttributes: bulk */
+      0x40,
+      0x00, /* wMaxPacketSize: */
+      0x00, /* bInterval: */
+
+      /*Endpoint 2out Descriptor*/
+      0x07, /* bLength: Endpoint Descriptor size */
+      0x05, /* bDescriptorType: Endpoint */
+      0x04, /* bEndpointAddress: (out2) */
+      0x02, /* bmAttributes: bulk */
+      0x40,
+      0x00, /* wMaxPacketSize: */
+      0x00, /* bInterval: */
+  };
+  const u8 *third_interface;
+  u8 third_interface_length;
+  if (udisk_mode || 1)
+  {
+    third_interface = interface_mass;
+    third_interface_length = sizeof interface_mass;
+  }
+  else
+  {
+    third_interface = interface_com;
+    third_interface_length = sizeof interface_com;
+  }
+  u8 length = sizeof interface_kb + sizeof interface_mouse + third_interface_length + 9;
+
+  u8 head[] = {
+      0x09,                              //bLength字段
+      USB_CONFIGURATION_DESCRIPTOR_TYPE, //bDescriptorType字段
+      //wTotalLength字段
+      length % 128,
+      /* wTotalLength: Bytes returned */
+      length / 128,
+
+      0x03, //bNumInterfaces字段
+      0x01, //bConfiguration字段
+      0x00, //iConfigurationz字段
+      0x80, //bmAttributes字段
+      0x32, //bMaxPower字段
+  };
+  KP_OFF_HID_DESC = sizeof head + 9;
+  Mouse_OFF_HID_DESC = sizeof head + sizeof interface_kb + 9;
+
+  const u8 *const sections[] = {
+      head, interface_kb, interface_mouse, third_interface};
+  u8 sections_length[] = {
+      sizeof head,
+      sizeof interface_kb,
+      sizeof interface_mouse,
+      third_interface_length};
+
+  u8 *const buf = (u8 *)malloc(length);
+  u8 index = 0;
+  const u8 section_len = sizeof(sections) / sizeof(sections[1]);
+  for (int i = 0; i < section_len; i++)
+  {
+    for (int j = 0; j < sections_length[i]; j++)
+    {
+      buf[index] = sections[i][j];
+      index++;
+    }
+  }
+
+  Joystick_ConfigDescriptor = buf;
+  ONE_DESCRIPTOR *ret = (ONE_DESCRIPTOR *)malloc(sizeof(ONE_DESCRIPTOR));
+  ret->Descriptor = buf;
+  ret->Descriptor_Size = length;
+  Config_Descriptor = *ret;
+}
+extern ONE_DESCRIPTOR KP_Hid_Descriptor;
+extern ONE_DESCRIPTOR Mouse_Hid_Descriptor;
+
+void init_hid_descriptor()
+{
+  KP_Hid_Descriptor.Descriptor = (u8 *)Joystick_ConfigDescriptor + KP_OFF_HID_DESC;
+  KP_Hid_Descriptor.Descriptor_Size = JOYSTICK_SIZ_HID_DESC;
+  Mouse_Hid_Descriptor.Descriptor = (u8 *)Joystick_ConfigDescriptor + Mouse_OFF_HID_DESC;
+  Mouse_Hid_Descriptor.Descriptor_Size = JOYSTICK_SIZ_HID_DESC;
+};
+
+void init_USB_config()
+{
+  init_string_descriptor();
+  init_config_descriptor();
+  init_hid_descriptor();
+}
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

@@ -20,6 +20,7 @@
 #include "usb_istr.h"
 #include "usb_bot.h"
 #include "usb_desc.h"
+#include "keyboard.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -184,23 +185,36 @@ void EP1_OUT_Callback(void)
 }
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
-u8 buffer_out[VIRTUAL_COM_PORT_DATA_SIZE];
-u32 count_out = 0;
-u32 count_in = 0;
+
+
+
 void EP3_IN_Callback(void)
 {
-  Mass_Storage_In();
+//	printf("epi");
+//	if(udisk_mode){
+		Mass_Storage_In();
+//	}
+  
+}
+u8 bufff[64];
+void EP4_OUT_Callback(void)
+{
+//	printf("epo");
+//	if(udisk_mode){
+		Mass_Storage_Out();
+//	}else{
+//		 u8 Data_Len = GetEPRxCount(ENDP4);
+//    PMAToUserBufferCopy(bufff, ENDP4_RXADDR, Data_Len);
+//		SetEPRxValid(ENDP4);
+//	}
 }
 void EP5_IN_Callback(void)
 {
-    count_in = 0;
 }
 
 void EP7_OUT_Callback(void)
 {
-  count_out = GetEPRxCount(ENDP3);
-  PMAToUserBufferCopy(buffer_out, ENDP7_RXADDR, count_out);
-  SetEPRxValid(ENDP3);
+
 }
 /*******************************************************************************
 * Function Name  : EP2_OUT_Callback.
@@ -210,7 +224,4 @@ void EP7_OUT_Callback(void)
 * Return         : None.
 *******************************************************************************/
 //???2,??????????????????????
-void EP4_OUT_Callback(void)
-{
-  Mass_Storage_Out();
-}
+

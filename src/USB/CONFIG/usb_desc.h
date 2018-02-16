@@ -33,10 +33,8 @@
 
 #define JOYSTICK_SIZ_DEVICE_DESC 18
 /*********************************************************/
-#define KP_OFF_HID_DESC 18
-#define Mouse_OFF_HID_DESC 50
 
-#define JOYSTICK_SIZ_CONFIG_DESC (66 + 23) //+58)
+// #define JOYSTICK_SIZ_CONFIG_DESC (66 + 23) //+58)
 #define KP_ReportDescriptor_Size 64
 #define Mouse_ReportDescriptor_Size 132
 /*********************************************************/
@@ -71,7 +69,7 @@ extern const u8 MouseReportDescriptor[Mouse_ReportDescriptor_Size];
 /*******************************************************************************/
 
 extern const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC];
-extern const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC];
+extern u8 *Joystick_ConfigDescriptor;
 //extern const u8 Joystick_StringLangID[JOYSTICK_SIZ_STRING_LANGID];
 //extern u8 *Joystick_StringVendor;
 //extern const u8 Joystick_StringProduct[JOYSTICK_SIZ_STRING_PRODUCT];

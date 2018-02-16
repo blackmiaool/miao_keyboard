@@ -118,9 +118,9 @@ void SCSI_ReadCapacity10_Cmd(u8 lun)
     return;
   }
 
-  ReadCapacity10_Data[0] = (u8)(Mass_Block_Count[lun] - 1 >> 24);
-  ReadCapacity10_Data[1] = (u8)(Mass_Block_Count[lun] - 1 >> 16);
-  ReadCapacity10_Data[2] = (u8)(Mass_Block_Count[lun] - 1 >>  8);
+  ReadCapacity10_Data[0] = (u8)((Mass_Block_Count[lun] - 1) >> 24);
+  ReadCapacity10_Data[1] = (u8)((Mass_Block_Count[lun] - 1) >> 16);
+  ReadCapacity10_Data[2] = (u8)((Mass_Block_Count[lun] - 1) >>  8);
   ReadCapacity10_Data[3] = (u8)(Mass_Block_Count[lun] - 1);
 
   ReadCapacity10_Data[4] = (u8)(Mass_Block_Size[lun] >>  24);

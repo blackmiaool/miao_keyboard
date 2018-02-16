@@ -5,7 +5,6 @@
 #include "sys.h"
 #include "stm32f10x_gpio.h"
 #include "usart.h"
-#include "commu_mcu.h"
 #include "keyboard.h"
 u8 led_buf[14][5];
 u8 led_mode = 0;

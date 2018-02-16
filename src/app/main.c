@@ -22,7 +22,6 @@ extern u32 Mass_Block_Size[MAX_LUN + 1];
 extern u32 Mass_Block_Count[MAX_LUN + 1];
 extern u8 USB_STATUS_REG;
 
-
 int calc_free_memory(u32 last, u32 base)
 {
     for (int i = 0; i <= 10; i++)
@@ -46,8 +45,9 @@ int calc_free_memory(u32 last, u32 base)
     }
     return 0;
 }
-void print_free_memory(const char *title){
-    printf("%s memory= %.3f KB\r\n",title, (float)calc_free_memory(0, 100000) / 1000);
+void print_free_memory(const char *title)
+{
+    printf("%s memory= %.3f KB\r\n", title, (float)calc_free_memory(0, 100000) / 1000);
 }
 static void timer_init()
 {
@@ -56,7 +56,7 @@ static void timer_init()
     TIM1->PSC = 7199;  //0.1ms per tick
     TIM1->CR1 |= 0x01;
 }
-extern void init_USB_string(void);
+extern void init_USB_config(void);
 int main(void)
 {
     Stm32_Clock_Init(9);
@@ -65,11 +65,12 @@ int main(void)
 
     // free JTAG pins
     JTAG_Set(1);
-		init_USB_string();
+
     // init usb hardware
+
     USB_Cable_Init();
     USB_Cable_Config(ENABLE);
-		
+
     timer_init();
 
     // wait for flash
@@ -85,7 +86,7 @@ int main(void)
 
     // init usb
     keyboard_init();
-
+    init_USB_config();
     //exec before app_init to check if parse bmk files
     keyboard_scan();
 
@@ -102,7 +103,7 @@ int main(void)
     print_free_memory("before app");
     led_init();
     app_init();
-    
+
     while (1)
     {
         led_handle();

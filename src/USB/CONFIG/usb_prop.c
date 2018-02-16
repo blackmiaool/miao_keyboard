@@ -32,77 +32,66 @@ u32 ProtocolValue;
 /* -------------------------------------------------------------------------- */
 /*  Structures initializations */
 /* -------------------------------------------------------------------------- */
-u32 Max_Lun =MAX_LUN; //����USB�豸������,1����2��.0����һ��   
+u32 Max_Lun = MAX_LUN; //����USB�豸������,1����2��.0����һ��
 extern u8 Bot_State;
 DEVICE Device_Table =
-{
-    EP_NUM,
-    1
-};
+    {
+        EP_NUM,
+        1};
 
 DEVICE_PROP Device_Property =
-{
-    Joystick_init,
-    Joystick_Reset,
-    Joystick_Status_In,
-    Joystick_Status_Out,
-    Joystick_Data_Setup,
-    Joystick_NoData_Setup,
-    Joystick_Get_Interface_Setting,
-    Joystick_GetDeviceDescriptor,
-    Joystick_GetConfigDescriptor,
-    Joystick_GetStringDescriptor,
-    0,
-    0x40 /*MAX PACKET SIZE*/
+    {
+        Joystick_init,
+        Joystick_Reset,
+        Joystick_Status_In,
+        Joystick_Status_Out,
+        Joystick_Data_Setup,
+        Joystick_NoData_Setup,
+        Joystick_Get_Interface_Setting,
+        Joystick_GetDeviceDescriptor,
+        Joystick_GetConfigDescriptor,
+        Joystick_GetStringDescriptor,
+        0,
+        0x40 /*MAX PACKET SIZE*/
 };
 USER_STANDARD_REQUESTS User_Standard_Requests =
-{
-    Joystick_GetConfiguration,
-    Joystick_SetConfiguration,
-    Joystick_GetInterface,
-    Joystick_SetInterface,
-    Joystick_GetStatus,
-    Joystick_ClearFeature,
-    Joystick_SetEndPointFeature,
-    Joystick_SetDeviceFeature,
-    Joystick_SetDeviceAddress
-};
+    {
+        Joystick_GetConfiguration,
+        Joystick_SetConfiguration,
+        Joystick_GetInterface,
+        Joystick_SetInterface,
+        Joystick_GetStatus,
+        Joystick_ClearFeature,
+        Joystick_SetEndPointFeature,
+        Joystick_SetDeviceFeature,
+        Joystick_SetDeviceAddress};
 
 ONE_DESCRIPTOR Device_Descriptor =
-{
-    (u8*)Joystick_DeviceDescriptor,
-    JOYSTICK_SIZ_DEVICE_DESC
-};
+    {
+        (u8 *)Joystick_DeviceDescriptor,
+        JOYSTICK_SIZ_DEVICE_DESC};
 
-ONE_DESCRIPTOR Config_Descriptor =
-{
-    (u8*)Joystick_ConfigDescriptor,
-    JOYSTICK_SIZ_CONFIG_DESC
-};
+ONE_DESCRIPTOR Config_Descriptor;
 /*******************************************************************/
-ONE_DESCRIPTOR KP_Report_Descriptor =                                   //
-{                                                                    //
-        (u8 *)KeyboardReportDescriptor,                                    //
-        KP_ReportDescriptor_Size                                        //
-        };                                                                //
+
+ONE_DESCRIPTOR KP_Report_Descriptor = //
+    {
+        //
+        (u8 *)KeyboardReportDescriptor, //
+        KP_ReportDescriptor_Size        //
+};                                      //
 //
-ONE_DESCRIPTOR KP_Hid_Descriptor =                                    //
-{                                                                    //
-        (u8*)Joystick_ConfigDescriptor + KP_OFF_HID_DESC,                //
-        JOYSTICK_SIZ_HID_DESC                                            //
-        };                                                                //
-//
-ONE_DESCRIPTOR Mouse_Report_Descriptor =                            //
-{                                                                    //
-        (u8 *)MouseReportDescriptor,                                    //
-        Mouse_ReportDescriptor_Size                                        //
-        };                                                                //
-//
-ONE_DESCRIPTOR Mouse_Hid_Descriptor =                                //
-{                                                                    //
-        (u8*)Joystick_ConfigDescriptor + Mouse_OFF_HID_DESC,            //
-        JOYSTICK_SIZ_HID_DESC                                            //
-        };                                                                //
+ONE_DESCRIPTOR KP_Hid_Descriptor;
+ONE_DESCRIPTOR Mouse_Hid_Descriptor;
+
+
+ONE_DESCRIPTOR Mouse_Report_Descriptor = //
+    {
+        //
+        (u8 *)MouseReportDescriptor, //
+        Mouse_ReportDescriptor_Size  //
+};                                   //
+                                                            //
 /*******************************************************************/
 
 ONE_DESCRIPTOR String_Descriptor[5];
@@ -138,7 +127,7 @@ void Joystick_init(void)
     /* Connect the device */
     PowerOn();
     /* USB interrupts initialization */
-    _SetISTR(0);               /* clear pending interrupts */
+    _SetISTR(0); /* clear pending interrupts */
     wInterrupt_Mask = IMR_MSK;
     _SetCNTR(wInterrupt_Mask); /* set interrupts mask */
 
@@ -157,7 +146,7 @@ void Joystick_Reset(void)
 {
     /* Set Joystick_DEVICE as not configured */
     pInformation->Current_Configuration = 0;
-    pInformation->Current_Interface = 0;/*the default Interface*/
+    pInformation->Current_Interface = 0; /*the default Interface*/
 
     /* Current Feature initialization */
     pInformation->Current_Feature = Joystick_ConfigDescriptor[7];
@@ -174,21 +163,21 @@ void Joystick_Reset(void)
     SetEPRxValid(ENDP0);
 
     /* Initialize Endpoint In 1 */
-    SetEPType(ENDP1, EP_INTERRUPT); //��ʼ��Ϊ�ж϶˵�����
+    SetEPType(ENDP1, EP_INTERRUPT);   //��ʼ��Ϊ�ж϶˵�����
     SetEPTxAddr(ENDP1, ENDP1_TXADDR); //���÷������ݵĵ�ַ
-    SetEPTxCount(ENDP1, 8); //���÷��͵ĳ���
-    SetEPTxStatus(ENDP1, EP_TX_NAK); //���ö˵㴦��æ״̬
+    SetEPTxCount(ENDP1, 8);           //���÷��͵ĳ���
+    SetEPTxStatus(ENDP1, EP_TX_NAK);  //���ö˵㴦��æ״̬
 
     /* Initialize Endpoint Out 1 */
-    SetEPRxAddr(ENDP1, ENDP1_RXADDR); //���ý������ݵĵ�ַ
-    SetEPRxCount(ENDP1, 2);  //���ý��ճ���
+    SetEPRxAddr(ENDP1, ENDP1_RXADDR);  //���ý������ݵĵ�ַ
+    SetEPRxCount(ENDP1, 2);            //���ý��ճ���
     SetEPRxStatus(ENDP1, EP_RX_VALID); //���ö˵���Ч�����Խ�������
 
     /* Initialize Endpoint In 2 */
-    SetEPType(ENDP2, EP_INTERRUPT); //��ʼ��Ϊ�ж϶˵�����
+    SetEPType(ENDP2, EP_INTERRUPT);   //��ʼ��Ϊ�ж϶˵�����
     SetEPTxAddr(ENDP2, ENDP2_TXADDR); //���÷������ݵĵ�ַ
-    SetEPTxCount(ENDP2, 5); //���÷��͵ĳ���
-    SetEPTxStatus(ENDP2, EP_TX_NAK); //���ö˵㴦��æ״̬
+    SetEPTxCount(ENDP2, 5);           //���÷��͵ĳ���
+    SetEPTxStatus(ENDP2, EP_TX_NAK);  //���ö˵㴦��æ״̬
 
     SetEPType(ENDP3, EP_BULK);
     SetEPTxAddr(ENDP3, ENDP3_TXADDR);
@@ -211,7 +200,6 @@ void Joystick_Reset(void)
     Bot_State = BOT_IDLE;
     //USB_NotConfigured_LED();
     /* Set this device to response on default address */
-
 }
 /*******************************************************************************
 * Function Name  : Joystick_SetConfiguration.
@@ -222,14 +210,14 @@ void Joystick_Reset(void)
 *******************************************************************************/
 void Joystick_SetConfiguration(void)
 {
-      if (pInformation->Current_Configuration != 0)
-  {
-    /* Device configured */
-    bDeviceState = CONFIGURED;      
-    ClearDTOG_TX(ENDP3);
-    ClearDTOG_RX(ENDP4);
-    Bot_State = BOT_IDLE; /* set the Bot state machine to the IDLE state */
-  }
+    if (pInformation->Current_Configuration != 0)
+    {
+        /* Device configured */
+        bDeviceState = CONFIGURED;
+        ClearDTOG_TX(ENDP3);
+        ClearDTOG_RX(ENDP4);
+        Bot_State = BOT_IDLE; /* set the Bot state machine to the IDLE state */
+    }
 }
 /*******************************************************************************
 * Function Name  : Joystick_SetConfiguration.
@@ -238,9 +226,9 @@ void Joystick_SetConfiguration(void)
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void Joystick_SetDeviceAddress (void)
+void Joystick_SetDeviceAddress(void)
 {
-     bDeviceState = ADDRESSED;
+    bDeviceState = ADDRESSED;
 }
 /*******************************************************************************
 * Function Name  : Joystick_Status_In.
@@ -250,7 +238,8 @@ void Joystick_SetDeviceAddress (void)
 * Return         : None.
 *******************************************************************************/
 void Joystick_Status_In(void)
-{}
+{
+}
 
 /*******************************************************************************
 * Function Name  : Joystick_Status_Out
@@ -259,8 +248,9 @@ void Joystick_Status_In(void)
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void Joystick_Status_Out (void)
-{}
+void Joystick_Status_Out(void)
+{
+}
 
 /*******************************************************************************
 * Function Name  : Joystick_Data_Setup
@@ -274,9 +264,7 @@ RESULT Joystick_Data_Setup(u8 RequestNo)
     u8 *(*CopyRoutine)(u16);
 
     CopyRoutine = NULL;
-    if ((RequestNo == GET_DESCRIPTOR)
-            && (Type_Recipient == (STANDARD_REQUEST | INTERFACE_RECIPIENT))
-            && (pInformation->USBwIndex0 < 2))
+    if ((RequestNo == GET_DESCRIPTOR) && (Type_Recipient == (STANDARD_REQUEST | INTERFACE_RECIPIENT)) && (pInformation->USBwIndex0 < 2))
     {
 
         if (pInformation->USBwValue1 == REPORT_DESCRIPTOR)
@@ -294,20 +282,14 @@ RESULT Joystick_Data_Setup(u8 RequestNo)
                 CopyRoutine = Mouse_GetHIDDescriptor;
         }
 
-
-
-
     } /* End of GET_DESCRIPTOR */
 
     /*** GET_PROTOCOL ***/
-    else if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-             && RequestNo == GET_PROTOCOL)
+    else if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) && RequestNo == GET_PROTOCOL)
     {
         CopyRoutine = Joystick_GetProtocolValue;
     }
-    else if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-             && (RequestNo == GET_MAX_LUN) && (pInformation->USBwValue == 0)
-             && (pInformation->USBwIndex == 0) && (pInformation->USBwLength == 0x01))
+    else if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) && (RequestNo == GET_MAX_LUN) && (pInformation->USBwValue == 0) && (pInformation->USBwIndex == 0) && (pInformation->USBwLength == 0x01))
     {
         CopyRoutine = Get_Max_Lun;
     }
@@ -320,9 +302,6 @@ RESULT Joystick_Data_Setup(u8 RequestNo)
     {
         return USB_UNSUPPORT;
     }
-
-
-
 
     pInformation->Ctrl_Info.CopyData = CopyRoutine;
     pInformation->Ctrl_Info.Usb_wOffset = 0;
@@ -340,30 +319,26 @@ RESULT Joystick_Data_Setup(u8 RequestNo)
 
 RESULT Joystick_NoData_Setup(u8 RequestNo)
 {
-    if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-            && (RequestNo == SET_PROTOCOL))
+    if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) && (RequestNo == SET_PROTOCOL))
     {
         return Joystick_SetProtocol();
     }
-    else  if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-      && (RequestNo == MASS_STORAGE_RESET) && (pInformation->USBwValue == 0)
-      && (pInformation->USBwIndex == 0) && (pInformation->USBwLength == 0x00))
-  {
-    /* Initialize Endpoint 1 */
-    ClearDTOG_TX(ENDP3);
+    else if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) && (RequestNo == MASS_STORAGE_RESET) && (pInformation->USBwValue == 0) && (pInformation->USBwIndex == 0) && (pInformation->USBwLength == 0x00))
+    {
+        /* Initialize Endpoint 1 */
+        ClearDTOG_TX(ENDP3);
 
-    /* Initialize Endpoint 2 */
-    ClearDTOG_RX(ENDP4);
+        /* Initialize Endpoint 2 */
+        ClearDTOG_RX(ENDP4);
 
-    /*intialise the CBW signature to enable the clear feature*/
-    CBW.dSignature = BOT_CBW_SIGNATURE;
-    Bot_State = BOT_IDLE;
+        /*intialise the CBW signature to enable the clear feature*/
+        CBW.dSignature = BOT_CBW_SIGNATURE;
+        Bot_State = BOT_IDLE;
 
-    return USB_SUCCESS;
-  }
+        return USB_SUCCESS;
+    }
 
-        return USB_UNSUPPORT;
-
+    return USB_UNSUPPORT;
 }
 
 /*******************************************************************************
@@ -400,14 +375,14 @@ u8 *Joystick_GetConfigDescriptor(u16 Length)
 u8 *Joystick_GetStringDescriptor(u16 Length)
 {
     u8 wValue0 = pInformation->USBwValue0;
-      if (wValue0 > 4)
-      {
+    if (wValue0 > 4)
+    {
         return NULL;
-      }
-      else
-      {
-    return Standard_GetDescriptorData(Length, &String_Descriptor[wValue0]);
-      }
+    }
+    else
+    {
+        return Standard_GetDescriptorData(Length, &String_Descriptor[wValue0]);
+    }
 }
 u8 INIT_OK = 0;
 /*******************************************************************************
@@ -500,8 +475,6 @@ u8 *Joystick_GetProtocolValue(u16 Length)
     }
 }
 
-
-
 /*******************************************************************************
 * Function Name  : Mass_Storage_SetConfiguration
 * Description    : Handle the SetConfiguration request.
@@ -528,7 +501,6 @@ u8 *Joystick_GetProtocolValue(u16 Length)
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-
 
 ///*******************************************************************************
 //* Function Name  : Mass_Storage_SetConfiguration.
@@ -573,7 +545,6 @@ u8 *Joystick_GetProtocolValue(u16 Length)
 * Return         : RESULT.
 *******************************************************************************/
 
-
 /*******************************************************************************
 * Function Name  : MASS_NoData_Setup.
 * Description    : Handle the no data class specific requests.
@@ -581,7 +552,6 @@ u8 *Joystick_GetProtocolValue(u16 Length)
 * Output         : None.
 * Return         : RESULT.
 *******************************************************************************/
-
 
 /*******************************************************************************
 * Function Name  : MASS_Get_Interface_Setting
@@ -665,14 +635,14 @@ u8 *Get_Max_Lun(u16 Length)
     }
     else
     {
-        return((u8*)(&Max_Lun));
+        return ((u8 *)(&Max_Lun));
     }
 }
 void Joystick_ClearFeature(void)
 {
-  /* when the host send a CBW with invalid signature or invalid length the two
+    /* when the host send a CBW with invalid signature or invalid length the two
      Endpoints (IN & OUT) shall stall until receiving a Mass Storage Reset     */
-  if (CBW.dSignature != BOT_CBW_SIGNATURE)
-    Bot_Abort(BOTH_DIR);
+    if (CBW.dSignature != BOT_CBW_SIGNATURE)
+        Bot_Abort(BOTH_DIR);
 }
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

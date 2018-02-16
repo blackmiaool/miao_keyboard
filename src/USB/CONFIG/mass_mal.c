@@ -14,39 +14,39 @@
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "platform_config.h"       
+#include "platform_config.h"
 #include "keyboard.h"
 //#include "mmc_sd.h"
 #include "usb_process.h"
 #include "mass_mal.h"
 //#include "flash.h"
-                                                                               
-long long Mass_Memory_Size[MAX_LUN+1];
-u32 Mass_Block_Size[MAX_LUN+1];
-u32 Mass_Block_Count[MAX_LUN+1];
-                                                                                   
+
+long long Mass_Memory_Size[MAX_LUN + 1];
+u32 Mass_Block_Size[MAX_LUN + 1];
+u32 Mass_Block_Count[MAX_LUN + 1];
+
 /*******************************************************************************
 * Function Name  : MAL_Init
 * Description    : Initializes the Media on the STM32
 * Input          : None
 * Output         : None
 * Return         : None
-*******************************************************************************/  
+*******************************************************************************/
 u16 MAL_Init(u8 lun)
 {
-  u16 status = MAL_OK;  
-  switch (lun)
-  {
-    case 0:                
-      break;               
-    case 1:                      
-      break;          
+    u16 status = MAL_OK;
+    switch (lun)
+    {
+    case 0:
+        break;
+    case 1:
+        break;
     default:
-      return MAL_FAIL;
-  }
-  return status;
+        return MAL_FAIL;
+    }
+    return status;
 }
-         
+
 /*******************************************************************************
 * Function Name  : MAL_Write
 * Description    : Write sectors
@@ -56,21 +56,22 @@ u16 MAL_Init(u8 lun)
                    1,FAIL
 *******************************************************************************/
 u16 MAL_Write(u8 lun, u32 Memory_Offset, u32 *Writebuff, u16 Transfer_Length)
-{      
+{
     u8 STA;
     switch (lun)
     {
-        case 0:                  
-            STA=SD_WriteDisk((u8*)Writebuff, Memory_Offset>>9, Transfer_Length>>9);             
-            break;                              
-        case 1:         
-            STA=0;
-            //SPI_Flash_Write((u8*)Writebuff, Memory_Offset, Transfer_Length);             
-            break; 
-        default:
-            return MAL_FAIL;
+    case 0:
+        STA = SD_WriteDisk((u8 *)Writebuff, Memory_Offset, Transfer_Length);
+        break;
+    case 1:
+        STA = 0;
+        //SPI_Flash_Write((u8*)Writebuff, Memory_Offset, Transfer_Length);
+        break;
+    default:
+        return MAL_FAIL;
     }
-    if(STA!=0)return MAL_FAIL;
+    if (STA != 0)
+        return MAL_FAIL;
     return MAL_OK;
 }
 
@@ -87,17 +88,18 @@ u16 MAL_Read(u8 lun, u32 Memory_Offset, u32 *Readbuff, u16 Transfer_Length)
     u8 STA;
     switch (lun)
     {
-        case 0:            
-            STA=SD_ReadDisk((u8*)Readbuff, Memory_Offset>>9, Transfer_Length>>9);       
-            break;                
-        case 1:     
-            STA=0;
-            //SPI_Flash_Read((u8*)Readbuff, Memory_Offset, Transfer_Length);             
-            break;      
-        default:
-            return MAL_FAIL;
+    case 0:
+        STA = SD_ReadDisk((u8 *)Readbuff, Memory_Offset, Transfer_Length);
+        break;
+    case 1:
+        STA = 0;
+        //SPI_Flash_Read((u8*)Readbuff, Memory_Offset, Transfer_Length);
+        break;
+    default:
+        return MAL_FAIL;
     }
-    if(STA!=0)return MAL_FAIL;
+    if (STA != 0)
+        return MAL_FAIL;
     return MAL_OK;
 }
 
@@ -108,17 +110,20 @@ u16 MAL_Read(u8 lun, u32 Memory_Offset, u32 *Readbuff, u16 Transfer_Length)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-u16 MAL_GetStatus (u8 lun)
+u16 MAL_GetStatus(u8 lun)
 {
-    switch(lun)
+    switch (lun)
     {
     case 0:
-        case 1:
-              if(udisk_mode){
-                    return MAL_OK;
-                }else{
-                    return MAL_FAIL;
-                }        
+    case 1:
+        if (udisk_mode)
+        {
+            return MAL_OK;
+        }
+        else
+        {
+            return MAL_FAIL;
+        }
     case 2:
         return MAL_FAIL;
     default:
