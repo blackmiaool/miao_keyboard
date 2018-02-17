@@ -12,7 +12,14 @@ function modifier2PlainText(modifier) {
     return ret;
 }
 export default class Rule {
-    constructor() {}
+    constructor(
+        { modifiers, key, expression } = {
+            modifiers: [],
+            expression: new Expression("")
+        }
+    ) {
+        Object.assign(this, { modifiers, key, expression });
+    }
     static format0Reg = /([\^+!#<>]*)([\da-zA-Z]+)::([\s\S]+)/;
     static fromFormat0(input) {
         const match = input.match(Rule.format0Reg);

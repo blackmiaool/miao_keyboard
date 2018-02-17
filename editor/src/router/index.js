@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import MacroList from "@/components/macro-list.vue";
+import MacroList from "@/router/macro-list.vue";
 
 Vue.use(Router);
 

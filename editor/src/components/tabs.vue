@@ -1,6 +1,8 @@
 <template>
     <div>
-        <router-link to="macro-list">Macro</router-link>
+        <router-link to="macro-list">
+            <i class="fa fa-fire"></i>
+            Macro</router-link>
     </div>
 
 </template>
@@ -10,12 +12,16 @@ export default {};
 <style lang="less" scoped>
 a {
     text-decoration: none;
-    color: #333;
-    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 10px 25px;
     border-radius: 5px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    &.router-link-active {
+        background-color: #0077f3;
+    }
 }
 </style>
 

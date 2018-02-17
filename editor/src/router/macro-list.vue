@@ -3,6 +3,7 @@
         <header>
             <i class="redo-btn fa fa-undo" :class="{active:listUndo.canUndo()}" @click="listUndo.undo()"></i>
             <i class="undo-btn fa fa-redo" :class="{active:listUndo.canRedo()}" @click="listUndo.redo()"></i>
+            <!-- <el-button type="success" @click="connect">Connect</el-button> -->
         </header>
         <el-table :data="list" stripe class="table" ref="table">
             <el-table-column type="expand">
@@ -37,10 +38,12 @@
             </el-table-column>
         </el-table>
         <div>
-            <el-button type="primary" @click="add">Add</el-button>
+            <el-button type="primary" @click="add">
+                <i class="fa fa-plus"></i> Add</el-button>
         </div>
         <el-button type="success" @click="exportConfig" class="clickable export-btn">
             <i class="fa fa-paper-plane"></i> Export</el-button>
+        <el-input type="textarea" v-model="output"></el-input>
     </div>
 </template>
 

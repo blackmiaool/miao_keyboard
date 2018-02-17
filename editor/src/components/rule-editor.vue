@@ -3,7 +3,7 @@
         <el-form ref="form" label-width="100px">
             <el-form-item label="Modifiers">
                 <el-select v-model="data.modifiers" multiple placeholder="Select" @visible-change="visibleChange" style="width:400px;">
-                    <el-option v-for="(value,modifier) in modifierMap" :key="value" :label="modifier" :value="modifier">
+                    <el-option v-for="(value,modifier) in code2usb" :key="value" :label="modifier" :value="modifier">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -38,7 +38,7 @@
 
 <script>
 import ExpressionComp from "@/components/expression";
-import { modifierMap, code2modifier, consumer2usb, key2usb } from "@/common";
+import { code2usb, code2modifier, consumer2usb, key2usb } from "@/common";
 import Expression from "@/expression";
 
 export default {
@@ -121,12 +121,12 @@ export default {
             this.$emit("input", this.data);
         }
     },
-    watch: {
-        data: {
-            handler: newValue => {},
-            deep: true
-        }
-    },
+    // watch: {
+    //     data: {
+    //         handler: newValue => {},
+    //         deep: true
+    //     }
+    // },
     props: {
         value: {
             type: Object
@@ -139,7 +139,7 @@ export default {
             selectedConsumer: undefined,
             consumer2usb,
             cachedData: undefined,
-            modifierMap,
+            code2usb,
             acceptingModifer: false,
             expressionInput: "",
             expression: [],

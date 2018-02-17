@@ -26,9 +26,7 @@ import draggable from "vuedraggable";
 export default {
     name: "Expression",
     props: ["expression", "editable"],
-    mounted() {
-        console.log("t", this.editable);
-    },
+    mounted() {},
     methods: {
         deleteSection(i) {
             this.expression.data.splice(i, 1);

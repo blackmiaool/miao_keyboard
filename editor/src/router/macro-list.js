@@ -1,10 +1,10 @@
 // import MacroLine from "@/components/macro-line";
-import Vue from "vue";
+// import Vue from "vue";
 import draggable from "vuedraggable";
 import ExpressionComp from "@/components/expression";
-import Expression from "@/expression";
+// import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
-import { shortModifierMap, modifierMap, ascii2usb, code2usb } from "@/common";
+import { modifierMap, ascii2usb, code2usb } from "@/common";
 import Undo from "../undo";
 import Rule from "../rule";
 
@@ -78,11 +78,13 @@ const list = config
 // });
 // eslint-disable-next-line no-new
 const listUndo = new Undo({ data: list });
+const luaScript = require("../../../udisk/main.lua");
+// console.log(luaScript);
 
 export default {
     name: "MacroList",
     data() {
-        return { list, modifierMap, listUndo };
+        return { list, modifierMap, listUndo, output: "" };
     },
     mounted() {
         window.a = () => {
@@ -108,18 +110,63 @@ export default {
                 undo({ index }, last) {
                     this.data.splice(index, 1, ...last);
                 }
+            })
+            .register({
+                name: "add",
+                exec() {
+                    this.data.push(new Rule());
+                },
+                undo() {
+                    this.data.pop();
+                }
             });
     },
     methods: {
+        connect() {
+            let device;
+            navigator.usb
+                .requestDevice({ filters: [{ vendorId: 0x0483 }] })
+                .then(deviceThis => {
+                    device = deviceThis;
+                    console.log(device.productName);
+                    console.log(device.manufacturerName);
+                    window.usbdevice = device;
+                    return device.open();
+                })
+                // .then(() => device.selectConfiguration(1)) // Select configuration #1 for the device.
+                .then(() => device.claimInterface(2)) // Request exclusive control over interface #2.
+                .then(() => device.transferOut(4, new ArrayBuffer(64)))
+                // .then(() => {
+                //     // setInterval(() => {
+                //     return device.transferIn(3, 64).then(() => {
+                //         console.log("!!!!");
+                //     });
+                //     // }, 10);
+                // })
+                // .then(() =>
+                //     device.controlTransferOut({
+                //         requestType: "class",
+                //         recipient: "interface",
+                //         request: 0x22,
+                //         value: 0x01,
+                //         index: 0x01
+                //     })
+                // )
+                // .then(() => device.transferIn(4, 64)) // Waiting for 64 bytes of data from endpoint #5.
+                .then(result => {
+                    const decoder = new TextDecoder();
+                    console.log(`Received: ${decoder.decode(result.data)}`);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
         add() {
-            this.list.push({});
+            this.listUndo.exec("add");
         },
         deleteLine(row) {
             const index = this.list.indexOf(row);
-            console.log("index", index);
             this.listUndo.exec("delete line", index);
-            // this.listUndo.
-            // this.list.splice()
         },
         edit(row) {
             this.$refs.table.toggleRowExpansion(row);
@@ -131,23 +178,33 @@ export default {
             this.listUndo.exec("edit", { index, data: newRow });
         },
         exportConfig() {
-            const txt = this.list
-                .map(li => {
-                    const modifiers = li.modifiers.reduce((p, modifier) => {
-                        // eslint-disable-next-line no-bitwise
-                        return p | code2usb[modifier];
-                    }, 0);
-                    let keyCode;
-                    if (li.key.match(/^\d{2,3}$/)) {
-                        keyCode = li.key;
-                    } else {
-                        keyCode = ascii2usb[li.key.charCodeAt(0)];
-                    }
-                    return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
-                })
-                .join("\n");
-            // console.log(JSON.stringify(this.list));
-            console.log(txt);
+            const map = {};
+            this.list.forEach(li => {
+                const modifiers = li.modifiers.reduce((p, modifier) => {
+                    // eslint-disable-next-line no-bitwise
+                    return p | code2usb[modifier];
+                }, 0);
+                let keyCode;
+                if (li.key.match(/^\d{2,3}$/)) {
+                    keyCode = li.key;
+                } else {
+                    keyCode = ascii2usb[li.key.charCodeAt(0)];
+                }
+                if (!map[keyCode]) {
+                    map[keyCode] = {};
+                }
+                map[keyCode][modifiers] = li.expression.toPlainText();
+                // return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
+            });
+            const ahkConfig = JSON.stringify(map, undefined, 4).replace(
+                /^(\s*)"(\d+)":/gm,
+                (all, indent, num) => `${indent}[${num}]=`
+            );
+            this.output = "";
+            this.output += "local ahk_data=";
+            this.output += ahkConfig;
+            this.output += "\n";
+            this.output += luaScript;
         }
     },
     components: {
