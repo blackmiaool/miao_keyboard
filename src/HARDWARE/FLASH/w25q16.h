@@ -123,7 +123,7 @@ void SPI_Flash_Wait_Busy(void);           //等廄空闲
 void SPI_Flash_PowerDown(void);           //滧入掉电模蕼
 
 void SPI_Flash_WAKEUP(void);              //粶醒
-
+void SPI_Flash_Write_Sector(u8 *,u16);
 #endif
 
 

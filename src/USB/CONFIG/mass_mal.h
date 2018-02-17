@@ -31,8 +31,8 @@ extern u32 Mass_Block_Count[MAX_LUN+1];
 
 u16 MAL_Init (u8 lun);
 u16 MAL_GetStatus (u8 lun);
-u16 MAL_Read(u8 lun, u32 Memory_Offset, u32 *Readbuff, u16 Transfer_Length);
-u16 MAL_Write(u8 lun, u32 Memory_Offset, u32 *Writebuff, u16 Transfer_Length);
+u16 MAL_Read(u8 lun, u32 Memory_Offset, u8 *Readbuff, u16 Transfer_Length);
+u16 MAL_Write(u8 lun, u32 Memory_Offset, u8 *Writebuff, u16 Transfer_Length);
 #endif /* __MASS_MAL_H */
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

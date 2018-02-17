@@ -1,7 +1,6 @@
 -- Don't use chinese comment.
 -- ahk's map ahk_data[normal_key][modifier_key]
-local ahk_data={}; 
- 
+
 
 -- init_datasheet(file_name, data_width): lua parse the table file,return a table for lua
 -- shift_table: (user shouldn't modify it) which key needs to be output with a shift key 
@@ -31,7 +30,7 @@ local key_map_mode=1;
 
 -- use to solve linux capslock delay bug
 local capslockCode=57;
-local clear_key,single_key,get_bit,modifier_compare,output_ahk,media_output,media_output,modifiers2value,ahk_parse,set_key_map_mode,key_input_underlying;
+local clear_key,single_key,get_bit,modifier_compare,output_ahk,media_output,media_output,modifiers2value,set_key_map_mode,key_input_underlying;
 
 
 function get_key_from_position(pos,index)
@@ -148,20 +147,6 @@ output_ahk= function (expression)
     end
 end
 
-ahk_parse= function (text_input)
-    for modifiers,key,expression in string.gmatch(text_input,"(%d+)@(%d+)@([^\n]+)") do
-        local key_index=tonumber(key);
-        
-        if not ahk_data[key_index] then
-            ahk_data[key_index]={}
-        end
-        ahk_data[key_index][modifiers]=expression;
-    end
-end
-
-
-
-
 function clear_key()
     single_key(0,0);    
 end
@@ -275,11 +260,9 @@ function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)
     previous_capslock=pressed_capslock;
     return true;
 end
+
 function main()
-    
-    
     local ahk_file=read_file("config/config.txt"); 
-    ahk_parse(ahk_file);
     ahk_file=nil;  
     collectgarbage();  
 end

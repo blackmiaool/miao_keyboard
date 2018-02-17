@@ -55,7 +55,7 @@ u16 MAL_Init(u8 lun)
 * Return         : 0,OK
                    1,FAIL
 *******************************************************************************/
-u16 MAL_Write(u8 lun, u32 Memory_Offset, u32 *Writebuff, u16 Transfer_Length)
+u16 MAL_Write(u8 lun, u32 Memory_Offset, u8 *Writebuff, u16 Transfer_Length)
 {
     u8 STA;
     switch (lun)
@@ -83,7 +83,7 @@ u16 MAL_Write(u8 lun, u32 Memory_Offset, u32 *Writebuff, u16 Transfer_Length)
 * Return         : 0,OK
                    1,FAIL
 *******************************************************************************/
-u16 MAL_Read(u8 lun, u32 Memory_Offset, u32 *Readbuff, u16 Transfer_Length)
+u16 MAL_Read(u8 lun, u32 Memory_Offset, u8 *Readbuff, u16 Transfer_Length)
 {
     u8 STA;
     switch (lun)

@@ -41,8 +41,9 @@ u8 SD_ReadDisk(u8 *buf, u32 addr, u32 cnt)
     SPI_Flash_Read(buf, addr, cnt);
     return 0;
 }
-u8 SD_WriteDisk(u8 *buf, u32 sector, u32 cnt)
+u8 SD_WriteDisk(u8 *buf, u32 addr, u32 cnt)
 {
-    SPI_Flash_Write(buf, sector, cnt);
+    printf("write %d %d\n", addr, cnt);
+    SPI_Flash_Write(buf, addr, cnt);
     return 0;
 }

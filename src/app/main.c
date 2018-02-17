@@ -80,9 +80,9 @@ int main(void)
     printf("start\r\n");
 
     // init flash descriptor for udisk
-    Mass_Memory_Size[0] = 4000 * 512;
-    Mass_Block_Size[0] = 512;
-    Mass_Block_Count[0] = 4000;
+    Mass_Memory_Size[0] = 500 * 4096;
+    Mass_Block_Size[0] = 4096;
+    Mass_Block_Count[0] = 500;
 
     // init usb
     keyboard_init();

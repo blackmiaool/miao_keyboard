@@ -33,7 +33,7 @@ vu32 Block_offset;
 vu32 Counter = 0;
 
 u32 Idx;
-u32 Data_Buffer[128]; //不使用malloc
+u8 Data_Buffer[4096]; //不使用malloc
 u8 TransferState = TXFR_IDLE;
 
 ////////////////////////////自己定义的一个标记USB状态的寄存器///////////////////
