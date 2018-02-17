@@ -16,9 +16,6 @@ export default {
 </script>
 
 <style>
-body {
-    margin: 0;
-}
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -29,5 +26,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     padding: 30px 0;
+    min-height: 100%;
+    box-sizing: border-box;
 }
 </style>

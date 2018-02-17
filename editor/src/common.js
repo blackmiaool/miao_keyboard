@@ -30,7 +30,6 @@ ascii2usb.forEach((num, i) => {
         usb2ascii[num] = i;
     }
 });
-console.log(usb2ascii);
 export const code2short = {
     ControlLeft: "<^",
     ControlRight: ">^",
