@@ -8,7 +8,7 @@ export default new Router({
     routes: [
         {
             path: "/",
-            name: "macro-list",
+            name: "home",
             component: MacroList
         },
         {

@@ -40,6 +40,7 @@
 import ExpressionComp from "@/components/expression";
 import { code2usb, code2modifier, consumer2usb, key2usb } from "@/common";
 import Expression from "@/expression";
+import Rule from "@/rule";
 
 export default {
     created() {
@@ -114,10 +115,14 @@ export default {
             });
         },
         onSubmit() {
-            if (this.data.key && this.data.key.length === 1) {
-                this.data.key = this.data.key.toUpperCase();
+            if (!this.data.key) {
+                alert("must have a 'key'");
+                return;
             }
-            console.log(this.data);
+            if (!Rule.key2usb(this.data.key)) {
+                alert(`unknown key: ${this.data.key}`);
+                return;
+            }
             this.$emit("input", this.data);
         }
     },

@@ -4,7 +4,9 @@ export const shortModifierMap = {
     "+": "Shift",
     "#": "Meta"
 };
-export const ascii2usb = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0,
+// prettier-ignore
+export const ascii2usb = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     44, 30, 52, 32, 33, 34, 36, 52, 38, 39, 37, 46, 54, 86, 55, 56,
     39, 30, 31, 32, 33, 34, 35, 36, 37, 38, 51, 51, 54, 46, 55, 56,
@@ -12,6 +14,23 @@ export const ascii2usb = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0,
     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0, 0, 0,
     53, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 50, 48, 53, 0];
+// prettier-ignore
+export const shiftTable = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0];
+export const usb2ascii = {};
+ascii2usb.forEach((num, i) => {
+    if (!shiftTable[i]) {
+        usb2ascii[num] = i;
+    }
+});
+console.log(usb2ascii);
 export const code2short = {
     ControlLeft: "<^",
     ControlRight: ">^",
@@ -78,14 +97,14 @@ export const modifierMap = {
     RMeta: 128
 };
 export const printableKeyMap = {
-    leftbracket: '{',
-    rightbracket: '}',
+    leftbracket: "{",
+    rightbracket: "}"
 };
 export function match2arr(str, reg) {
     const ret = [];
     let result;
     // eslint-disable-next-line no-cond-assign
-    while (result = reg.exec(str)) {
+    while ((result = reg.exec(str))) {
         ret.push(result.slice(1));
     }
     return ret;
@@ -132,16 +151,5 @@ export const key2usb = {
     ArrowLeft: 80,
     ArrowDown: 81,
     ArrowUp: 82,
-    NumLock: 83,
-
+    NumLock: 83
 };
-
-export const shiftTable = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0];

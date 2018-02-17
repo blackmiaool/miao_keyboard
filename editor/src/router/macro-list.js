@@ -4,11 +4,14 @@ import draggable from "vuedraggable";
 import ExpressionComp from "@/components/expression";
 // import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
-import { modifierMap, ascii2usb, code2usb } from "@/common";
+import store from "@/store";
+import { modifierMap, code2usb, usb2ascii } from "@/common";
 import Undo from "../undo";
 import Rule from "../rule";
 
-let config = `!<+a::blackmiaool
+let config = `
+<+6::694421865
+!<+a::blackmiaool
 >^w::{esc}
 >^n::{down}
 >^p::{up}
@@ -78,7 +81,7 @@ const list = config
 // });
 // eslint-disable-next-line no-new
 const listUndo = new Undo({ data: list });
-const luaScript = require("../../../udisk/main.lua");
+
 // console.log(luaScript);
 
 export default {
@@ -179,32 +182,33 @@ export default {
         },
         exportConfig() {
             const map = {};
-            this.list.forEach(li => {
-                const modifiers = li.modifiers.reduce((p, modifier) => {
-                    // eslint-disable-next-line no-bitwise
-                    return p | code2usb[modifier];
-                }, 0);
-                let keyCode;
-                if (li.key.match(/^\d{2,3}$/)) {
-                    keyCode = li.key;
-                } else {
-                    keyCode = ascii2usb[li.key.charCodeAt(0)];
-                }
+            this.list.forEach(rule => {
+                const modifiers = rule.getModifersUSB();
+                const keyCode = rule.getKeyUSB();
+
                 if (!map[keyCode]) {
                     map[keyCode] = {};
                 }
-                map[keyCode][modifiers] = li.expression.toPlainText();
-                // return `${modifiers}@${keyCode}@${li.expression.toPlainText()}`;
+                map[keyCode][modifiers] = rule.expression.toPlainText();
             });
-            const ahkConfig = JSON.stringify(map, undefined, 4).replace(
-                /^(\s*)"(\d+)":/gm,
-                (all, indent, num) => `${indent}[${num}]=`
-            );
-            this.output = "";
-            this.output += "local ahk_data=";
-            this.output += ahkConfig;
-            this.output += "\n";
-            this.output += luaScript;
+            store.commit("setAHK", map);
+            this.output += store.getters.script;
+            download("main.lua", store.getters.script);
+            function download(filename, text) {
+                const element = document.createElement("a");
+                element.setAttribute(
+                    "href",
+                    `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`
+                );
+                element.setAttribute("download", filename);
+
+                element.style.display = "none";
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
         }
     },
     components: {

@@ -18,7 +18,10 @@
                     </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="key" label="Key" width="80" align="center" sortable>
+            <el-table-column label="Key" width="80" align="center" sortable>
+                <template slot-scope="scope">
+                    <span>{{scope.row.key}}</span>
+                </template>
             </el-table-column>
             <el-table-column label="Expression">
                 <template slot-scope="scope">

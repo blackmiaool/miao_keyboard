@@ -1,4 +1,4 @@
-import { shortModifierMap } from "@/common";
+import { shortModifierMap, ascii2usb, key2usb, code2usb } from "@/common";
 import Expression from "@/expression";
 
 function modifier2PlainText(modifier) {
@@ -27,7 +27,31 @@ export default class Rule {
             modifier2PlainText
         );
         const key = match[2].toUpperCase();
+
         const expression = new Expression(match[3]);
-        return { modifiers, key, expression };
+        return new Rule({ modifiers, key, expression });
+    }
+    getModifersUSB() {
+        const modifiers = this.modifiers.reduce((p, modifier) => {
+            // eslint-disable-next-line no-bitwise
+            return p | code2usb[modifier];
+        }, 0);
+        return modifiers;
+    }
+    getKeyUSB() {
+        return Rule.key2usb(this.key);
+    }
+    static key2usb(key) {
+        let usb;
+
+        if (key.length === 1) {
+            const ascii = key.charCodeAt(0);
+            usb = ascii2usb[ascii];
+        } else if (key.match(/^\d+$/)) {
+            usb = key * 1;
+        } else {
+            usb = key2usb[key];
+        }
+        return usb;
     }
 }
