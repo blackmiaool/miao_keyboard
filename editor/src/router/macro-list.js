@@ -5,7 +5,7 @@ import ExpressionComp from "@/components/expression";
 // import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import store from "@/store";
-import { modifierMap, code2usb, usb2ascii } from "@/common";
+import { modifierMap } from "@/common";
 import Undo from "../undo";
 import Rule from "../rule";
 
