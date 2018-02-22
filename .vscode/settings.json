@@ -1,41 +1,45 @@
 {
-  "files.associations": {
-    "*.js": "javascript",
-    "*.lessx": "less",
-    "lua_inf.h": "c",
-    "app.h": "c",
-    "keyboard.h": "c",
-    "stm32lib.h": "c",
-    "delay.h": "c",
-    "stm32f10x_lib.h": "c",
-    "stm32f10x_wwdg.h": "c",
-    "stm32f10x_map.h": "c",
-    "stm32f10x_type.h": "c",
-    "cortexm3_macro.h": "c",
-    "ff.h": "c",
-    "stm32f10x_conf.h": "c",
-    "usb_process.h": "c",
-    "hw_config.h": "c",
-    "led.h": "c"
-  },
-  "c-cpp-flylint.cppcheck.enable": false,
-  "c-cpp-flylint.flexelint.enable": false,
-  "editor.formatOnSave": true,
-  "editor.tabSize": 4,
-  "vetur.format.defaultFormatter.html": "js-beautify-html",
-  "eslint.validate": [
-    {
-      "language": "vue",
-      "autoFix": true
+    "files.associations": {
+        "*.js": "javascript",
+        "*.lessx": "less",
+        "lua_inf.h": "c",
+        "app.h": "c",
+        "keyboard.h": "c",
+        "stm32lib.h": "c",
+        "delay.h": "c",
+        "stm32f10x_lib.h": "c",
+        "stm32f10x_wwdg.h": "c",
+        "stm32f10x_map.h": "c",
+        "stm32f10x_type.h": "c",
+        "cortexm3_macro.h": "c",
+        "ff.h": "c",
+        "stm32f10x_conf.h": "c",
+        "usb_process.h": "c",
+        "hw_config.h": "c",
+        "led.h": "c"
     },
-    {
-      "language": "html",
-      "autoFix": true
-    },
-    {
-      "language": "javascript",
-      "autoFix": true
-    }
-  ],
-  "editor.dragAndDrop": false
+    "c-cpp-flylint.cppcheck.enable": false,
+    "c-cpp-flylint.flexelint.enable": false,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "c-cpp-flylint.language": "c",
+    "eslint.validate": [
+        {
+            "language": "vue",
+            "autoFix": true
+        },
+        {
+            "language": "html",
+            "autoFix": true
+        },
+        {
+            "language": "javascript",
+            "autoFix": true
+        },
+        {
+            "language": "javascriptreact",
+            "autoFix": true
+        },
+    ]
 }
