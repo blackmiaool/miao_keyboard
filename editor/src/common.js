@@ -159,6 +159,9 @@ export const key2short = {
     ",": `<\n,`,
     ".": `>\n.`,
     "/": `?\n/`,
+    "]": "}\n]",
+    "[": "{\n[",
+    "\\": "|\n\\",
     1: "!\n1",
     2: "@\n2",
     3: "#\n3",
@@ -182,5 +185,6 @@ export const key2short = {
     ArrowUp: "↑",
     ArrowDown: "↓",
     ArrowRight: "→",
-    ArrowLeft: "←"
+    ArrowLeft: "←",
+    PrintScreen: "PrtScn"
 };

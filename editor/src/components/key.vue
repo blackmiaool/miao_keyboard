@@ -1,8 +1,10 @@
 <template>
-    <div class="kb-key" :style="finalStyle" @click="onClick">
+    <div class="kb-key clickable" :style="finalStyle" @click="onClick" :class="{inherit:!text}">
+        <!-- <el-tooltip class="item" effect="dark" :disabled="!title" :enterable="false" :content="title" placement="top" transition="el-zoom-in-top" :popper-options="{removeOnDestroy:true}"> -->
         <div class="key-front flex-center">
             <div class="text">{{shortText}}</div>
         </div>
+        <!-- </el-tooltip> -->
     </div>
 
 </template>
@@ -13,11 +15,23 @@ export default {
     methods: {
         onClick() {
             this.$emit("click");
+        },
+        getShort(text) {
+            return key2short[text] || text;
         }
     },
     computed: {
+        title() {
+            if (!this.text) {
+                return "inherit from basic mode";
+            }
+            return null;
+        },
         shortText() {
-            return key2short[this.text] || this.text;
+            if (this.text) {
+                return this.getShort(this.text);
+            }
+            return this.getShort(this.basicText);
         },
         finalStyle() {
             const ret = { width: `${this.width * 54}px` };
@@ -42,7 +56,8 @@ export default {
             type: Number,
             default: 1
         },
-        text: {}
+        text: {},
+        basicText: {}
     }
 };
 </script>
@@ -62,6 +77,9 @@ export default {
             margin: -1px;
         }
     }
+    &.inherit {
+        opacity: 0.4;
+    }
     .key-front {
         position: absolute;
         background-color: white;
@@ -73,6 +91,7 @@ export default {
         white-space: pre;
         // font-weight: bold;
         > .text {
+            line-height: 18px;
         }
     }
 }

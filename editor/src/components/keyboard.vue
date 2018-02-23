@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="kb-line" v-for="(keyLine,i) in layout" :key="i">
-            <Key :class="{selected:key===selectedKey}" v-for="(key,j) in keyLine" :text="map[i][j]" :key="j" :width="key.w" :line="key.l" :style0="key.style" @click="selectKey(i,j)" />
+            <Key :class="{selected:key===selectedKey}" v-for="(key,j) in keyLine" :text="map[i][j]" :basicText="basicMap[i][j]" :key="j" :width="key.w" :line="key.l" :style0="key.style" @click="selectKey(i,j)" />
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default {
     mounted() {
         console.log(this.layout);
     },
-    props: ["map", "layout"],
+    props: ["basicMap", "map", "layout"],
     data() {
         return { selectedKey: undefined };
     },
