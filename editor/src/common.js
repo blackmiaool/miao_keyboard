@@ -67,7 +67,7 @@ export const consumer2usb = {
     // macbook only
     BrightUp: 0x6f
 };
-export const code2usb = {
+export const modifier2usb = {
     ControlLeft: 1,
     ControlRight: 16,
     Control: 1 + 16,
@@ -152,6 +152,13 @@ export const key2usb = {
     ArrowUp: 82,
     NumLock: 83
 };
+export const key2icon = {
+    VolumeUp: 'fa fa-volume-up',
+    VolumeDown: 'fa fa-volume-down',
+    Mute: 'fa fa-volume-off',
+    BrightDown: 'fa fa-thermometer-quarter',
+    BrightUp: 'fa fa-thermometer-full'
+};
 export const key2short = {
     Escape: "Esc",
     ";": ":\n;",
@@ -174,6 +181,7 @@ export const key2short = {
     0: ")\n0",
     "-": "_\n-",
     "=": "+\n=",
+    "`": '~\n`',
     ShiftLeft: "LShift",
     ShiftRight: "RShift",
     MetaLeft: "LMeta",

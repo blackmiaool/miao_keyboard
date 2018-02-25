@@ -16,8 +16,10 @@ export default {
             console.log(this.selectedKey, clickKey);
             if (this.selectedKey === clickKey) {
                 this.selectedKey = undefined;
+                this.$emit("unselectKey");
             } else {
                 this.selectedKey = this.layout[x][y];
+                this.$emit("selectKey", x, y);
             }
         }
     },

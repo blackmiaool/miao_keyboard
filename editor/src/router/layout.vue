@@ -1,7 +1,7 @@
 <template>
     <div class="comp-layout window">
-        <Keyboard :map="selectedMode.map" :layout="kbLayout" :basicMap="modes[0].map" />
-        <KeyboardEditor v-model="selectedKey" />
+        <Keyboard :map="selectedMode.map" :layout="kbLayout" :basicMap="modes[0].map" @unselectKey="unselectKey" @selectKey="selectKey" />
+        <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" />
         <div class="mode-wrap">
             <div class="mode-select">
                 <div class="mode clickable" v-for="(mode,i) in modes" :key="i" @click="selectedMode=mode" :class="{selected:selectedMode==mode}">{{mode.name}}</div>
@@ -15,6 +15,7 @@
 
 <script>
 import Keyboard from "@/components/keyboard";
+import KeyboardEditor from "@/components/keyboard-editor";
 import ModeEditor from "@/components/mode-editor";
 
 const modes = [
@@ -37,7 +38,7 @@ const modes = [
         // prettier-ignore
         map: [
 [null, 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', null],
-[null, 124, 125, 126, null, null, null, null, null, null, 127, 129, 128, null],
+[null, 'BrightDown', 'BrightUp', 126, null, null, null, null, null, null, 'Mute', 'VolumeDown', 'VolumeUp', null],
 [null, null, null, null, null, null, null, null, null, null, null, null, null],
 [null, null, null, null, null, null, null, null, null, null, null, null],
 [null, null, null, null, null, null, null, null, null, null, null]]
@@ -86,7 +87,15 @@ const kbLayout = [
 ];
 
 export default {
-    methods: {},
+    methods: {
+        selectKey(x, y) {
+            console.log(x, y);
+            this.selectedKey = { x, y };
+        },
+        unselectKey() {
+            this.selectKey = null;
+        }
+    },
     created() {
         this.selectedMode = modes[0];
     },
@@ -96,10 +105,10 @@ export default {
             kbLayout,
             selectedMode: undefined,
             modes,
-            selectedKey: undefined
+            selectedKey: null
         };
     },
-    components: { Keyboard, ModeEditor }
+    components: { Keyboard, ModeEditor, KeyboardEditor }
 };
 </script>
 

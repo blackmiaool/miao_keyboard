@@ -1,4 +1,4 @@
-import { shortModifierMap, ascii2usb, key2usb, code2usb } from "@/common";
+import { shortModifierMap, ascii2usb, key2usb, modifier2usb } from "@/common";
 import Expression from "@/expression";
 
 function modifier2PlainText(modifier) {
@@ -34,7 +34,7 @@ export default class Rule {
     getModifersUSB() {
         const modifiers = this.modifiers.reduce((p, modifier) => {
             // eslint-disable-next-line no-bitwise
-            return p | code2usb[modifier];
+            return p | modifier2usb[modifier];
         }, 0);
         return modifiers;
     }
