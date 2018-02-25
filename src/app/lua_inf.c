@@ -238,23 +238,32 @@ static int init_datasheet(lua_State *L)
 
     const char *file_name = lua_tostring(L, 1);
     u8 width = (u8)lua_tointeger(L, 2);
-
-    if (!f_open(&file, file_name, FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
-    {
-        char *read_buf = (char *)malloc((u16)(file.fsize + 1));
-        u32 cnt = 0;
-        f_read(&file, read_buf, file.fsize, &cnt);
-        f_close(&file);
-        str_trim(read_buf);
-        u8 *buf_p = handle_datasheet(read_buf, (u16)cnt, width);
-        if (!strcmp(file_name, "config/key_index.txt"))
+    int mode = (u8)lua_tointeger(L, 3); // optional
+    int input_num_cnt = (u8)lua_tointeger(L, 4); // optional
+    printf("mode%d",mode);
+    if(!mode){
+        if (!f_open(&file, file_name, FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
         {
-            key_index_lua_buf = (u8 *)buf_p;
+            char *read_buf = (char *)malloc((u16)(file.fsize + 1));
+            u32 cnt = 0;
+            f_read(&file, read_buf, file.fsize, &cnt);
+            f_close(&file);
+            str_trim(read_buf);
+            u8 *buf_p = handle_datasheet(read_buf, (u16)cnt, width);
+            if (!strcmp(file_name, "config/key_index.txt"))
+            {
+                key_index_lua_buf = (u8 *)buf_p;
+            }
+            lua_pushinteger(L, (int)buf_p);
+            free(read_buf);
+            return 1;
         }
+    }else{
+        u8 *buf_p = handle_datasheet((char *)file_name, (u16)input_num_cnt, width);
         lua_pushinteger(L, (int)buf_p);
-        free(read_buf);
         return 1;
     }
+    
     return 0;
 }
 

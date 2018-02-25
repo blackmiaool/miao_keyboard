@@ -458,7 +458,6 @@ void init_config_descriptor()
   };
   const u8 *third_interface;
   u8 third_interface_length;
-	printf("udisk_mode%d",udisk_mode);
   if (udisk_mode)
   {
     third_interface = interface_mass;
