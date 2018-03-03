@@ -75,6 +75,7 @@ export default {
     border-radius: 5px;
     background-color: #ccc;
     position: relative;
+    overflow: hidden;
     &.selected {
         border: 2px solid #0077f3;
         .key-front {

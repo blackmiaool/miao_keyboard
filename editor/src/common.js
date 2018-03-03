@@ -67,7 +67,7 @@ export const consumer2usb = {
     // macbook only
     BrightUp: 0x6f
 };
-export const modifier2usb = {
+export const modifier2ahk = {
     ControlLeft: 1,
     ControlRight: 16,
     Control: 1 + 16,
@@ -81,19 +81,15 @@ export const modifier2usb = {
     MetaRight: 128,
     Meta: 8 + 128
 };
-export const modifierMap = {
-    Control: 1 + 16,
-    Shift: 2 + 32,
-    Alt: 4 + 64,
-    Win: 8 + 128,
-    LControl: 1,
-    LShift: 2,
-    LAlt: 4,
-    LMeta: 8,
-    RControl: 16,
-    RShift: 32,
-    RAlt: 64,
-    RMeta: 128
+export const modifier2usb = {
+    ControlLeft: 224,
+    ControlRight: 228,
+    AltLeft: 226,
+    AltRight: 230,
+    ShiftLeft: 225,
+    ShiftRight: 229,
+    MetaLeft: 227,
+    MetaRight: 231,
 };
 export const printableKeyMap = {
     leftbracket: "{",

@@ -13,7 +13,7 @@ export default {
     methods: {
         selectKey(x, y) {
             const clickKey = this.layout[x][y];
-            console.log(this.selectedKey, clickKey);
+
             if (this.selectedKey === clickKey) {
                 this.selectedKey = undefined;
                 this.$emit("unselectKey");

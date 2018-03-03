@@ -5,7 +5,6 @@ import ExpressionComp from "@/components/expression";
 // import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import store from "@/store";
-import { modifierMap } from "@/common";
 import Undo from "../undo";
 import Rule from "../rule";
 
@@ -87,7 +86,7 @@ const listUndo = new Undo({ data: list });
 export default {
     name: "MacroList",
     data() {
-        return { list, modifierMap, listUndo, output: "" };
+        return { list, listUndo, output: "" };
     },
     mounted() {
         window.a = () => {

@@ -2,7 +2,7 @@
     <div class="wrap" @keydown.prevent="onKeyDown">
         <el-form ref="form" label-width="80px">
             <el-form-item label="Key name">
-                <el-input v-model="keyTextRaw"></el-input>
+                <el-input v-model="keyTextRaw" :placeholder="'inherit: '+baseValue" clearable></el-input>
             </el-form-item>
             <el-select v-model="selectedKey" @change="keyChange" style="width:120px;" placeholder="Key">
                 <el-option v-for="(usb,key) in key2usb" :key="usb" :label="key" :value="key">
@@ -75,7 +75,7 @@ export default {
         }
     },
     mounted() {},
-    props: ["keyText", "value"],
+    props: ["keyText", "value", "baseValue"],
     computed: {},
     data() {
         return {
