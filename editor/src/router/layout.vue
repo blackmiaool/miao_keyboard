@@ -4,7 +4,7 @@
         <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" :baseValue="modes[0].map[selectedKey.x][selectedKey.y]" />
         <div class="mode-wrap">
             <div class="mode-select">
-                <div class="mode clickable" v-for="(mode,i) in modes" :key="i" @click="selectedMode=mode" :class="{selected:selectedMode==mode}">{{mode.name}}</div>
+                <div class="mode clickable" v-for="(mode,i) in modes" :key="i" @click="selectedMode=mode" :class="{selected:selectedMode==mode}">{{mode.name||'mode'+i}}</div>
             </div>
             <div class="mode-editor">
                 <ModeEditor :mode="selectedMode" />
@@ -17,46 +17,8 @@
 import Keyboard from "@/components/keyboard";
 import KeyboardEditor from "@/components/keyboard-editor";
 import ModeEditor from "@/components/mode-editor";
-
-const modes = [
-    {
-        name: "basic",
-        macro: true,
-        // prettier-ignore
-        map: [
-['Escape', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
-['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
-['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'Enter'],
-['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
-['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 140, 141, 135, 136]]
-    },
-    {
-        name: "mode2",
-        trigger: "pressing",
-        triggerKey: 135,
-        macro: true,
-        // prettier-ignore
-        map: [
-[null, 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', null],
-[null, 'BrightDown', 'BrightUp', null, null, null, null, null, null, null, null, 'VolumeDown', 'VolumeUp', 'Mute'],
-[null, null, null, null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null, null]]
-    },
-    {
-        name: "game",
-        trigger: "toggle",
-        triggerKey: 136,
-        macro: false,
-        // prettier-ignore
-        map: [
-[null, null, null, null, null, null, null, null, null, null, null, null, null, 'Delete'],
-[null, null, null, null, null, null, null, null, 'ArrowUp', null, null, null, null, 'PrintScreen'],
-[null, null, null, null, null, null, null, 'ArrowLeft', 'ArrowDown', 'ArrowRight', null, null, null],
-[null, null, null, null, null, null, null, null, null, null, null, null],
-[null, null, null, null, null, null, null, null, null, null, null]]
-    }
-];
+import store from "@/store";
+import { mapState } from "vuex";
 // // prettier-ignore
 // const kbMap = [[
 // ['Escape', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
@@ -95,15 +57,18 @@ export default {
             this.selectedKey = null;
         }
     },
+    store,
     created() {
-        this.selectedMode = modes[0];
+        this.selectedMode = this.modes[0];
+    },
+    computed: {
+        ...mapState(["modes"])
     },
     mounted() {},
     data() {
         return {
             kbLayout,
             selectedMode: undefined,
-            modes,
             selectedKey: null
         };
     },

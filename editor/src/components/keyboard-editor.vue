@@ -16,6 +16,10 @@
                 <el-option v-for="(usb,modifier) in modifier2usb" :key="usb" :value="modifier">
                 </el-option>
             </el-select>
+            <el-select v-model="selectedChar" @change="keyChange" style="width:120px;" placeholder="Char">
+                <el-option v-for="(usb,char) in baseAscii2usb" :key="char" :value="String.fromCharCode(char).toUpperCase()">
+                </el-option>
+            </el-select>
         </el-form>
     </div>
 </template>
@@ -26,9 +30,11 @@ import {
     consumer2usb,
     shiftTable,
     key2usb,
-    modifier2usb
+    modifier2usb,
+    baseAscii2usb
 } from "@/common";
 
+console.log(baseAscii2usb);
 export default {
     methods: {
         keyChange() {
@@ -36,11 +42,13 @@ export default {
                 "input",
                 this.selectedKey ||
                     this.selectedConsumer ||
-                    this.selectedModifier
+                    this.selectedModifier ||
+                    this.selectedChar
             );
             this.selectedKey = null;
             this.selectedConsumer = null;
             this.selectedModifier = null;
+            this.selectedChar = null;
         },
         onKeyDown(e) {
             console.log("e", e);
@@ -85,7 +93,9 @@ export default {
             selectedConsumer: null,
             selectedModifier: null,
             modifier2usb,
-            consumer2usb
+            consumer2usb,
+            baseAscii2usb,
+            selectedChar: null
         };
     },
     components: {}

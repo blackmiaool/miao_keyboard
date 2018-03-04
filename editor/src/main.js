@@ -8,7 +8,7 @@ import router from "./router";
 
 // import Vue from "vue";
 
-require("./assets/css/fontawesome-all.css");
+// require("./assets/css/fontawesome-all.css");
 require("./less/style.less");
 
 Vue.use(ElementUI);
