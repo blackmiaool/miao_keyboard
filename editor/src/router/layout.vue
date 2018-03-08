@@ -1,7 +1,7 @@
 <template>
     <div class="comp-layout window">
-        <Keyboard :map="selectedMode.map" :layout="kbLayout" :basicMap="modes[0].map" @unselectKey="unselectKey" @selectKey="selectKey" />
-        <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" :baseValue="modes[0].map[selectedKey.x][selectedKey.y]" />
+        <Keyboard :map="selectedMode.map" :layout="kbLayout" @unselectKey="unselectKey" @selectKey="selectKey" />
+        <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" :baseValue="baseMap[selectedKey.x][selectedKey.y]" />
         <div class="mode-wrap">
             <div class="mode-select">
                 <div class="mode clickable" v-for="(mode,i) in modes" :key="i" @click="selectedMode=mode" :class="{selected:selectedMode==mode}">{{mode.name||'mode'+i}}</div>
@@ -62,7 +62,10 @@ export default {
         this.selectedMode = this.modes[0];
     },
     computed: {
-        ...mapState(["modes"])
+        ...mapState({
+            modes: state => state.modes,
+            baseMap: state => state.modes[0].map
+        })
     },
     mounted() {},
     data() {

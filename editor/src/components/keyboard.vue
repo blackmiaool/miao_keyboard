@@ -8,6 +8,7 @@
 
 <script>
 import Key from "@/components/key";
+import { mapState } from "vuex";
 
 export default {
     methods: {
@@ -26,7 +27,10 @@ export default {
     mounted() {
         console.log(this.layout);
     },
-    props: ["basicMap", "map", "layout"],
+    computed: {
+        ...mapState({ basicMap: state => state.modes[0].map })
+    },
+    props: ["map", "layout"],
     data() {
         return { selectedKey: undefined };
     },

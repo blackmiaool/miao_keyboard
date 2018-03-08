@@ -1,11 +1,12 @@
 import Vuex from "vuex";
 import Vue from "vue";
+import KBMode from './kbmode';
 
 Vue.use(Vuex);
 
 const modes = [
-    {
-        name: "basic",
+    new KBMode({
+        isBasic: true,
         macro: true,
         // prettier-ignore
         map: [
@@ -14,8 +15,8 @@ const modes = [
             ['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'Enter'],
             ['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
             ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 140, 141, 135, 136]]
-    },
-    {
+    }),
+    new KBMode({
         trigger: "pressing",
         triggerKey: 135,
         macro: true,
@@ -26,8 +27,8 @@ const modes = [
             [null, null, null, null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null, null]]
-    },
-    {
+    }),
+    new KBMode({
         trigger: "toggle",
         triggerKey: 136,
         macro: false,
@@ -38,7 +39,7 @@ const modes = [
             [null, null, null, null, null, null, null, 'ArrowLeft', 'ArrowDown', 'ArrowRight', null, null, null],
             [null, null, null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null, null]]
-    }
+    })
 ];
 const luaScript = require("@/../../udisk/main.lua");
 
