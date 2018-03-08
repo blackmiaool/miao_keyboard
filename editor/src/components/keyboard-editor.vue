@@ -20,6 +20,10 @@
                 <el-option v-for="(usb,char) in baseAscii2usb" :key="char" :value="String.fromCharCode(char).toUpperCase()">
                 </el-option>
             </el-select>
+            <el-select v-model="selectedModeTrigger" @change="keyChange" style="width:140px;" placeholder="Mode trigger">
+                <el-option v-for="(mode,i) in modes" :key="i" :value="'mode'+i" v-if="!mode.isBasic">
+                </el-option>
+            </el-select>
         </el-form>
     </div>
 </template>
@@ -33,6 +37,7 @@ import {
     modifier2usb,
     baseAscii2usb
 } from "@/common";
+import { mapState } from "vuex";
 
 console.log(baseAscii2usb);
 export default {
@@ -43,12 +48,14 @@ export default {
                 this.selectedKey ||
                     this.selectedConsumer ||
                     this.selectedModifier ||
+                    this.selectedModeTrigger ||
                     this.selectedChar
             );
             this.selectedKey = null;
             this.selectedConsumer = null;
             this.selectedModifier = null;
             this.selectedChar = null;
+            this.selectedModeTrigger = null;
         },
         onKeyDown(e) {
             console.log("e", e);
@@ -84,7 +91,9 @@ export default {
     },
     mounted() {},
     props: ["keyText", "value", "baseValue"],
-    computed: {},
+    computed: {
+        ...mapState(["modes"])
+    },
     data() {
         return {
             keyTextRaw: "",
@@ -95,7 +104,8 @@ export default {
             modifier2usb,
             consumer2usb,
             baseAscii2usb,
-            selectedChar: null
+            selectedChar: null,
+            selectedModeTrigger: null
         };
     },
     components: {}

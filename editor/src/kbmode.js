@@ -1,8 +1,9 @@
 export default class KBMode {
-    constructor({ isBasic, macro, map, trigger, triggerKey }) {
+    constructor({ index, isBasic, macro, map, trigger, triggerKey }) {
         this.macro = macro;
         this.map = map;
-
+        this.isBasic = isBasic;
+        this.index = index;
         if (isBasic) {
             KBMode.basicMode = this;
         } else {

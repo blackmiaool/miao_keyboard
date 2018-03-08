@@ -207,3 +207,13 @@ export const key2short = {
     ArrowLeft: "←",
     PrintScreen: "PrtScn"
 };
+export function isModeTrigger(key) {
+    return /^mode\d+$/.test(key);
+}
+export function getModeFromModeTrigger(key) {
+    try {
+        return key.match(/(\d+)$/)[1];
+    } catch (e) {
+        return null;
+    }
+}

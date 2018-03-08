@@ -1,13 +1,10 @@
 <template>
     <div class="wrap">
         <el-form ref="form" :model="mode" label-width="120px">
-            <el-form-item label="Mode name">
-                <el-input v-model="mode.name" :disabled="isBasicMode"></el-input>
-            </el-form-item>
             <el-form-item label="Enable macro">
                 <el-switch v-model="mode.macro"></el-switch>
             </el-form-item>
-            <el-container v-if="!isBasicMode">
+            <el-container v-if="!mode.isBasic">
                 <el-col :span="12">
                     <el-form-item label="Trigger">
                         <el-select v-model="mode.trigger" placeholder="please select your zone">
@@ -18,7 +15,8 @@
                 </el-col>
                 <el-col :span="11">
                     <el-form-item label="Trigger key">
-                        <el-input type="number" v-model="mode.triggerKey"></el-input>
+                        <i class="fa fa-code-branch"></i>
+                        <span>{{mode.index}}</span>
                     </el-form-item>
                 </el-col>
             </el-container>
@@ -28,9 +26,15 @@
 </template>
 
 <script>
+import { getModeFromModeTrigger } from "@/common";
+
 export default {
-    methods: {},
-    mounted() {},
+    methods: {
+        getModeFromModeTrigger
+    },
+    mounted() {
+        console.log(this.mode);
+    },
     props: ["mode"],
     computed: {
         isBasicMode() {
