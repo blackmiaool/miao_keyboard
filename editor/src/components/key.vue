@@ -3,7 +3,9 @@
         <!-- <el-tooltip class="item" effect="dark" :disabled="!title" :enterable="false" :content="title" placement="top" transition="el-zoom-in-top" :popper-options="{removeOnDestroy:true}"> -->
         <div class="key-front flex-center">
             <div v-if="!key2icon[shortText]" class="text">{{shortText}}</div>
-            <i v-if="key2icon[shortText]" :class="key2icon[shortText]"></i>
+            <div v-if="key2icon[shortText]">
+                <i :class="key2icon[shortText]"></i>
+            </div>
         </div>
         <!-- </el-tooltip> -->
     </div>
