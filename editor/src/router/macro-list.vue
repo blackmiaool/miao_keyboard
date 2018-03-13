@@ -1,8 +1,8 @@
 <template>
     <div class="comp-macro-list table-wrap">
         <header>
-            <i class="redo-btn fa fa-undo" :class="{active:listUndo.canUndo()}" @click="listUndo.undo()"></i>
-            <i class="undo-btn fa fa-redo" :class="{active:listUndo.canRedo()}" @click="listUndo.redo()"></i>
+            <i class="redo-btn fa fa-undo" :class="{active:canUndo}" @click="undo()"></i>
+            <i class="undo-btn fa fa-redo" :class="{active:canRedo}" @click="redo()"></i>
             <!-- <el-button type="success" @click="connect">Connect</el-button> -->
         </header>
         <el-table :data="list" stripe class="table" ref="table">
@@ -34,7 +34,7 @@
                         <el-button type="success" size="mini" @click="edit(scope.row)">
                             <i class="fa fa-edit"></i> Edit</el-button>
 
-                        <el-button type="danger" size="mini" @click="deleteLine(scope.row)">
+                        <el-button type="danger" size="mini" @click="remove(getIndexOfRow(scope.row))">
                             <i class="fa fa-trash"></i> Delete</el-button>
                     </span>
                 </template>
@@ -44,9 +44,7 @@
             <el-button type="primary" @click="add">
                 <i class="fa fa-plus"></i> Add</el-button>
         </div>
-        <el-button type="success" @click="exportConfig" class="clickable export-btn">
-            <i class="fa fa-paper-plane"></i> Export</el-button>
-        <el-input type="textarea" v-model="output"></el-input>
+
     </div>
 </template>
 

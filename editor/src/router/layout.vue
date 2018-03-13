@@ -17,7 +17,6 @@
 import Keyboard from "@/components/keyboard";
 import KeyboardEditor from "@/components/keyboard-editor";
 import ModeEditor from "@/components/mode-editor";
-import store from "@/store";
 import { mapState } from "vuex";
 // // prettier-ignore
 // const kbMap = [[
@@ -57,7 +56,6 @@ export default {
             this.selectedKey = null;
         }
     },
-    store,
     created() {
         this.selectedMode = this.modes[0];
     },

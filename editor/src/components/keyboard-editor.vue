@@ -2,7 +2,7 @@
     <div class="wrap" @keydown.prevent="onKeyDown">
         <el-form ref="form" label-width="80px">
             <el-form-item label="Key name">
-                <el-input v-model="keyTextRaw" :placeholder="'inherit: '+baseValue" clearable></el-input>
+                <el-input :value="value" :placeholder="'inherit: '+baseValue" clearable @clear="onClear"></el-input>
             </el-form-item>
             <el-select v-model="selectedKey" @change="keyChange" style="width:120px;" placeholder="Key">
                 <el-option v-for="(usb,key) in key2usb" :key="usb" :label="key" :value="key">
@@ -39,18 +39,20 @@ import {
 } from "@/common";
 import { mapState } from "vuex";
 
-console.log(baseAscii2usb);
 export default {
     methods: {
+        onClear() {
+            this.$emit("input", null);
+        },
         keyChange() {
-            this.$emit(
-                "input",
+            const value =
                 this.selectedKey ||
-                    this.selectedConsumer ||
-                    this.selectedModifier ||
-                    this.selectedModeTrigger ||
-                    this.selectedChar
-            );
+                this.selectedConsumer ||
+                this.selectedModifier ||
+                this.selectedModeTrigger ||
+                this.selectedChar;
+            console.log("change", value);
+            this.$emit("input", value);
             this.selectedKey = null;
             this.selectedConsumer = null;
             this.selectedModifier = null;
@@ -81,14 +83,7 @@ export default {
             // });
         }
     },
-    watch: {
-        value: {
-            handler(v) {
-                this.keyTextRaw = v;
-            },
-            immediate: true
-        }
-    },
+    watch: {},
     mounted() {},
     props: ["keyText", "value", "baseValue"],
     computed: {
@@ -96,7 +91,6 @@ export default {
     },
     data() {
         return {
-            keyTextRaw: "",
             key2usb,
             selectedKey: null,
             selectedConsumer: null,

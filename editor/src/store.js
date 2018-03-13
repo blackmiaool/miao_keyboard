@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import KBMode from './kbmode';
+import MacroList from "./modules/macro-list";
 
 Vue.use(Vuex);
 
@@ -44,21 +45,26 @@ const modes = [
             [null, null, null, null, null, null, null, null, null, null, null]]
     })
 ];
+window.modes = modes;
 const luaScript = require("@/../../udisk/main.lua");
+
 
 const store = new Vuex.Store({
     state: {
         ahk: {},
-        modes
+        modes,
+        script: '',
     },
     mutations: {
         setAHK(state, ahk) {
             state.ahk = ahk;
-        }
+        },
+        setScript(state, script) {
+            state.script = script;
+        },
     },
-    getters: {
-        script(state) {
-            console.log("getter");
+    actions: {
+        exportConfig({ commit, state }) {
             let ret = "";
             const ahkLuaTable = JSON.stringify(state.ahk, undefined, 4).replace(
                 /^(\s*)"(\d+)":/gm,
@@ -69,8 +75,28 @@ const store = new Vuex.Store({
             ret += ahkLuaTable;
             ret += "\n";
             ret += luaScript;
-            return ret;
+            commit('setScript', ret);
+            // return ret;
         }
+    },
+    getters: {
+        // script(state) {
+        //     console.log("getter");
+        //     let ret = "";
+        //     const ahkLuaTable = JSON.stringify(state.ahk, undefined, 4).replace(
+        //         /^(\s*)"(\d+)":/gm,
+        //         (all, indent, num) => `${indent}[${num}]=`
+        //     );
+        //     ret = "";
+        //     ret += "local ahk_data=";
+        //     ret += ahkLuaTable;
+        //     ret += "\n";
+        //     ret += luaScript;
+        //     return ret;
+        // }
+    },
+    modules: {
+        MacroList
     }
 });
 
