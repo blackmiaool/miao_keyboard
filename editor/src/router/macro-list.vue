@@ -2,7 +2,7 @@
     <div class="comp-macro-list table-wrap">
         <header>
             <i class="redo-btn fa fa-undo" :class="{active:canUndo,clickable:canUndo}" @click="undo()"></i>
-            <i class="undo-btn fa fa-redo" :class="{active:canRedo,clickable:canUndo}" @click="redo()"></i>
+            <i class="undo-btn fa fa-redo" :class="{active:canRedo,clickable:canRedo}" @click="redo()"></i>
             <!-- <el-button type="success" @click="connect">Connect</el-button> -->
         </header>
         <el-table :data="list" stripe class="table" ref="table">

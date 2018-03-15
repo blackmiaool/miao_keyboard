@@ -66,7 +66,17 @@ const store = new Vuex.Store({
     actions: {
         exportConfig({ commit, state }) {
             let ret = "";
-            const ahkLuaTable = JSON.stringify(state.ahk, undefined, 4).replace(
+            const map = {};
+            state.MacroList.list.forEach(rule => {
+                const modifiers = rule.getModifersUSB();
+                const keyCode = rule.getKeyUSB();
+
+                if (!map[keyCode]) {
+                    map[keyCode] = {};
+                }
+                map[keyCode][modifiers] = rule.expression.toPlainText();
+            });
+            const ahkLuaTable = JSON.stringify(map, undefined, 4).replace(
                 /^(\s*)"(\d+)":/gm,
                 (all, indent, num) => `${indent}[${num}]=`
             );

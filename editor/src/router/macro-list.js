@@ -1,19 +1,12 @@
-// import MacroLine from "@/components/macro-line";
-// import Vue from "vue";
 import draggable from "vuedraggable";
 import { createNamespacedHelpers } from 'vuex';
 import ExpressionComp from "@/components/expression";
 // import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
-import Undo from "../undo";
 import Rule from "../rule";
 
 const { mapState, mapActions, mapMutations } = createNamespacedHelpers('MacroList');
 
-// eslint-disable-next-line no-new
-// const listUndo = new Undo({ data: list });
-
-// console.log(luaScript);
 
 export default {
     name: "MacroList",
@@ -27,36 +20,6 @@ export default {
         window.a = () => {
             console.log(this.list);
         };
-        // this.listUndo
-        //     .register({
-        //         name: "delete line",
-        //         exec(lineNum) {
-        //             const line = this.data.splice(lineNum, 1);
-        //             return line;
-        //         },
-        //         undo(lineNum, line) {
-        //             this.data.splice(lineNum, 0, ...line);
-        //         }
-        //     })
-        //     .register({
-        //         name: "edit",
-        //         exec({ index, data }) {
-        //             console.log("splice", data);
-        //             return this.data.splice(index, 1, data);
-        //         },
-        //         undo({ index }, last) {
-        //             this.data.splice(index, 1, ...last);
-        //         }
-        //     })
-        //     .register({
-        //         name: "add",
-        //         exec() {
-        //             this.data.push(new Rule());
-        //         },
-        //         undo() {
-        //             this.data.pop();
-        //         }
-        //     });
     },
     methods: {
         ...mapActions(['undo', 'redo']),
@@ -106,19 +69,13 @@ export default {
         getIndexOfRow(row) {
             return this.list.indexOf(row);
         },
-        deleteLine(row) {
-            const index = this.getIndexOfRow(row);
-            this.listUndo.exec("delete line", index);
-        },
         edit(row) {
             this.$refs.table.toggleRowExpansion(row);
         },
         onSave(oldRow, newRow) {
-            // Object.assign(oldRow, newRow);
             this.$refs.table.toggleRowExpansion(oldRow);
             const index = this.list.indexOf(oldRow);
             this.set({ index, data: newRow });
-            // this.listUndo.exec("edit", { index, data: newRow });
         },
         exportConfig() {
             const map = {};

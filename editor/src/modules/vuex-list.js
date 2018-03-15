@@ -38,7 +38,7 @@ export default class VuexList {
                 if (!this.canUndo()) {
                     this.state.canUndo = false;
                 }
-                this.canRedo = true;
+                this.state.canRedo = true;
             };
         });
 
