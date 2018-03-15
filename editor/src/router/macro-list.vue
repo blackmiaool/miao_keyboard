@@ -1,8 +1,8 @@
 <template>
     <div class="comp-macro-list table-wrap">
         <header>
-            <i class="redo-btn fa fa-undo" :class="{active:canUndo}" @click="undo()"></i>
-            <i class="undo-btn fa fa-redo" :class="{active:canRedo}" @click="redo()"></i>
+            <i class="redo-btn fa fa-undo" :class="{active:canUndo,clickable:canUndo}" @click="undo()"></i>
+            <i class="undo-btn fa fa-redo" :class="{active:canRedo,clickable:canUndo}" @click="redo()"></i>
             <!-- <el-button type="success" @click="connect">Connect</el-button> -->
         </header>
         <el-table :data="list" stripe class="table" ref="table">
@@ -41,7 +41,7 @@
             </el-table-column>
         </el-table>
         <div>
-            <el-button type="primary" @click="add">
+            <el-button type="primary" @click="addRule">
                 <i class="fa fa-plus"></i> Add</el-button>
         </div>
 

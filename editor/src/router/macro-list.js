@@ -100,8 +100,8 @@ export default {
                     console.log(error);
                 });
         },
-        add() {
-            this.listUndo.exec("add");
+        addRule() {
+            this.add(new Rule());
         },
         getIndexOfRow(row) {
             return this.list.indexOf(row);
@@ -117,7 +117,8 @@ export default {
             // Object.assign(oldRow, newRow);
             this.$refs.table.toggleRowExpansion(oldRow);
             const index = this.list.indexOf(oldRow);
-            this.listUndo.exec("edit", { index, data: newRow });
+            this.set({ index, data: newRow });
+            // this.listUndo.exec("edit", { index, data: newRow });
         },
         exportConfig() {
             const map = {};

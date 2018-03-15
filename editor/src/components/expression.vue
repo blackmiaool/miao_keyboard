@@ -89,6 +89,7 @@ export default {
     transform: translate(-50%, -50%);
     font-size: 12px;
     color: #aaa;
+    line-height: 1;
     &:hover {
         color: gray;
     }

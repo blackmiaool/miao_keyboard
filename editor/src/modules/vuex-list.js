@@ -13,36 +13,40 @@ export default class VuexList {
         this.state.canUndo = false;
         this.state.canRedo = false;
 
-        const random = Date.now() + Math.random();
+        const random = `-undo${Date.now()}${Math.random()}`;
         VuexList.commands.forEach((command) => {
             this.mutations[command.name] = (state, payload) => {
-                this.state.canUndo = true;
                 const result = command.exec.call(this, state.list, payload);
-                this.stackPosition++;
+                if (!this.inRedo) {
+                    this.stackPosition++;
+                }
                 this.setCurrentRecord({ commandName: command.name, payload, result });
-                this.history.splice(this.stackPosition);
+                if (!this.inRedo) {
+                    this.history.splice(this.stackPosition);
+                }
+
                 if (!this.canRedo()) {
                     this.state.canRedo = false;
                 }
+                this.state.canUndo = true;
             };
             this.mutations[`${command.name}${random}`] = (state, payload) => {
                 this.data = state.list;
                 command.undo.call(this, state.list, payload.payload, payload.result);
                 this.stackPosition--;
+
+                if (!this.canUndo()) {
+                    this.state.canUndo = false;
+                }
+                this.canRedo = true;
             };
         });
-        this.mutations.setUndoState = function setUndoState(state, value) {
-            console.log('value', value);
-            state.canUndo = value;
-        };
-        this.mutations.setRedoState = function setRedoState(state, value) {
-            state.canRedo = value;
-        };
+
         this.random = random;
         this.commands = {};
         this.history = [];
         this.stackPosition = 0;
-        console.log(this);
+        this.inRedo = false;
     }
     static commands = [{
         name: "remove",
@@ -73,8 +77,8 @@ export default class VuexList {
     setCurrentRecord(record) {
         this.history[this.stackPosition - 1] = record;
     }
-    getCurrentRecord(bias = 0) {
-        return this.history[this.stackPosition - 1 + bias];
+    getCurrentRecord() {
+        return this.history[this.stackPosition - 1];
     }
     undo(context) {
         if (!this.canUndo()) {
@@ -82,11 +86,6 @@ export default class VuexList {
         }
         const record = this.getCurrentRecord();
         context.commit(record.commandName + this.random, { payload: record.payload, result: record.result });
-
-        if (!this.canUndo()) {
-            context.commit('setUndoState', false);
-        }
-        context.commit('setRedoState', true);
     }
     canUndo() {
         return this.stackPosition > 0;
@@ -95,13 +94,12 @@ export default class VuexList {
         if (!this.canRedo()) {
             return;
         }
-        const record = this.getCurrentRecord(1);
-        context.commit(record.commandName, record.payload);
+        this.inRedo = true;
+        this.stackPosition++;
+        const record = this.getCurrentRecord();
 
-        if (!this.canRedo()) {
-            context.commit('setRedoState', false);
-        }
-        context.commit('setUndoState', true);
+        context.commit(record.commandName, record.payload);
+        this.inRedo = false;
     }
     canRedo() {
         return this.stackPosition < this.history.length;
