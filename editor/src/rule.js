@@ -1,4 +1,4 @@
-import { shortModifierMap, ascii2usb, key2usb, modifier2ahk } from "@/common";
+import { shortModifierMap, ascii2usb, key2usb, modifier2ahk, modifier2usb } from "@/common";
 import Expression from "@/expression";
 
 function modifier2PlainText(modifier) {
@@ -42,6 +42,7 @@ export default class Rule {
         return Rule.key2usb(this.key);
     }
     static key2usb(key) {
+        key += '';
         let usb;
 
         if (key.length === 1) {
@@ -49,6 +50,8 @@ export default class Rule {
             usb = ascii2usb[ascii];
         } else if (key.match(/^\d+$/)) {
             usb = key * 1;
+        } else if (modifier2usb[key]) {
+            return modifier2usb[key];
         } else {
             usb = key2usb[key];
         }

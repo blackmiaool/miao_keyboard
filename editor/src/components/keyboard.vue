@@ -9,6 +9,7 @@
 <script>
 import Key from "@/components/key";
 import { mapState } from "vuex";
+import { kbLayout } from "@/kbmode";
 
 export default {
     methods: {
@@ -30,9 +31,9 @@ export default {
     computed: {
         ...mapState({ basicMap: state => state.modes[0].map })
     },
-    props: ["map", "layout"],
+    props: ["map"],
     data() {
-        return { selectedKey: undefined };
+        return { selectedKey: undefined, layout: kbLayout };
     },
     components: {
         Key

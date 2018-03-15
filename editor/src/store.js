@@ -45,6 +45,10 @@ const modes = [
             [null, null, null, null, null, null, null, null, null, null, null]]
     })
 ];
+console.log(modes[0].mapToString((name) => {
+    console.log('name', name);
+    return 0;
+}));
 window.modes = modes;
 const luaScript = require("@/../../udisk/main.lua");
 

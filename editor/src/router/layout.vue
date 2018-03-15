@@ -18,6 +18,8 @@ import Keyboard from "@/components/keyboard";
 import KeyboardEditor from "@/components/keyboard-editor";
 import ModeEditor from "@/components/mode-editor";
 import { mapState } from "vuex";
+import { kbLayout } from "@/kbmode";
+
 // // prettier-ignore
 // const kbMap = [[
 // ['Escape', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
@@ -37,15 +39,6 @@ import { mapState } from "vuex";
 // 0, 0, 0, 0, 0, 0, 0, 80, 81, 79, 0, 0, 0, 0,
 // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
-
-// prettier-ignore
-const kbLayout = [
-    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2 }],
-    [{ w: 1.5 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 1.5 }],
-    [{ w: 1.75 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.25, l: 2 }],
-    [{ w: 2.25, l: 2 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.75, l: 2 }],
-    [{ w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.75, l: 2 }, { w: 1.75, l: 2 }, { style: { "margin-left": 0.25 }, w: 1.25, l: 2 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }]
-];
 
 export default {
     methods: {
