@@ -1,7 +1,9 @@
 import Vuex from "vuex";
 import Vue from "vue";
+import { luaStringify } from "@/common";
 import KBMode from './kbmode';
 import MacroList from "./modules/macro-list";
+
 
 Vue.use(Vuex);
 
@@ -45,11 +47,7 @@ const modes = [
             [null, null, null, null, null, null, null, null, null, null, null]]
     })
 ];
-console.log(modes[0].mapToString((name) => {
-    console.log('name', name);
-    return 0;
-}));
-window.modes = modes;
+
 const luaScript = require("@/../../udisk/main.lua");
 
 
@@ -80,11 +78,11 @@ const store = new Vuex.Store({
                 }
                 map[keyCode][modifiers] = rule.expression.toPlainText();
             });
-            const ahkLuaTable = JSON.stringify(map, undefined, 4).replace(
-                /^(\s*)"(\d+)":/gm,
-                (all, indent, num) => `${indent}[${num}]=`
-            );
+            const ahkLuaTable = luaStringify(map);
+            window.modes = modes;
+            const modesScript = KBMode.modesGetLua(modes);
             ret = "";
+            ret += modesScript;
             ret += "local ahk_data=";
             ret += ahkLuaTable;
             ret += "\n";

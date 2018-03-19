@@ -217,3 +217,16 @@ export function getModeFromModeTrigger(key) {
         return null;
     }
 }
+export function leftPadding(num, width) {
+    const str = num.toString();
+    if (str.length > width) {
+        return num;
+    }
+    return '0'.repeat(width - str.length) + str;
+}
+export function luaStringify(obj) {
+    return JSON.stringify(obj, undefined, 4).replace(
+        /^(\s*)"(\d+)":/gm,
+        (all, indent, num) => `${indent}[${num}]=`
+    );
+}

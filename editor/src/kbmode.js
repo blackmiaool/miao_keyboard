@@ -1,5 +1,6 @@
-import { key2usb, consumer2usb } from "@/common";
+// import { key2usb, consumer2usb, getModeFromModeTrigger, isModeTrigger } from "@/common";
 import Rule from "@/rule";
+import { leftPadding } from "./common";
 
 // prettier-ignore
 export const kbLayout = [
@@ -31,9 +32,11 @@ export default class KBMode {
         //     ['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
         //     ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 140, 141, 135, 136]]
     }
-    mapToString(getSpecialCode) {
-        let ret = '';
+    getUSBMap() {
+        const ret = [];
         kbLayout.forEach((lineLayout, lineIndex) => {
+            const line = [];
+            ret.push(line);
             lineLayout.forEach((key, keyIndex) => {
                 let len = 1;
                 if (key.l) {
@@ -41,22 +44,69 @@ export default class KBMode {
                 }
                 for (let i = 0; i < len; i++) {
                     const keyName = this.map[lineIndex][keyIndex];
+                    // if (!keyName) {
+                    //     keyName = KBMode.basicMode.map[lineIndex][keyIndex];
+                    // }
 
                     const usbCode = Rule.key2usb(keyName);
+                    if (usbCode) {
+                        line.push(usbCode);
+                    } else {
+                        line.push(keyName);
+                    }
+
+                    // if (!usbCode && keyName) {
+                    //     if (inheritance) {
+
+                    //     }
+                    //     usbCode = getSpecialCode(keyName);
+                    // }
                     // if (key2usb[keyName]) {
                     //     usbCode = key2usb[keyName];
                     // } else if (consumer2usb[keyName]) {
                     //     usbCode = getSpecialCode(keyName);
                     // }
-                    ret += `${usbCode},`;
                 }
             });
-            ret += '\n';
         });
         return ret;
     }
-    static modesGetLua() {
+    static modesGetLua(modes) {
+        let specialCode = 128;
+        const specialCodeMap = {};
+        function getSpecialCode(name) {
+            const ret = specialCode++;
+            specialCodeMap[ret] = name;
+            return ret;
+        }
+        const maps = modes.map(mode => mode.getUSBMap());
+        const basicMap = maps[0];
 
+        let ret = maps.reduce((pMap, map) => {
+            const modeStr = map.reduce((pLine, line, row) => {
+                const lineStr = line.reduce((pp, key, column) => {
+                    let code = key;
+                    if (typeof key === 'string') { // special key
+                        code = getSpecialCode(key);
+                        map[row][column] = code;
+                    } else if (key === null) {
+                        if (basicMap[row][column]) {
+                            code = basicMap[row][column];
+                        }
+                    }
+                    return `${pp + leftPadding(code, 3)}, `;
+                }, '');
+                return `${pLine + lineStr}\n`;
+            }, '');
+            return `${pMap + modeStr}\n`;
+        }, '');
+        console.log(specialCodeMap);
+        ret = ret.trim();
+        ret = `
+local kb_index=[[${ret}]];
+`;
+        console.log(ret);
+        return ret;
     }
     static basicMode = null
 }
