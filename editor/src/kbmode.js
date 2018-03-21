@@ -1,6 +1,6 @@
 // import { key2usb, consumer2usb, getModeFromModeTrigger, isModeTrigger } from "@/common";
 import Rule from "@/rule";
-import { leftPadding } from "./common";
+import { leftPadding, luaStringify, isModeTrigger, getModeFromModeTrigger, consumer2usb } from "./common";
 
 // prettier-ignore
 export const kbLayout = [
@@ -73,10 +73,18 @@ export default class KBMode {
     }
     static modesGetLua(modes) {
         let specialCode = 128;
-        const specialCodeMap = {};
+        const consumerCodeMap = {};
+        const modeTriggerMap = {};
+
         function getSpecialCode(name) {
             const ret = specialCode++;
-            specialCodeMap[ret] = name;
+            if (isModeTrigger(name)) {
+                modeTriggerMap[ret] = getModeFromModeTrigger(name);
+            } else if (consumer2usb[name]) {
+                consumerCodeMap[ret] = consumer2usb[name];
+            } else {
+                console.warn('unknown key', name);
+            }
             return ret;
         }
         const maps = modes.map(mode => mode.getUSBMap());
@@ -100,10 +108,12 @@ export default class KBMode {
             }, '');
             return `${pMap + modeStr}\n`;
         }, '');
-        console.log(specialCodeMap);
+        console.log(consumerCodeMap);
         ret = ret.trim();
         ret = `
 local kb_index=[[${ret}]];
+local consumer_map=${luaStringify(consumerCodeMap)};
+local mode_trigger_map=${luaStringify(modeTriggerMap)};
 `;
         console.log(ret);
         return ret;

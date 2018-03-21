@@ -212,7 +212,7 @@ export function isModeTrigger(key) {
 }
 export function getModeFromModeTrigger(key) {
     try {
-        return key.match(/(\d+)$/)[1];
+        return key.match(/(\d+)$/)[1] * 1;
     } catch (e) {
         return null;
     }
