@@ -2,11 +2,13 @@
 -- ahk's map ahk_data[normal_key][modifier_key]
 
 
+-- injected: kb_index,consumer_map,
 -- init_datasheet(file_name, data_width): lua parse the table file,return a table for lua
 -- shift_table: (user shouldn't modify it) which key needs to be output with a shift key 
 -- key_index: (most user may modify it) record 3 modes' usb value in a key map
 -- asciiusb: (user shouldn't modify it) ascii value to usb value
-local key_index_data=init_datasheet("config/key_index.txt",3); 
+local key_index_data=init_datasheet(kb_index,3,1,string.len(kb_index)); 
+kb_index=nil;
 -- init_datasheet("config/ascii2usb.txt",3);
 
 -- count of rows and column in the "key_index.txt" file
@@ -114,9 +116,6 @@ local previous_cnt=0;
 local previous_key_map_mode=1;
 local previous_capslock=false;
 
-local media_map={
-    [126]=0x65,
-}
 local pressed_media=false;
 local withModifierPattern="^(%d+),(%d+)$";
 local keyPattern="^(%d+)$";
@@ -209,8 +208,8 @@ key_input_underlying=function (modifiers,cnt,key_arr)
 
             
 
-            if media_map[value] then
-                media_output(media_map[value]);
+            if consumer_map[value] then
+                media_output(consumer_map[value]);
                 pressed_media=true;
                 return ;
             end
