@@ -11,7 +11,7 @@ export const kbLayout = [
     [{ w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.75, l: 2 }, { w: 1.75, l: 2 }, { style: { "margin-left": 0.25 }, w: 1.25, l: 2 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }]
 ];
 export default class KBMode {
-    constructor({ index, isBasic, macro, map, trigger, triggerKey }) {
+    constructor({ index, isBasic, macro, map, trigger }) {
         this.macro = macro;
         this.map = map;
         this.isBasic = isBasic;
@@ -20,7 +20,6 @@ export default class KBMode {
             KBMode.basicMode = this;
         } else {
             this.trigger = trigger;
-            this.triggerKey = triggerKey;
         }
         // name: "basic",
         // macro: true,
@@ -108,12 +107,22 @@ export default class KBMode {
             }, '');
             return `${pMap + modeStr}\n`;
         }, '');
+
+        const modesConfig = modes.map((mode) => {
+            return {
+                isBasic: mode.isBasic,
+                trigger: mode.trigger,
+                macro: mode.macro,
+            };
+        });
+
         console.log(consumerCodeMap);
         ret = ret.trim();
         ret = `
 local kb_index=[[${ret}]];
 local consumer_map=${luaStringify(consumerCodeMap)};
 local mode_trigger_map=${luaStringify(modeTriggerMap)};
+local modes_config=${luaStringify(modesConfig)};
 `;
         console.log(ret);
         return ret;

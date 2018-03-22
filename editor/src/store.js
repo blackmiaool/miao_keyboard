@@ -22,7 +22,6 @@ const modes = [
     }),
     new KBMode({
         trigger: "pressing",
-        triggerKey: 135,
         macro: true,
         index: 1,
         // prettier-ignore
@@ -35,7 +34,6 @@ const modes = [
     }),
     new KBMode({
         trigger: "toggle",
-        triggerKey: 136,
         macro: false,
         index: 2,
         // prettier-ignore

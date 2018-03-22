@@ -225,8 +225,12 @@ export function leftPadding(num, width) {
     return '0'.repeat(width - str.length) + str;
 }
 export function luaStringify(obj) {
-    return JSON.stringify(obj, undefined, 4).replace(
+    let ret = JSON.stringify(obj, undefined, 4).replace(
         /^(\s*)"(\d+)":/gm,
         (all, indent, num) => `${indent}[${num}]=`
     );
+    if (Array.isArray(obj)) {
+        ret = ret.replace(/^\[/, '{').replace(/\]$/, '}');
+    }
+    return ret;
 }
