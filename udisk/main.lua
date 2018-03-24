@@ -251,7 +251,7 @@ end
 -- return true to capture the input, prevent default handling
 -- cnt: pressing normal keys' count
 function key_input(modifiers,cnt,k1,k2,k3,k4,k5,k6)    
-    local key_arr={k1,k2,k3,k4,k5,k6};    
+    local key_arr={k1,k2,k3,k4,k5,k6};
     pressed_capslock=false;
     key_input_underlying(modifiers,cnt,key_arr);
     previous_cnt=cnt;

@@ -78,7 +78,8 @@ export default class KBMode {
         function getSpecialCode(name) {
             const ret = specialCode++;
             if (isModeTrigger(name)) {
-                modeTriggerMap[ret] = getModeFromModeTrigger(name);
+                // plus 1 to use in lua
+                modeTriggerMap[ret] = getModeFromModeTrigger(name) + 1;
             } else if (consumer2usb[name]) {
                 consumerCodeMap[ret] = consumer2usb[name];
             } else {
@@ -101,9 +102,9 @@ export default class KBMode {
                             code = basicMap[row][column];
                         }
                     }
-                    return `${pp + leftPadding(code, 3)}, `;
+                    return `${pp + leftPadding(code, 3)},`;
                 }, '');
-                return `${pLine + lineStr}\n`;
+                return `${pLine + lineStr}000,000,\n`;
             }, '');
             return `${pMap + modeStr}\n`;
         }, '');
@@ -116,13 +117,18 @@ export default class KBMode {
             };
         });
 
-        console.log(consumerCodeMap);
-        ret = ret.trim();
+        console.log(consumerCodeMap, ret);
+
+        ret = ret.trim().replace(/\s/g, '');
         ret = `
 local kb_index=[[${ret}]];
+
 local consumer_map=${luaStringify(consumerCodeMap)};
+
 local mode_trigger_map=${luaStringify(modeTriggerMap)};
+
 local modes_config=${luaStringify(modesConfig)};
+
 `;
         console.log(ret);
         return ret;
