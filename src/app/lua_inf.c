@@ -238,10 +238,10 @@ static int init_datasheet(lua_State *L)
 
     const char *file_name = lua_tostring(L, 1);
     u8 width = (u8)lua_tointeger(L, 2);
-    int mode = (u8)lua_tointeger(L, 3); // optional
-    int input_num_cnt = (u8)lua_tointeger(L, 4); // optional
-    printf("mode%d",mode);
-    if(!mode){
+    int mode = (u8)lua_tointeger(L, 3);           // optional
+    int input_num_cnt = (u16)lua_tointeger(L, 4); // optional
+    if (!mode)
+    {
         if (!f_open(&file, file_name, FA_OPEN_EXISTING | FA_WRITE | FA_READ | FA__WRITTEN))
         {
             char *read_buf = (char *)malloc((u16)(file.fsize + 1));
@@ -258,12 +258,14 @@ static int init_datasheet(lua_State *L)
             free(read_buf);
             return 1;
         }
-    }else{
+    }
+    else
+    {
         u8 *buf_p = handle_datasheet((char *)file_name, (u16)input_num_cnt, width);
         lua_pushinteger(L, (int)buf_p);
         return 1;
     }
-    
+
     return 0;
 }
 

@@ -215,6 +215,9 @@ static u8 hardware_scan(u16 *map)
 static key_t keys_pre = {0, 0};
 static void key_t_add(key_t *keys, u8 p0, u8 p1)
 {
+    if(keys->cnt==6){
+        return ;
+    }
     keys->key[keys->cnt].pos[0] = p0;
     keys->key[keys->cnt].pos[1] = p1;
     keys->cnt++;

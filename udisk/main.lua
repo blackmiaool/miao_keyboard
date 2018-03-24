@@ -22,8 +22,7 @@ local ahk_avaliable_function={
 }
 
 -- mode2 and mode3's value in key_index.txt file
-local mode2_key=135;
-local mode3_key=136;
+
 -- wait for user releasing all the key, do nothing before releasing
 local wait_release=false;
 
@@ -169,21 +168,26 @@ local pressed_capslock=false;
 key_input_underlying=function (modifiers,cnt,key_arr)
     local final_normal_keys={};
 
-    if key_map_mode==2 then
+    if key_map_mode~=1 and modes_config[key_map_mode].trigger=='pressing' then
         key_map_mode=1;
     end
     -- decide current key_map_mode
     for i=1,cnt do
         local value=get_key_from_position(key_arr[i],1);
-        if value==mode2_key  then
+
+        if mode_trigger_map[value] then
             key_arr[i]=nil;
-            set_key_map_mode(2,true);     
-        elseif value==mode3_key  then
-            key_arr[i]=nil;
-            if key_map_mode~=3 then
-                set_key_map_mode(3,true);
+            local mode=mode_trigger_map[value];
+            local mode_config_target=modes_config[mode];
+            
+            if mode_config_target.trigger=="toggle" then
+                if key_map_mode ~= mode then
+                    set_key_map_mode(mode,true);
+                else
+                    set_key_map_mode(1,true);
+                end
             else
-                set_key_map_mode(1,true);
+                set_key_map_mode(mode,true);
             end
         elseif value == capslockCode then
             pressed_capslock=true;
@@ -193,8 +197,11 @@ key_input_underlying=function (modifiers,cnt,key_arr)
         end        
     end
 
+    local mode_config=modes_config[key_map_mode];
+
+
     -- handle mode2 race condition
-    if key_map_mode ~=2 and previous_key_map_mode == 2 then
+    if mode_config.trigger ~= "pressing" and modes_config[previous_key_map_mode].trigger=="pressing" then
         clear_key();
         return;
     end
@@ -233,14 +240,16 @@ key_input_underlying=function (modifiers,cnt,key_arr)
         wait_release=false;
     end
 
-    if previous_cnt < cnt and ahk_data[final_normal_keys[1]] then 
-        for target_modifiers,expression in pairs(ahk_data[final_normal_keys[1]]) do
-            if modifier_compare(modifiers,target_modifiers) then
-                output_ahk(expression);
-                wait_release=true;
-                return;
+    if mode_config.macro then
+        if previous_cnt < cnt and ahk_data[final_normal_keys[1]] then 
+            for target_modifiers,expression in pairs(ahk_data[final_normal_keys[1]]) do
+                if modifier_compare(modifiers,target_modifiers) then
+                    output_ahk(expression);
+                    wait_release=true;
+                    return;
+                end
+                
             end
-            
         end
     end
 
