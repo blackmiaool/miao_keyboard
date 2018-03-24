@@ -1,6 +1,6 @@
 // import { key2usb, consumer2usb, getModeFromModeTrigger, isModeTrigger } from "@/common";
 import Rule from "@/rule";
-import { leftPadding, luaStringify, isModeTrigger, getModeFromModeTrigger, consumer2usb } from "./common";
+import { leftPadding, isModeTrigger, getModeFromModeTrigger, consumer2usb, } from "./common";
 
 // prettier-ignore
 export const kbLayout = [
@@ -70,7 +70,7 @@ export default class KBMode {
         });
         return ret;
     }
-    static modesGetLua(modes) {
+    static modesGetLua(modes, declarations) {
         let specialCode = 128;
         const consumerCodeMap = {};
         const modeTriggerMap = {};
@@ -90,7 +90,7 @@ export default class KBMode {
         const maps = modes.map(mode => mode.getUSBMap());
         const basicMap = maps[0];
 
-        let ret = maps.reduce((pMap, map) => {
+        let kbIndex = maps.reduce((pMap, map) => {
             const modeStr = map.reduce((pLine, line, row) => {
                 const lineStr = line.reduce((pp, key, column) => {
                     let code = key;
@@ -108,7 +108,7 @@ export default class KBMode {
             }, '');
             return `${pMap + modeStr}\n`;
         }, '');
-
+        kbIndex = kbIndex.replace(/\s/g, '');
         const modesConfig = modes.map((mode) => {
             return {
                 isBasic: mode.isBasic,
@@ -116,22 +116,10 @@ export default class KBMode {
                 macro: mode.macro,
             };
         });
-
-        console.log(consumerCodeMap, ret);
-
-        ret = ret.trim().replace(/\s/g, '');
-        ret = `
-local kb_index=[[${ret}]];
-
-local consumer_map=${luaStringify(consumerCodeMap)};
-
-local mode_trigger_map=${luaStringify(modeTriggerMap)};
-
-local modes_config=${luaStringify(modesConfig)};
-
-`;
-        console.log(ret);
-        return ret;
+        declarations.push(['kb_index', kbIndex]);
+        declarations.push(['consumer_map', consumerCodeMap]);
+        declarations.push(['mode_trigger_map', modeTriggerMap]);
+        declarations.push(['modes_config', modesConfig]);
     }
     static basicMode = null
 }

@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import { luaStringify } from "@/common";
+import { getLuaDeclaration } from "@/common";
 import KBMode from './kbmode';
 import MacroList from "./modules/macro-list";
 
@@ -18,7 +18,7 @@ const modes = [
             ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
             ['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'Enter'],
             ['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
-            ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 140, 141, 'mode1', 'mode2']]
+            ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 'customized1', 'customized2', 'mode1', 'mode2']]
     }),
     new KBMode({
         trigger: "pressing",
@@ -48,7 +48,9 @@ const modes = [
 
 const luaScript = require("@/../../udisk/main.lua");
 
-
+function getConfigJson() {
+    return '';
+}
 const store = new Vuex.Store({
     state: {
         ahk: {},
@@ -76,15 +78,19 @@ const store = new Vuex.Store({
                 }
                 map[keyCode][modifiers] = rule.expression.toPlainText();
             });
-            const ahkLuaTable = luaStringify(map);
             window.modes = modes;
-            const modesScript = KBMode.modesGetLua(modes);
-            ret = "";
-            ret += modesScript;
-            ret += "local ahk_data=";
-            ret += ahkLuaTable;
-            ret += "\n";
+
+            const declarations = [];
+            KBMode.modesGetLua(modes, declarations);
+            declarations.push(['ahk_data', map]);
+            const exportJson = getConfigJson(state);
+            ret = exportJson;
+            ret += declarations.map(([name, value]) => {
+                return getLuaDeclaration(name, value);
+            }).join('\n');
+            console.log('ret:', ret);
             ret += luaScript;
+
             commit('setScript', ret);
             // return ret;
         }

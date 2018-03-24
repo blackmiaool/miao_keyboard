@@ -20,7 +20,7 @@
             </el-table-column>
             <el-table-column label="Key" width="80" align="center" sortable>
                 <template slot-scope="scope">
-                    <span>{{scope.row.key}}</span>
+                    <Key :text="scope.row.key" :width="1" :line="1" />
                 </template>
             </el-table-column>
             <el-table-column label="Expression">

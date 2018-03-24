@@ -4,6 +4,7 @@ import ExpressionComp from "@/components/expression";
 // import Expression from "@/expression";
 import RuleEditor from "@/components/rule-editor";
 import Rule from "../rule";
+import Key from "../components/key";
 
 const { mapState, mapActions, mapMutations } = createNamespacedHelpers('MacroList');
 
@@ -112,6 +113,7 @@ export default {
         // MacroLine,
         ExpressionComp,
         RuleEditor,
-        draggable
+        draggable,
+        Key
     }
 };

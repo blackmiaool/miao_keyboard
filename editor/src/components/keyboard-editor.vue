@@ -24,6 +24,10 @@
                 <el-option v-for="(mode,i) in modes" :key="i" :value="'mode'+i" v-if="!mode.isBasic">
                 </el-option>
             </el-select>
+            <el-select v-model="selectedCustomized" @change="keyChange" style="width:140px;" placeholder="Customized">
+                <el-option v-for="(customized,i) in customized2usb" :key="i" :value="i">
+                </el-option>
+            </el-select>
         </el-form>
     </div>
 </template>
@@ -35,7 +39,8 @@ import {
     shiftTable,
     key2usb,
     modifier2usb,
-    baseAscii2usb
+    baseAscii2usb,
+    customized2usb
 } from "@/common";
 import { mapState } from "vuex";
 
@@ -50,7 +55,8 @@ export default {
                 this.selectedConsumer ||
                 this.selectedModifier ||
                 this.selectedModeTrigger ||
-                this.selectedChar;
+                this.selectedChar ||
+                this.selectedCustomized;
             console.log("change", value);
             this.$emit("input", value);
             this.selectedKey = null;
@@ -58,6 +64,7 @@ export default {
             this.selectedModifier = null;
             this.selectedChar = null;
             this.selectedModeTrigger = null;
+            this.selectedCustomized = null;
         },
         onKeyDown(e) {
             console.log("e", e);
@@ -99,7 +106,9 @@ export default {
             consumer2usb,
             baseAscii2usb,
             selectedChar: null,
-            selectedModeTrigger: null
+            selectedModeTrigger: null,
+            selectedCustomized: null,
+            customized2usb
         };
     },
     components: {}

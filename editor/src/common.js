@@ -163,6 +163,18 @@ export const key2usb = {
     ArrowUp: 82,
     NumLock: 83
 };
+export const customized2usb = {
+    customized1: 141,
+    customized2: 142,
+    customized3: 143,
+    customized4: 144,
+    customized5: 145,
+    customized6: 146,
+    customized7: 147,
+    customized8: 148,
+    customized9: 149,
+    customized10: 150,
+};
 export const key2icon = {
     VolumeUp: 'fa fa-volume-up',
     VolumeDown: 'fa fa-volume-down',
@@ -210,12 +222,18 @@ export const key2short = {
 export function isModeTrigger(key) {
     return /^mode\d+$/.test(key);
 }
+export function isCustomized(key) {
+    return /^customized\d+$/.test(key);
+}
 export function getModeFromModeTrigger(key) {
     try {
         return key.match(/(\d+)$/)[1] * 1;
     } catch (e) {
         return null;
     }
+}
+export function getIndexFromCustomized(key) {
+    return getModeFromModeTrigger(key);
 }
 export function leftPadding(num, width) {
     const str = num.toString();
@@ -238,4 +256,12 @@ export function luaStringify(obj) {
         ret = ret.replace(/^\[/, '{').replace(/\]$/, '}');
     }
     return ret;
+}
+export function getLuaDeclaration(name, expression) {
+    if (typeof expression === 'object' && expression) {
+        expression = luaStringify(expression);
+    } else if (typeof expression === 'string') {
+        expression = `[[${expression}]]`;
+    }
+    return `local ${name}=${expression};`;
 }

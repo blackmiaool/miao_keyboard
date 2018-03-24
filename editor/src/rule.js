@@ -1,5 +1,6 @@
 import { shortModifierMap, ascii2usb, key2usb, modifier2ahk, modifier2usb } from "@/common";
 import Expression from "@/expression";
+import { customized2usb } from "./common";
 
 function modifier2PlainText(modifier) {
     let ret = "";
@@ -26,7 +27,12 @@ export default class Rule {
         const modifiers = (match[1].match(/[<>]?[\^+!#]/g) || []).map(
             modifier2PlainText
         );
-        const key = match[2].toUpperCase();
+        let key;
+        if (match[2].length === 1) {
+            key = match[2].toUpperCase();
+        } else {
+            key = match[2];
+        }
 
         const expression = new Expression(match[3]);
         return new Rule({ modifiers, key, expression });
@@ -52,6 +58,8 @@ export default class Rule {
             usb = key * 1;
         } else if (modifier2usb[key]) {
             return modifier2usb[key];
+        } else if (customized2usb[key]) {
+            return customized2usb[key];
         } else {
             usb = key2usb[key];
         }

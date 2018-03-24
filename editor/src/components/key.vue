@@ -1,5 +1,5 @@
 <template>
-    <div class="kb-key clickable" :style="finalStyle" @click="onClick" :class="{inherit:!text}">
+    <div class="kb-key clickable" :style="finalStyle" @click="onClick" :class="{inherit:!text}" :title="text">
         <!-- <el-tooltip class="item" effect="dark" :disabled="!title" :enterable="false" :content="title" placement="top" transition="el-zoom-in-top" :popper-options="{removeOnDestroy:true}"> -->
         <div class="key-front flex-center">
             <div v-if="key2icon[shortText]">
@@ -8,6 +8,10 @@
             <div v-else-if="isModeTrigger(shortText)">
                 <i class="fa fa-code-branch"></i>
                 <span>{{getModeFromModeTrigger(shortText)}}</span>
+            </div>
+            <div v-else-if="isCustomized(shortText)">
+                <i class="fa fa-wrench"></i>
+                <span>{{getIndexFromCustomized(shortText)}}</span>
             </div>
             <div v-else class="text">{{shortText}}</div>
 
@@ -21,7 +25,9 @@ import {
     key2short,
     key2icon,
     isModeTrigger,
-    getModeFromModeTrigger
+    getModeFromModeTrigger,
+    isCustomized,
+    getIndexFromCustomized
 } from "@/common";
 
 export default {
@@ -33,7 +39,9 @@ export default {
             return key2short[text] || text;
         },
         isModeTrigger,
-        getModeFromModeTrigger
+        getModeFromModeTrigger,
+        isCustomized,
+        getIndexFromCustomized
     },
     data() {
         return { key2icon };

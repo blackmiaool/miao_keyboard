@@ -31,13 +31,8 @@ let config = `
 <+o::const{space}
 <+u::sudo{space}apt-get{space}install
 <+n::(()=>{leftbracket}{rightbracket});{left}{left}{left}{enter}
-140::{<^-down}{left}
-141::{<^-down}{right}
-129::{VolumeDown}
-128::{VolumeUp}
-127::{Mute}
-124::{BrightDown}
-125::{BrightUp}
+customized1::{<^-down}{left}
+customized2::{<^-down}{right}
 # <: left modifier key
 # >: right modifier key
 # ^: ctrl
