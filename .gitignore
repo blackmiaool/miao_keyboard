@@ -227,7 +227,6 @@ $RECYCLE.BIN/
 # Packages
 *.egg
 *.egg-info
-dist/
 eggs/
 parts/
 var/
