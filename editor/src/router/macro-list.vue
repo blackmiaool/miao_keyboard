@@ -41,7 +41,7 @@
             </el-table-column>
         </el-table>
         <div>
-            <el-button type="primary" @click="addRule">
+            <el-button type="primary" @click="addRule" style="width:100%;margin-top:20px;">
                 <i class="fa fa-plus"></i> Add</el-button>
         </div>
 
