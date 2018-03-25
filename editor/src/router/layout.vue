@@ -56,7 +56,11 @@ export default {
             baseMap: state => state.modes[0].map
         })
     },
-    mounted() {},
+    mounted() {
+        if (this.modes) {
+            this.selectedMode = this.modes[0];
+        }
+    },
     data() {
         return {
             kbLayout,

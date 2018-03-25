@@ -1,9 +1,13 @@
 <template>
     <div class="wrap">
-        <el-form v-if="mode" ref="form" :model="mode" label-width="120px">
+        <el-form v-if="mode" ref="form" :model="mode" style="margin-left:20px;">
+            <el-form-item v-if="mode.isBasic" label="Basic Mode" title="mode0 is always basic mode">
+                <el-switch :value="true" disabled></el-switch>
+            </el-form-item>
             <el-form-item label="Enable macro">
                 <el-switch v-model="mode.macro"></el-switch>
             </el-form-item>
+
             <el-container v-if="!mode.isBasic">
                 <el-col :span="12">
                     <el-form-item label="Trigger">
@@ -20,7 +24,6 @@
                     </el-form-item>
                 </el-col>
             </el-container>
-
         </el-form>
         <div v-if="!mode" style="flex:1;">
             Select a mode first

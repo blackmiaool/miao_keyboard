@@ -72,6 +72,7 @@ module.exports = {
         ],
         "linebreak-style": 0,
         "no-plusplus": 0,
-        "no-alert": 0
+        "no-alert": 0,
+        "no-new": 0
     }
 };

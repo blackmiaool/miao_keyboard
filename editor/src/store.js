@@ -4,7 +4,7 @@ import { getLuaDeclaration } from "@/common";
 import KBMode from './kbmode';
 import Rule from "./rule";
 import MacroList from "./modules/macro-list";
-import defaultConfig from "./defaultConfig.json";
+
 
 Vue.use(Vuex);
 
@@ -64,7 +64,7 @@ const store = new Vuex.Store({
             window.modes = modes;
 
             const declarations = [];
-            KBMode.modesGetLua(modes, declarations);
+            KBMode.modesGetLua(this.state.modes, declarations);
             declarations.push(['ahk_data', map]);
             const exportJson = getConfigJson(state);
             ret = exportJson;
@@ -86,8 +86,4 @@ const store = new Vuex.Store({
     }
 });
 
-
-setTimeout(() => {
-    store.commit('importConfig', defaultConfig);
-}, 1000);
 export default store;

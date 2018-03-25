@@ -7,8 +7,11 @@
             <i class="fa fa-keyboard"></i>
             Layout</router-link>
         <router-link to="import">
-            <i class="fa fa-download"></i>
+            <i class="fa fa-upload"></i>
             Import</router-link>
+        <router-link to="export">
+            <i class="fa fa-download"></i>
+            Export</router-link>
     </div>
 
 </template>

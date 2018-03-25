@@ -265,3 +265,6 @@ export function getLuaDeclaration(name, expression) {
     }
     return `local ${name}=${expression};`;
 }
+export function getJSONFromLua(luaCode) {
+    return JSON.parse(luaCode.match(/--\[\[([\s\S]+?)\]\]--/)[1]);
+}
