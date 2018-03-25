@@ -1,5 +1,5 @@
 <template>
-    <div class="comp-macro-list table-wrap">
+    <div class="comp-macro-list table-wrap window">
         <header>
             <i class="redo-btn fa fa-undo" :class="{active:canUndo,clickable:canUndo}" @click="undo()"></i>
             <i class="undo-btn fa fa-redo" :class="{active:canRedo,clickable:canRedo}" @click="redo()"></i>
@@ -64,10 +64,6 @@
 .table-wrap {
     text-align: center;
     padding: 30px;
-    background-color: rgba(255, 255, 255, 0.8);
-    max-width: 800px;
-    margin: auto;
-    border-radius: 5px;
 }
 .table {
     border-radius: 5px;

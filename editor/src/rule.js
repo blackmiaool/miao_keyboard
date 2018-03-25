@@ -1,6 +1,5 @@
-import { shortModifierMap, ascii2usb, key2usb, modifier2ahk, modifier2usb } from "@/common";
+import { shortModifierMap, ascii2usb, key2usb, modifier2ahk, modifier2usb, customized2usb } from "@/common";
 import Expression from "@/expression";
-import { customized2usb } from "./common";
 
 function modifier2PlainText(modifier) {
     let ret = "";
@@ -19,6 +18,9 @@ export default class Rule {
             expression: new Expression("")
         }
     ) {
+        if (typeof expression === 'string') {
+            expression = new Expression(expression);
+        }
         Object.assign(this, { modifiers, key, expression });
     }
     static format0Reg = /([\^+!#<>]*)([\da-zA-Z]+)::([\s\S]+)/;

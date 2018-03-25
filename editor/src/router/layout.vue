@@ -1,6 +1,6 @@
 <template>
     <div class="comp-layout window">
-        <Keyboard :map="selectedMode.map" :layout="kbLayout" @unselectKey="unselectKey" @selectKey="selectKey" />
+        <Keyboard v-if="selectedMode" :map="selectedMode.map" :layout="kbLayout" @unselectKey="unselectKey" @selectKey="selectKey" />
         <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" :baseValue="baseMap[selectedKey.x][selectedKey.y]" />
         <div class="mode-wrap">
             <div class="mode-select">
@@ -49,9 +49,7 @@ export default {
             this.selectedKey = null;
         }
     },
-    created() {
-        this.selectedMode = this.modes[0];
-    },
+    created() {},
     computed: {
         ...mapState({
             modes: state => state.modes,
@@ -73,7 +71,7 @@ export default {
 <style scoped lang="less">
 .window {
     background-color: rgba(255, 255, 255, 0.8);
-    display: inline-block;
+
     padding: 20px;
     border-radius: 5px;
 }

@@ -1,0 +1,454 @@
+{
+    "modes": [
+        {
+            "isBasic": true,
+            "macro": true,
+            "map": [
+                [
+                    "Escape",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "0",
+                    "-",
+                    "=",
+                    "Backspace"
+                ],
+                [
+                    "Tab",
+                    "Q",
+                    "W",
+                    "E",
+                    "R",
+                    "T",
+                    "Y",
+                    "U",
+                    "I",
+                    "O",
+                    "P",
+                    "[",
+                    "]",
+                    "\\"
+                ],
+                [
+                    "CapsLock",
+                    "A",
+                    "S",
+                    "D",
+                    "F",
+                    "G",
+                    "H",
+                    "J",
+                    "K",
+                    "L",
+                    ";",
+                    "'",
+                    "Enter"
+                ],
+                [
+                    "ShiftLeft",
+                    "Z",
+                    "X",
+                    "C",
+                    "V",
+                    "B",
+                    "N",
+                    "M",
+                    ",",
+                    ".",
+                    "/",
+                    "ShiftRight"
+                ],
+                [
+                    "ControlLeft",
+                    "MetaLeft",
+                    "ArrowUp",
+                    "AltLeft",
+                    "Space",
+                    "Space",
+                    "ControlRight",
+                    "customized1",
+                    "customized2",
+                    "mode1",
+                    "mode2"
+                ]
+            ]
+        },
+        {
+            "macro": true,
+            "map": [
+                [
+                    null,
+                    "F1",
+                    "F2",
+                    "F3",
+                    "F4",
+                    "F5",
+                    "F6",
+                    "F7",
+                    "F8",
+                    "F9",
+                    "F10",
+                    "F11",
+                    "F12",
+                    null
+                ],
+                [
+                    null,
+                    "BrightDown",
+                    "BrightUp",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "VolumeDown",
+                    "VolumeUp",
+                    "Mute"
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ]
+            ],
+            "trigger": "pressing"
+        },
+        {
+            "macro": false,
+            "map": [
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "Delete"
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "ArrowUp",
+                    null,
+                    null,
+                    null,
+                    null,
+                    "PrintScreen"
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "ArrowLeft",
+                    "ArrowDown",
+                    "ArrowRight",
+                    null,
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ]
+            ],
+            "trigger": "toggle"
+        }
+    ],
+    "macro": [
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "6",
+            "expression": "694421865"
+        },
+        {
+            "modifiers": [
+                "Alt",
+                "ShiftLeft"
+            ],
+            "key": "A",
+            "expression": "blackmiaool"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "W",
+            "expression": "{Escape}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "N",
+            "expression": "{ArrowDown}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "P",
+            "expression": "{ArrowUp}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "F",
+            "expression": "{ArrowRight}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "B",
+            "expression": "{ArrowLeft}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "A",
+            "expression": "{Home}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "E",
+            "expression": "{End}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "D",
+            "expression": "{Delete}"
+        },
+        {
+            "modifiers": [
+                "ControlRight"
+            ],
+            "key": "V",
+            "expression": "{PageDown}"
+        },
+        {
+            "modifiers": [
+                "AltLeft"
+            ],
+            "key": "V",
+            "expression": "{PageUp}"
+        },
+        {
+            "modifiers": [
+                "Control",
+                "Alt"
+            ],
+            "key": "P",
+            "expression": "{PrintScreen}"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "P",
+            "expression": "git{Space}pull{Space}--rebase"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "F",
+            "expression": "function"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "L",
+            "expression": "local{Space}"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "R",
+            "expression": "return{Space}"
+        },
+        {
+            "modifiers": [
+                "ShiftRight"
+            ],
+            "key": "Q",
+            "expression": "~"
+        },
+        {
+            "modifiers": [
+                "ShiftRight"
+            ],
+            "key": "W",
+            "expression": "`"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "I",
+            "expression": "@xiaomi.com"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "B",
+            "expression": "blackmiaool"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "C",
+            "expression": "console.log(){ArrowLeft}"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "V",
+            "expression": "console.warn(){ArrowLeft}"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "T",
+            "expression": "this.state."
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "W",
+            "expression": "ilwt.science"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "O",
+            "expression": "const{Space}"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "U",
+            "expression": "sudo{Space}apt-get{Space}install"
+        },
+        {
+            "modifiers": [
+                "ShiftLeft"
+            ],
+            "key": "N",
+            "expression": "(()=>{leftbracket}{rightbracket});{ArrowLeft}{ArrowLeft}{ArrowLeft}{Enter}"
+        },
+        {
+            "modifiers": [],
+            "key": "customized1",
+            "expression": "{<^-down}{ArrowLeft}"
+        },
+        {
+            "modifiers": [],
+            "key": "customized2",
+            "expression": "{<^-down}{ArrowRight}"
+        }
+    ]
+}

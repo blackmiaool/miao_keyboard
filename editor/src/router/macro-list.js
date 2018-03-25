@@ -76,7 +76,7 @@ export default {
         onSave(oldRow, newRow) {
             this.$refs.table.toggleRowExpansion(oldRow);
             const index = this.list.indexOf(oldRow);
-            this.set({ index, data: newRow });
+            this.set({ index, data: new Rule(newRow) });
         },
         exportConfig() {
             const map = {};

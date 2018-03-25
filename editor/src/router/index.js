@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import MacroList from "@/router/macro-list.vue";
 import Layout from "@/router/layout";
+import Import from "@/router/import";
 
 Vue.use(Router);
 
@@ -21,6 +22,11 @@ export default new Router({
             path: "/layout",
             name: "layout",
             component: Layout
+        },
+        {
+            path: "/import",
+            name: "import",
+            component: Import
         }
     ]
 });

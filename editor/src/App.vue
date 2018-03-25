@@ -26,7 +26,6 @@ export default {
     },
     methods: {
         exportConfig() {
-            console.log(this.$store.script);
             this.$store.dispatch("exportConfig");
         }
     }

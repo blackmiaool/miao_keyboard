@@ -2,54 +2,29 @@ import Vuex from "vuex";
 import Vue from "vue";
 import { getLuaDeclaration } from "@/common";
 import KBMode from './kbmode';
+import Rule from "./rule";
 import MacroList from "./modules/macro-list";
-
+import defaultConfig from "./defaultConfig.json";
 
 Vue.use(Vuex);
 
 const modes = [
-    new KBMode({
-        isBasic: true,
-        macro: true,
-        index: 0,
-        // prettier-ignore
-        map: [
-            ['Escape', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
-            ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
-            ['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'Enter'],
-            ['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
-            ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 'customized1', 'customized2', 'mode1', 'mode2']]
-    }),
-    new KBMode({
-        trigger: "pressing",
-        macro: true,
-        index: 1,
-        // prettier-ignore
-        map: [
-            [null, 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', null],
-            [null, 'BrightDown', 'BrightUp', null, null, null, null, null, null, null, null, 'VolumeDown', 'VolumeUp', 'Mute'],
-            [null, null, null, null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null, null]]
-    }),
-    new KBMode({
-        trigger: "toggle",
-        macro: false,
-        index: 2,
-        // prettier-ignore
-        map: [
-            [null, null, null, null, null, null, null, null, null, null, null, null, null, 'Delete'],
-            [null, null, null, null, null, null, null, null, 'ArrowUp', null, null, null, null, 'PrintScreen'],
-            [null, null, null, null, null, null, null, 'ArrowLeft', 'ArrowDown', 'ArrowRight', null, null, null],
-            [null, null, null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null, null]]
-    })
+
 ];
 
 const luaScript = require("@/../../udisk/main.lua");
 
-function getConfigJson() {
-    return '';
+function getConfigJson(state) {
+    const obj = {};
+    obj.modes = state.modes.map((mode) => {
+        return mode.toPlainObject();
+    });
+    obj.macro = state.MacroList.list;
+    console.log(state.MacroList.list);
+    return `--[[
+        ${JSON.stringify(obj, false, 4)}
+    ]]--
+    `;
 }
 const store = new Vuex.Store({
     state: {
@@ -58,6 +33,14 @@ const store = new Vuex.Store({
         script: '',
     },
     mutations: {
+        importConfig(state, config) {
+            config.modes.forEach((mode, i) => {
+                mode.index = i;
+            });
+            console.log(config, state);
+            state.modes = config.modes.map(mode => new KBMode(mode));
+            state.MacroList.list = config.macro.map(li => new Rule(li));
+        },
         setAHK(state, ahk) {
             state.ahk = ahk;
         },
@@ -96,24 +79,15 @@ const store = new Vuex.Store({
         }
     },
     getters: {
-        // script(state) {
-        //     console.log("getter");
-        //     let ret = "";
-        //     const ahkLuaTable = JSON.stringify(state.ahk, undefined, 4).replace(
-        //         /^(\s*)"(\d+)":/gm,
-        //         (all, indent, num) => `${indent}[${num}]=`
-        //     );
-        //     ret = "";
-        //     ret += "local ahk_data=";
-        //     ret += ahkLuaTable;
-        //     ret += "\n";
-        //     ret += luaScript;
-        //     return ret;
-        // }
+
     },
     modules: {
         MacroList
     }
 });
 
+
+setTimeout(() => {
+    store.commit('importConfig', defaultConfig);
+}, 1000);
 export default store;

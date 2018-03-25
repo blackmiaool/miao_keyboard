@@ -31,6 +31,17 @@ export default class KBMode {
         //     ['ShiftLeft', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'ShiftRight'],
         //     ['ControlLeft', 'MetaLeft', 'ArrowUp', 'AltLeft', 'Space', 'Space', 'ControlRight', 140, 141, 135, 136]]
     }
+    toPlainObject() {
+        const ret = {
+            isBasic: this.isBasic,
+            macro: this.macro,
+            map: this.map,
+        };
+        if (!this.isBasic) {
+            ret.trigger = this.trigger;
+        }
+        return ret;
+    }
     getUSBMap() {
         const ret = [];
         kbLayout.forEach((lineLayout, lineIndex) => {

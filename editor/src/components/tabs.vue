@@ -6,6 +6,9 @@
         <router-link to="layout">
             <i class="fa fa-keyboard"></i>
             Layout</router-link>
+        <router-link to="import">
+            <i class="fa fa-download"></i>
+            Import</router-link>
     </div>
 
 </template>

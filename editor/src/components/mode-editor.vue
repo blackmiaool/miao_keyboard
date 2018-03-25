@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <el-form ref="form" :model="mode" label-width="120px">
+        <el-form v-if="mode" ref="form" :model="mode" label-width="120px">
             <el-form-item label="Enable macro">
                 <el-switch v-model="mode.macro"></el-switch>
             </el-form-item>
@@ -22,6 +22,9 @@
             </el-container>
 
         </el-form>
+        <div v-if="!mode" style="flex:1;">
+            Select a mode first
+        </div>
     </div>
 </template>
 
@@ -32,9 +35,7 @@ export default {
     methods: {
         getModeFromModeTrigger
     },
-    mounted() {
-        console.log(this.mode);
-    },
+    mounted() {},
     props: ["mode"],
     computed: {
         isBasicMode() {
