@@ -7,8 +7,8 @@
 -- shift_table: (user shouldn't modify it) which key needs to be output with a shift key 
 -- key_index: (most user may modify it) record 3 modes' usb value in a key map
 -- asciiusb: (user shouldn't modify it) ascii value to usb value
-local key_index_data=init_datasheet(kb_index,3,1,string.len(kb_index)); 
-kb_index=nil;
+--local key_index_data=init_datasheet(kb_index,3,1,string.len(kb_index)); 
+--kb_index=nil;
 -- init_datasheet("config/ascii2usb.txt",3);
 
 -- count of rows and column in the "key_index.txt" file
@@ -39,7 +39,7 @@ function get_key_from_position(pos,index)
         index=key_map_mode;
     end
 
-    local num=read_datasheet(key_index_data,pos+(index-1)*columns*rows);
+    local num=key_index_data[pos+(index-1)*columns*rows+1];
     if index~=1 and num==0 then
         return get_key_from_position(pos,1);
     else

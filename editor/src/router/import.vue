@@ -57,7 +57,7 @@ export default {
             this.$message({
                 message: "Succeed to import default config!",
                 type: "success",
-                duration: 1300
+                duration: 500
             });
         }
     },

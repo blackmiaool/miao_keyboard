@@ -22,8 +22,8 @@ export const ascii2usbRaw = [
     39, 30, 31, 32, 33, 34, 35, 36, 37, 38, 51, 51, 54, 46, 55, 56,
     31, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 49, 48, 45, 0,
-    53, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 49, 48, 53, 0];
+    50, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 49, 48, 50, 0];
 
 export const ascii2usb = ascii2usbRaw.reduce((pre, v, i) => {
     if (v) {
@@ -243,15 +243,24 @@ export function leftPadding(num, width) {
     return '0'.repeat(width - str.length) + str;
 }
 export function luaStringify(obj) {
-    let ret = JSON.stringify(obj, undefined, 4).replace(
-        /^(\s*)"(\w+)":/gm,
-        (all, indent, num) => {
+    let ret = JSON.stringify(obj).replace(
+        /"(\w+)":/gm,
+        (all, num) => {
             if (num.match(/^\d+$/)) {
-                return `${indent}[${num}]=`;
+                return `[${num}]=`;
             }
-            return `${indent}["${num}"]=`;
+            return `["${num}"]=`;
         }
     );
+    // let ret2 = JSON.stringify(obj, undefined, 4).replace(
+    //     /^(\s*)"(\w+)":/gm,
+    //     (all, indent, num) => {
+    //         if (num.match(/^\d+$/)) {
+    //             return `${indent}[${num}]=`;
+    //         }
+    //         return `${indent}["${num}"]=`;
+    //     }
+    // );
     if (Array.isArray(obj)) {
         ret = ret.replace(/^\[/, '{').replace(/\]$/, '}');
     }
