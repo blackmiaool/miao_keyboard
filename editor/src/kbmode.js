@@ -1,6 +1,6 @@
 // import { key2usb, consumer2usb, getModeFromModeTrigger, isModeTrigger } from "@/common";
 import Rule from "@/rule";
-import { isModeTrigger, getModeFromModeTrigger, consumer2usb, } from "./common";
+import { leftPadding, isModeTrigger, getModeFromModeTrigger, consumer2usb, } from "./common";
 
 // prettier-ignore
 export const kbLayout = [
@@ -113,7 +113,7 @@ export default class KBMode {
                             code = basicMap[row][column];
                         }
                     }
-                    return `${pp + code},`;
+                    return `${pp + leftPadding(code, 3)},`;
                 }, '');
                 return `${pLine + lineStr}000,000,\n`;
             }, '');
@@ -127,15 +127,7 @@ export default class KBMode {
                 macro: mode.macro,
             };
         });
-        if (kbIndex) {
-            kbIndex = kbIndex.replace(/000/g, '0')
-                .replace(/,$/g, '');
-            console.log(kbIndex);
-            kbIndex = `[${kbIndex}]`;
-            kbIndex = JSON.parse(kbIndex);
-        }
-
-        declarations.push(['key_index_data', kbIndex]);
+        declarations.push(['kb_index', kbIndex]);
         declarations.push(['consumer_map', consumerCodeMap]);
         declarations.push(['mode_trigger_map', modeTriggerMap]);
         declarations.push(['modes_config', modesConfig]);
