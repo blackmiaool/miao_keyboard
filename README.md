@@ -1,6 +1,7 @@
 # blackmiaool's keyboard
 <p align="center">      
     <img width="600" src="https://raw.githubusercontent.com/blackmiaool/miao_keyboard/master/photo.jpg">  
+    <img width="600" src="https://raw.githubusercontent.com/blackmiaool/miao_keyboard/master/photo2.jpg">  
 </p>
 
 ### Feature
