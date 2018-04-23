@@ -34,9 +34,7 @@ void io_bulk_parse(char *data, u16 size, struct GPIO_struct *buf)
             i++;
         }
         i++;
-        delay_ms(10);
-        //        printf(" n:%d %d\r\n",io->pin,io->num);
-        delay_ms(10);
+        //printf(" n:%d %d\r\n",io->pin,io->num);
         cnt++;
     }
 }
@@ -48,9 +46,24 @@ void io_bulk_config(struct GPIO_struct *io, u8 size, u8 config)
         IOout(io[size].port, io[size].num, 1);
     }
 }
+void set_all(u8 value)
+{
+    IOout(SER595_io.port, SER595_io.num, !value);
+    for (u8 i = 0; i < 16; i++)
+    {
+        IOout(SCK595_io.port, SCK595_io.num, 0);
+        delay_us(10);
+        IOout(SCK595_io.port, SCK595_io.num, 1);
+        delay_us(10);
+    }
+    IOout(RCK595_io.port, RCK595_io.num, 0);
+    delay_us(10);
+    IOout(RCK595_io.port, RCK595_io.num, 1);
+}
 
 void led_init()
 {
+return;
     //    buf[1][0]=1;
     io_bulk_parse(rows, sizeof(rows), rows_io);
     io_bulk_parse(SER595, sizeof(SER595), &SER595_io);
@@ -60,16 +73,16 @@ void led_init()
     for (u8 i = 0; i < 5; i++)
     {
         IOConfig(rows_io[i].port, rows_io[i].num > 7, rows_io[i].pin, 3);
-        IOout(rows_io[i].port, rows_io[i].num, 1);
+        IOout(rows_io[i].port, rows_io[i].num, 0);
     }
     IOConfig(SER595_io.port, SER595_io.num > 7, SER595_io.pin, 3);
-    IOout(SER595_io.port, SER595_io.num, 0);
+    IOout   (SER595_io.port, SER595_io.num, 0);
     delay_us(1);
     IOConfig(RCK595_io.port, RCK595_io.num > 7, RCK595_io.pin, 3);
-    IOout(RCK595_io.port, RCK595_io.num, 1);
+    IOout   (RCK595_io.port, RCK595_io.num, 1);
     delay_us(1);
     IOConfig(SCK595_io.port, SCK595_io.num > 7, SCK595_io.pin, 3);
-    IOout(SCK595_io.port, SCK595_io.num, 1);
+    IOout   (SCK595_io.port, SCK595_io.num, 1);
     u8 b = led_buf[0][0];
     b = b;
     for (u8 i = 0; i < ROW_LEN; i++)
@@ -79,6 +92,7 @@ void led_init()
             led_buf[j][i] = 1;
         }
     }
+    set_all(1);
 }
 //10000times  20layer 500time per bright  25time*20
 
@@ -105,19 +119,7 @@ void led_reset()
 {
     tick = (u32)(call_times_per_s * cycle);
 }
-void set_all(u8 value)
-{
-    IOout(SER595_io.port, SER595_io.num, !value);
-    for (u8 i = 0; i < 16; i++)
-    {
-        IOout(SCK595_io.port, SCK595_io.num, 0);
-        delay_us(1);
-        IOout(SCK595_io.port, SCK595_io.num, 1);
-    }
-    IOout(RCK595_io.port, RCK595_io.num, 0);
-    delay_us(1);
-    IOout(RCK595_io.port, RCK595_io.num, 1);
-}
+
 
 extern u8 use_lua;
 void led_handle()
@@ -133,6 +135,7 @@ void led_handle()
     //    if(tick>call_times_per_s){
     //        value=!value;
     //    }
+    return;
     if (use_lua)
     {
         tick++;

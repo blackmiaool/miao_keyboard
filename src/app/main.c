@@ -88,6 +88,7 @@ int main(void)
     keyboard_init();
 		keyboard_scan();
     init_USB_config();
+    led_init();
     //exec before app_init to check if parse bmk files
     
 
@@ -102,7 +103,7 @@ int main(void)
     // wait for udisk mounting
     delay_ms(2000);
     print_free_memory("before app");
-    led_init();
+    
     app_init();
 
     while (1)
