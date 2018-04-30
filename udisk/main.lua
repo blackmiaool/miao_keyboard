@@ -167,7 +167,8 @@ end
 local pressed_capslock=false;
 key_input_underlying=function (modifiers,cnt,key_arr)
     local final_normal_keys={};
-
+    local enter_key_map_mode=key_map_mode;
+    
     if key_map_mode~=1 and modes_config[key_map_mode].trigger=='pressing' then
         key_map_mode=1;
     end
@@ -182,12 +183,12 @@ key_input_underlying=function (modifiers,cnt,key_arr)
             
             if mode_config_target.trigger=="toggle" then
                 if key_map_mode ~= mode then
-                    set_key_map_mode(mode,true);
+                    key_map_mode=mode;
                 else
-                    set_key_map_mode(1,true);
+                    key_map_mode=1;
                 end
             else
-                set_key_map_mode(mode,true);
+                key_map_mode=mode;
             end
         elseif value == capslockCode then
             pressed_capslock=true;
@@ -195,6 +196,10 @@ key_input_underlying=function (modifiers,cnt,key_arr)
                 key_arr[i]=nil;
             end
         end        
+    end
+
+    if key_map_mode ~= enter_key_map_mode then
+        set_key_map_mode(key_map_mode,true);
     end
 
     local mode_config=modes_config[key_map_mode];
