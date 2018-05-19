@@ -9,6 +9,7 @@
 #include "lstate.h"
 #include <lualib.h>
 #include <string.h>
+#include "wdg.h"
 
 static lua_State *current_Lua;
 u8 use_lua = false;
@@ -111,9 +112,12 @@ static int get_key_index(lua_State *L)
 static int lua_delay_ms(lua_State *L)
 {
     int ms = lua_tointeger(L, 1);
-    for (int i = 0; i < ms / 1000; i++)
-        delay_ms(1000);
-    delay_ms(ms % 1000);
+    for (int i = 0; i < ms / 100; i++){
+        IWDG_Feed();
+        delay_ms(100);
+    }
+    IWDG_Feed();    
+    delay_ms(ms % 100);
     return 0;
 }
 extern void mouse_process(u8 *buf);

@@ -1,5 +1,7 @@
 #include <stm32f10x_lib.h>
 #include "delay.h"
+#include "wdg.h"
+
 //////////////////////////////////////////////////////////////////////////////////     
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //Mini STM32开发板
@@ -35,7 +37,8 @@ void delay_init(u8 SYSCLK)
 //SYSCLK单位为Hz,nms单位为ms
 //对72M条件下,nms<=1864
 void delay_ms(u16 nms)
-{                     
+{         
+//    IWDG_Feed();    
     u32 temp;           
     SysTick->LOAD=(u32)nms*fac_ms;//时间加载(SysTick->LOAD为24bit)
     SysTick->VAL =0x00;           //清空计数器
@@ -51,7 +54,8 @@ void delay_ms(u16 nms)
 //延时nus
 //nus为要延时的us数.
 void delay_us(u32 nus)
-{        
+{    
+//    IWDG_Feed();    
     u32 temp;             
     SysTick->LOAD=nus*fac_us; //时间加载
     SysTick->VAL=0x00;        //清空计数器

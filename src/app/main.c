@@ -12,6 +12,7 @@
 #include "w25q16.h"
 #include "led.h"
 #include "app.h"
+#include "wdg.h"
 
 extern u8 EP1BUSY; // kb busy flag
 extern u8 EP2BUSY; // mouse busy flag
@@ -105,9 +106,10 @@ int main(void)
     print_free_memory("before app");
     
     app_init();
-
+    IWDG_Init(4,500);
     while (1)
     {
+		IWDG_Feed();
         led_handle();
         keyboard_scan();
         delay_us(100);

@@ -63,7 +63,7 @@ void set_all(u8 value)
 
 void led_init()
 {
-return;
+//return;
     //    buf[1][0]=1;
     io_bulk_parse(rows, sizeof(rows), rows_io);
     io_bulk_parse(SER595, sizeof(SER595), &SER595_io);
@@ -92,7 +92,7 @@ return;
             led_buf[j][i] = 1;
         }
     }
-    set_all(1);
+   set_all(0);
 }
 //10000times  20layer 500time per bright  25time*20
 
@@ -135,7 +135,7 @@ void led_handle()
     //    if(tick>call_times_per_s){
     //        value=!value;
     //    }
-    return;
+    //return;
     if (use_lua)
     {
         tick++;
