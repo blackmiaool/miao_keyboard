@@ -35,7 +35,7 @@ export default {
     background-size: cover;
     background-attachment: fixed;
     background-position: center center;
-    padding: 30px 0;
+    padding: 50px 0;
     min-height: 100%;
     box-sizing: border-box;
 }

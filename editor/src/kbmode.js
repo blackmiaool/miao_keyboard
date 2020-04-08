@@ -1,15 +1,32 @@
 // import { key2usb, consumer2usb, getModeFromModeTrigger, isModeTrigger } from "@/common";
 import Rule from "@/rule";
-import { leftPadding, isModeTrigger, getModeFromModeTrigger, consumer2usb, } from "./common";
+import {
+    leftPadding,
+    isModeTrigger,
+    getModeFromModeTrigger,
+    consumer2usb
+} from "./common";
 
 // prettier-ignore
-export const kbLayout = [
+export const kbLayoutDoubleSpace = [
     [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2 }],
     [{ w: 1.5 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 1.5 }],
     [{ w: 1.75 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.25, l: 2 }],
     [{ w: 2.25, l: 2 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.75, l: 2 }],
     [{ w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.75, l: 2 }, { w: 1.75, l: 2 }, { style: { "margin-left": 0.25 }, w: 1.25, l: 2 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }]
 ];
+// prettier-ignore
+export const kbLayoutTex = [
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2 }],
+    [{ w: 1.5 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 1.5 }],
+    [{ w: 1.75 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.25, l: 2 }],
+    [{ w: 2.25, l: 2 }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { w: 2.75, l: 2 }],
+    [{ w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 3.25, l: 4 }, { w: 1 }, { w: 1 }, { w: 1 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }, { w: 1.25 }]
+];
+export const kbLayouts = {
+    dbs: { label: "Double Space", name: 'dbs', value: { name: "11", layout: kbLayoutDoubleSpace } },
+    tex: { label: "Tex Yoda", name: 'tex', value: { name: "22", layout: kbLayoutTex } },
+};
 export default class KBMode {
     constructor({ index, isBasic, macro, map, trigger }) {
         this.macro = macro;
@@ -35,16 +52,19 @@ export default class KBMode {
         const ret = {
             isBasic: this.isBasic,
             macro: this.macro,
-            map: this.map,
+            map: this.map
         };
         if (!this.isBasic) {
             ret.trigger = this.trigger;
         }
         return ret;
     }
+    setLayout(layout) {
+        this.layout = kbLayouts[layout].value.layout;
+    }
     getUSBMap() {
         const ret = [];
-        kbLayout.forEach((lineLayout, lineIndex) => {
+        this.layout.forEach((lineLayout, lineIndex) => {
             const line = [];
             ret.push(line);
             lineLayout.forEach((key, keyIndex) => {
@@ -94,7 +114,7 @@ export default class KBMode {
             } else if (consumer2usb[name]) {
                 consumerCodeMap[ret] = consumer2usb[name];
             } else {
-                console.warn('unknown key', name);
+                console.warn("unknown key", name);
             }
             return ret;
         }
@@ -105,7 +125,8 @@ export default class KBMode {
             const modeStr = map.reduce((pLine, line, row) => {
                 const lineStr = line.reduce((pp, key, column) => {
                     let code = key;
-                    if (typeof key === 'string') { // special key
+                    if (typeof key === "string") {
+                        // special key
                         code = getSpecialCode(key);
                         map[row][column] = code;
                     } else if (key === null) {
@@ -114,23 +135,23 @@ export default class KBMode {
                         }
                     }
                     return `${pp + leftPadding(code, 3)},`;
-                }, '');
+                }, "");
                 return `${pLine + lineStr}000,000,\n`;
-            }, '');
+            }, "");
             return `${pMap + modeStr}\n`;
-        }, '');
-        kbIndex = kbIndex.replace(/\s/g, '');
-        const modesConfig = modes.map((mode) => {
+        }, "");
+        kbIndex = kbIndex.replace(/\s/g, "");
+        const modesConfig = modes.map(mode => {
             return {
                 isBasic: mode.isBasic,
                 trigger: mode.trigger,
-                macro: mode.macro,
+                macro: mode.macro
             };
         });
-        declarations.push(['kb_index', kbIndex]);
-        declarations.push(['consumer_map', consumerCodeMap]);
-        declarations.push(['mode_trigger_map', modeTriggerMap]);
-        declarations.push(['modes_config', modesConfig]);
+        declarations.push(["kb_index", kbIndex]);
+        declarations.push(["consumer_map", consumerCodeMap]);
+        declarations.push(["mode_trigger_map", modeTriggerMap]);
+        declarations.push(["modes_config", modesConfig]);
     }
-    static basicMode = null
+    static basicMode = null;
 }

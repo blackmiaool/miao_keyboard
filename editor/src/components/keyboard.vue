@@ -1,39 +1,43 @@
 <template>
     <div>
-        <div class="kb-line" v-for="(keyLine,i) in layout" :key="i">
+        <div class="kb-line" v-for="(keyLine,i) in layoutarr" :key="i">
             <Key :class="{selected:key===selectedKey}" v-for="(key,j) in keyLine" :text="map[i][j]" :basicText="basicMap[i][j]" :key="j" :width="key.w" :line="key.l" :style0="key.style" @click="selectKey(i,j)" />
         </div>
     </div>
 </template>
 
 <script>
-import Key from "@/components/key";
 import { mapState } from "vuex";
-import { kbLayout } from "@/kbmode";
+import Key from "@/components/key";
+import { kbLayouts } from "../kbmode";
+
 
 export default {
     methods: {
         selectKey(x, y) {
-            const clickKey = this.layout[x][y];
+            const clickKey = this.layoutarr[x][y];
 
             if (this.selectedKey === clickKey) {
                 this.selectedKey = undefined;
                 this.$emit("unselectKey");
             } else {
-                this.selectedKey = this.layout[x][y];
+                this.selectedKey = this.layoutarr[x][y];
                 this.$emit("selectKey", x, y);
             }
         }
     },
     mounted() {
-        console.log(this.layout);
+        console.log(this.layoutarr);
     },
     computed: {
-        ...mapState({ basicMap: state => state.modes[0].map })
+        ...mapState({ basicMap: state => state.modes[0].map }),
+        layoutarr() {
+            return kbLayouts[this.layout].value.layout;
+        }
     },
-    props: ["map"],
+    props: ["map", "layout"],
     data() {
-        return { selectedKey: undefined, layout: kbLayout };
+        return { selectedKey: undefined };
     },
     components: {
         Key

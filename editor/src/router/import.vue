@@ -61,7 +61,11 @@ export default {
             });
         }
     },
-    mounted() {},
+    mounted() {
+        setTimeout(() => {
+            this.importDefault();
+        });
+    },
     data() {
         return {
             config: ""

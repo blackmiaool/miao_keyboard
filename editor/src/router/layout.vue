@@ -1,16 +1,45 @@
 <template>
-    <div class="comp-layout window">
-        <Keyboard v-if="selectedMode" :map="selectedMode.map" :layout="kbLayout" @unselectKey="unselectKey" @selectKey="selectKey" />
-        <KeyboardEditor v-if="selectedKey" v-model="selectedMode.map[selectedKey.x][selectedKey.y]" :baseValue="baseMap[selectedKey.x][selectedKey.y]" />
-        <div class="mode-wrap">
-            <div class="mode-select">
-                <div class="mode clickable" v-for="(mode,i) in modes" :key="i" @click="selectedMode=mode" :class="{selected:selectedMode==mode}">{{mode.name||'mode'+i}}</div>
-            </div>
-            <div class="mode-editor">
-                <ModeEditor :mode="selectedMode" />
-            </div>
-        </div>
+  <div class="comp-layout window">
+    <el-select
+      :value="layout"
+      @input="setLayout"
+      placeholder="Select Layout"
+    >
+      <el-option
+        v-for="(kbLayout,i) in kbLayouts"
+        :key="i"
+        :label="kbLayout.label"
+        :value="kbLayout.name"
+      >
+      </el-option>
+    </el-select>
+    <Keyboard
+      v-if="selectedMode && layout"
+      :map="selectedMode.map"
+      :layout="layout"
+      @unselectKey="unselectKey"
+      @selectKey="selectKey"
+    />
+    <KeyboardEditor
+      v-if="selectedKey && selectedMode"
+      v-model="selectedMode.map[selectedKey.x][selectedKey.y]"
+      :baseValue="baseMap[selectedKey.x][selectedKey.y]"
+    />
+    <div class="mode-wrap">
+      <div class="mode-select">
+        <div
+          class="mode clickable"
+          v-for="(mode,i) in modes"
+          :key="i"
+          @click="selectedMode=mode"
+          :class="{selected:selectedMode==mode}"
+        >{{mode.name||'mode'+i}}</div>
+      </div>
+      <div class="mode-editor">
+        <ModeEditor :mode="selectedMode" />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -18,8 +47,9 @@ import Keyboard from "@/components/keyboard";
 import KeyboardEditor from "@/components/keyboard-editor";
 import ModeEditor from "@/components/mode-editor";
 import { mapState } from "vuex";
-import { kbLayout } from "@/kbmode";
+import { kbLayouts } from "@/kbmode";
 
+console.log("kbLayouts", kbLayouts);
 // // prettier-ignore
 // const kbMap = [[
 // ['Escape', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
@@ -47,13 +77,17 @@ export default {
         },
         unselectKey() {
             this.selectedKey = null;
+        },
+        setLayout(layout) {
+            this.$store.commit("setLayout", layout);
         }
     },
     created() {},
     computed: {
         ...mapState({
             modes: state => state.modes,
-            baseMap: state => state.modes[0].map
+            baseMap: state => state.modes[0].map,
+            layout: state => state.layout
         })
     },
     mounted() {
@@ -63,7 +97,7 @@ export default {
     },
     data() {
         return {
-            kbLayout,
+            kbLayouts,
             selectedMode: undefined,
             selectedKey: null
         };

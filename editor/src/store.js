@@ -1,25 +1,23 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import { getLuaDeclaration } from "@/common";
-import KBMode from './kbmode';
+import KBMode from "./kbmode";
 import Rule from "./rule";
 import MacroList from "./modules/macro-list";
 
-
 Vue.use(Vuex);
 
-const modes = [
-
-];
+const modes = [];
 
 const luaScript = require("@/../../udisk/main.lua");
 
 function getConfigJson(state) {
     const obj = {};
-    obj.modes = state.modes.map((mode) => {
+    obj.modes = state.modes.map(mode => {
         return mode.toPlainObject();
     });
     obj.macro = state.MacroList.list;
+    obj.layout = state.layout;
     console.log(state.MacroList.list);
     return `--[[
         ${JSON.stringify(obj, false, 4)}
@@ -30,7 +28,8 @@ const store = new Vuex.Store({
     state: {
         ahk: {},
         modes,
-        script: '',
+        script: "",
+        layout: '',
     },
     mutations: {
         importConfig(state, config) {
@@ -40,13 +39,26 @@ const store = new Vuex.Store({
             console.log(config, state);
             state.modes = config.modes.map(mode => new KBMode(mode));
             state.MacroList.list = config.macro.map(li => new Rule(li));
+            if (!config.layout) {
+                config.layout = 'dbs';
+            }
+            state.layout = config.layout;
+            state.modes.forEach(mode => {
+                mode.setLayout(config.layout);
+            });
+        },
+        setLayout(state, layout) {
+            state.layout = layout;
+            state.modes.forEach(mode => {
+                mode.setLayout(layout);
+            });
         },
         setAHK(state, ahk) {
             state.ahk = ahk;
         },
         setScript(state, script) {
             state.script = script;
-        },
+        }
     },
     actions: {
         exportConfig({ commit, state }) {
@@ -65,22 +77,22 @@ const store = new Vuex.Store({
 
             const declarations = [];
             KBMode.modesGetLua(this.state.modes, declarations);
-            declarations.push(['ahk_data', map]);
+            declarations.push(["ahk_data", map]);
             const exportJson = getConfigJson(state);
             ret = exportJson;
-            ret += declarations.map(([name, value]) => {
-                return getLuaDeclaration(name, value);
-            }).join('\n');
-            console.log('ret:', ret);
+            ret += declarations
+                .map(([name, value]) => {
+                    return getLuaDeclaration(name, value);
+                })
+                .join("\n");
+            console.log("ret:", ret);
             ret += luaScript;
 
-            commit('setScript', ret);
+            commit("setScript", ret);
             // return ret;
         }
     },
-    getters: {
-
-    },
+    getters: {},
     modules: {
         MacroList
     }
