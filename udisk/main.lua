@@ -168,6 +168,11 @@ local pressed_capslock=false;
 key_input_underlying=function (modifiers,cnt,key_arr)
     local final_normal_keys={};
     local enter_key_map_mode=key_map_mode;
+    -- ensure consumer keys are released when no keys are pressed
+    if cnt==0 and pressed_media then
+        media_output(0);
+        pressed_media=false;
+    end
     
     if key_map_mode~=1 and modes_config[key_map_mode].trigger=='pressing' then
         key_map_mode=1;
@@ -207,6 +212,11 @@ key_input_underlying=function (modifiers,cnt,key_arr)
 
     -- handle mode2 race condition
     if mode_config.trigger ~= "pressing" and modes_config[previous_key_map_mode].trigger=="pressing" then
+        -- release any active consumer key to avoid sticky media
+        if pressed_media then
+            media_output(0);
+            pressed_media=false;
+        end
         clear_key();
         return;
     end
