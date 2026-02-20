@@ -75,6 +75,7 @@ export const shortMap = {
 };
 export const consumer2usb = {
     VolumeDown: 0xea,
+    'Play/Pause': 0xCD,
     VolumeUp: 0xe9,
     Mute: 0xe2,
     // macbook only
